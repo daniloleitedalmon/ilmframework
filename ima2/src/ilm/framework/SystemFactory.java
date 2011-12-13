@@ -1,0 +1,45 @@
+package ilm.framework;
+
+import ilm.framework.assignment.AssignmentControl;
+import ilm.framework.comm.CommControl;
+import ilm.framework.comm.IlmAppletFileRW;
+import ilm.framework.comm.IlmDesktopFileRW;
+import ilm.framework.comm.IlmEncrypter;
+import ilm.framework.config.SystemConfig;
+import ilm.framework.domain.IDomainConverter;
+import ilm.framework.domain.DomainGUI;
+import ilm.framework.domain.DomainModel;
+import ilm.framework.gui.BaseGUI;
+import ilm.framework.gui.IlmBaseGUI;
+
+public abstract class SystemFactory {
+
+	public abstract DomainModel createDomainModel();
+	
+	public abstract DomainGUI createDomainGUI(DomainModel domainModel);
+	
+	public abstract IDomainConverter createDomainConverter();
+	
+	public BaseGUI createBaseGUI(SystemConfig config, DomainGUI domainGUI) {
+		return new IlmBaseGUI(config, domainGUI);
+	}
+
+	public CommControl createCommControl(SystemConfig config) {
+		CommControl comm = new CommControl(config);
+		comm.SetEncrypter(new IlmEncrypter());
+		if(config.isApplet()) {
+			comm.SetFileRW(new IlmAppletFileRW());
+		}
+		else {
+			comm.SetFileRW(new IlmDesktopFileRW());
+		}
+		return comm;
+	}
+
+	public AssignmentControl createAssignmentControl(SystemConfig config,
+													 IDomainConverter converter) {
+		AssignmentControl assignControl = new AssignmentControl(config, converter);
+		return assignControl;
+	}
+	
+}
