@@ -6,7 +6,6 @@ import ilm.framework.comm.IlmAppletFileRW;
 import ilm.framework.comm.IlmDesktopFileRW;
 import ilm.framework.comm.IlmEncrypter;
 import ilm.framework.config.SystemConfig;
-import ilm.framework.domain.IDomainConverter;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.domain.DomainModel;
 import ilm.framework.gui.BaseGUI;
@@ -14,11 +13,9 @@ import ilm.framework.gui.IlmBaseGUI;
 
 public abstract class SystemFactory {
 
-	public abstract DomainModel createDomainModel();
+	public abstract DomainModel createDomainModel(SystemConfig config);
 	
-	public abstract DomainGUI createDomainGUI(DomainModel domainModel);
-	
-	public abstract IDomainConverter createDomainConverter();
+	public abstract DomainGUI createDomainGUI(SystemConfig config, DomainModel domainModel);
 	
 	public BaseGUI createBaseGUI(SystemConfig config, DomainGUI domainGUI) {
 		return new IlmBaseGUI(config, domainGUI);
@@ -37,8 +34,8 @@ public abstract class SystemFactory {
 	}
 
 	public AssignmentControl createAssignmentControl(SystemConfig config,
-													 IDomainConverter converter) {
-		AssignmentControl assignControl = new AssignmentControl(config, converter);
+													 DomainModel model) {
+		AssignmentControl assignControl = new AssignmentControl(config, model);
 		return assignControl;
 	}
 	

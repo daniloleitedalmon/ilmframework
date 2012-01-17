@@ -2,7 +2,7 @@ package ilm.framework.domain;
 
 import ilm.framework.assignment.model.AssignmentState;
 
-public abstract class DomainModel {
+public abstract class DomainModel implements DomainConverter {
 	
     public abstract AssignmentState getNewAssignmentState();
     

@@ -3,6 +3,7 @@ package ilm.framework;
 import ilm.framework.assignment.AssignmentControl;
 import ilm.framework.comm.CommControl;
 import ilm.framework.config.SystemConfig;
+import ilm.framework.domain.DomainModel;
 import ilm.framework.gui.BaseGUI;
 import ilm.framework.modules.AutomaticCheckingModule;
 
@@ -12,6 +13,7 @@ public final class SystemControl {
 	private SystemConfig _config;
 	private AssignmentControl _assignmentControl;
 	private CommControl _comm;
+	private DomainModel _model;
 	private BaseGUI _gui;
 	
 	public void initialize(boolean isApplet, String[] parameterList, SystemFactory factory) {
@@ -22,8 +24,9 @@ public final class SystemControl {
 
 	private void initComponents() {
 		_comm = _factory.createCommControl(_config);
-		_assignmentControl = _factory.createAssignmentControl(_config, _factory.createDomainConverter());
-		_gui = _factory.createBaseGUI(_config, _factory.createDomainGUI(_factory.createDomainModel()));
+		_model = _factory.createDomainModel(_config);
+		_assignmentControl = _factory.createAssignmentControl(_config, _model);
+		_gui = _factory.createBaseGUI(_config, _factory.createDomainGUI(_config, _model));
 		initComponentsCommunication();
 	}
 	
@@ -33,9 +36,9 @@ public final class SystemControl {
 	}
 	
 	public IlmProtocol getProtocol() {
-		AutomaticCheckingModule module = 
-				(AutomaticCheckingModule)_assignmentControl.getIlmModuleList().get("automatic_checking");
-		module.setModel(_factory.createDomainModel());
+		AutomaticCheckingModule module = (AutomaticCheckingModule)
+									_assignmentControl.getIlmModuleList().get("automatic_checking");
+		module.setModel(_model);
 		return module;
 	}
 	
