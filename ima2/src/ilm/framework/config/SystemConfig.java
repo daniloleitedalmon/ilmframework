@@ -81,4 +81,5 @@ public final class SystemConfig extends Observable {
 	public boolean isApplet() {
 		return _isApplet;
 	}
+	
 }

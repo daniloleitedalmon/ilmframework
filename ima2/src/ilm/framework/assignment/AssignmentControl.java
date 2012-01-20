@@ -10,30 +10,36 @@ import ilm.framework.assignment.modules.ObjectListModule;
 import ilm.framework.assignment.modules.UndoRedoModule;
 import ilm.framework.comm.ICommunication;
 import ilm.framework.config.SystemConfig;
-import ilm.framework.domain.IDomainConverter;
+import ilm.framework.domain.DomainConverter;
+import ilm.framework.domain.DomainModel;
 import ilm.framework.modules.AutomaticCheckingModule;
 import ilm.framework.modules.IlmModule;
 
 public final class AssignmentControl implements IAssignment, IAssignmentOperator, IModulesLists {
 
 	private SystemConfig _config;
-	private IDomainConverter _converter;
+	private DomainModel _model;
 	private ICommunication _comm;
 	private ArrayList<Assignment> _assignmentList;
 	private HashMap<String, AssignmentModule> _availableAssignmentModules;
 	private HashMap<String, IlmModule> _ilmModuleList;
 	
-	public AssignmentControl(SystemConfig config, IDomainConverter converter) {
+	public AssignmentControl(SystemConfig config, DomainModel model) {
 		_config = config;
-		_converter = converter;
+		_model = model;
 		initAssignmentModuleList();
 		initIlmModuleList();
 		initAssignments();
 	}
 
+	
 	private void initIlmModuleList() {
 		_ilmModuleList = new HashMap<String, IlmModule>();
 		IlmModule module = new AutomaticCheckingModule(this, this);
+		_ilmModuleList.put(module.getName(), module);
+	}
+	
+	public void addIlmModule(IlmModule module) {
 		_ilmModuleList.put(module.getName(), module);
 	}
 
@@ -47,56 +53,123 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		_availableAssignmentModules.put(module.getName(), module);
 	}
 
+	public void addAssignmentModule(AssignmentModule module) {
+		_availableAssignmentModules.put(module.getName(), module);
+	}
+
+	
+	private void initAssignments() {
+		int numberOfAssignments;
+		try {
+			numberOfAssignments = Integer.parseInt(_config.getValue("numberOfAssignments"));
+		}
+		catch(NumberFormatException e) { 
+			numberOfAssignments = 0;
+			// TODO warn the user that the number of assignment was wrong
+		}
+		
+		if(numberOfAssignments > 0) {
+			for(int i = 0; i < numberOfAssignments; i++) {
+				_assignmentList.add(loadAssignment(i));
+			}
+		}
+		else {
+			_assignmentList.add(createNewAssignment());
+		}
+	}
+
+	private Assignment createNewAssignment() {
+		AssignmentState initialState = _model.getNewAssignmentState();
+		return new Assignment("", initialState, initialState, null);
+	}
+
+	private Assignment loadAssignment(int assignmentIndex) {
+		String assignmentString = loadAssignmentString(assignmentIndex);	
+		AssignmentParser parser = new AssignmentParser();
+
+		String proposition = parser.proposition(assignmentString);
+		AssignmentState initialState = _model.convertStringToAssignment(parser.initialState(assignmentString));
+		AssignmentState currentState = _model.convertStringToAssignment(parser.currentState(assignmentString));
+		AssignmentState expectedState = _model.convertStringToAssignment(parser.expectedAnswer(assignmentString));
+		ArrayList<AssignmentModule> moduleList = _model.convertStringToModuleList(parser.moduleList(assignmentString));
+		
+		Assignment assignment = new Assignment(proposition, initialState, currentState, expectedState);
+		for(AssignmentModule m : moduleList) {
+			assignment.addModule(m);
+		}
+		return assignment;
+	}
+	
+	private String loadAssignmentString(int assignmentIndex) {
+		// TODO checks if _config has the assignment data for the index received as string or the file path
+		//  loads the corresponding file
+		//  converts it to string
+		return "";
+	}
+	
+
 	public void setCommProtocol(ICommunication commProtocol) {
 		_comm = commProtocol;
 	}
 
-	public void addAssignmentModule(AssignmentModule module) {
-		_availableAssignmentModules.put(module.getName(), module);
-	}
-	
-	public void addIlmModule(IlmModule module) {
-		_ilmModuleList.put(module.getName(), module);
-	}
 
-	private void initAssignments() {
-		// TODO Auto-generated method stub
-		// for each assignment data in _config
-		// 		load the corresponding file
-		//		create the assignment
-		//		add the respective modules to each one (modules are observers of actions in DomainGUI)
-	}
-	
+	/**
+	 * @see IModuleLists
+	 */
 	@Override
 	public HashMap<String, AssignmentModule> getAssignmentModuleList(int index) {
 		return _assignmentList.get(index).getModuleList();
 	}
 	
+	/**
+	 * @see IModuleLists
+	 */
 	@Override
 	public HashMap<String, IlmModule> getIlmModuleList() {
 		return _ilmModuleList;
 	}
 
+	/**
+	 * @see IAssignment
+	 */
 	@Override
 	public AssignmentState getCurrentState(int index) {
 		return _assignmentList.get(index).getCurrentState();
 	}
 
+	/**
+	 * @see IAssignment
+	 */
 	@Override
 	public AssignmentState getInitialState(int index) {
 		return _assignmentList.get(index).getInitialState();
 	}
 
+	/**
+	 * @see IAssignment
+	 */
 	@Override
 	public AssignmentState getExpectedAnswer(int index) {
 		return _assignmentList.get(index).getExpectedAnswer();
 	}
 
+	/**
+	 * @see IAssignmentOperator
+	 * 
+	 * @return the converter from file to domain objects and actions
+	 * 		requested by the iLM Modules
+	 */
 	@Override
-	public IDomainConverter getConverter() {
-		return _converter;
+	public DomainConverter getConverter() {
+		return _model;
 	}
 
+	/**
+	 * @see IAssignmentOperator
+	 * 
+	 * @return the reader and writer of files
+	 * 		requested by the iLM Modules
+	 */
 	@Override
 	public ICommunication getFileRW() {
 		return _comm;
