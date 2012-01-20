@@ -1,49 +1,60 @@
 package ilm.framework.config;
 
-import java.util.Enumeration;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 
 public final class SystemConfig extends Observable {
 
+	private static final String CUSTOM_PROPERTIES_KEY = "config";
+	private static final String DEFAULT_PROPERTIES_FILE = "DefaultConfig.properties";
 	private Properties _parameters;
 	private boolean _isApplet;
     private Locale _currentLocale;
     
-	public SystemConfig(boolean isApplet, String[] parameterList) {
-		_parameters = new Properties(getDefaultProperties());
+	public SystemConfig(boolean isApplet, Map<String, String> parameterList) throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
+		this(isApplet, parameterList, null);
+	}
+	
+	public SystemConfig(boolean isApplet, Map<String, String> parameterList, Properties properties) throws InvalidPropertiesFormatException, FileNotFoundException, IOException
+	{
+		if(properties != null)
+		{
+			_parameters = properties;
+		}
+		else
+		{
+			if(parameterList.containsKey(CUSTOM_PROPERTIES_KEY))
+			{
+				_parameters = new Properties();
+				_parameters.loadFromXML(new FileInputStream(parameterList.get(CUSTOM_PROPERTIES_KEY)));
+			}
+			else
+			{
+				_parameters = getDefaultProperties();
+			}
+		}
 		_isApplet = isApplet;
 		setProperties(parameterList);
 		setLanguage(_parameters.getProperty("language"));
 	}
 
-	private Properties getDefaultProperties() {
-		ResourceBundle defaultConfig = ResourceBundle.getBundle("ima2.ilm.framework.config.defaultConfig");
+	private Properties getDefaultProperties() throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
         Properties defaultProperties = new Properties();
-        
-        String s;
-        for(Enumeration<String> e = defaultConfig.getKeys(); e.hasMoreElements();) {
-            s = e.nextElement();
-            defaultProperties.setProperty(s, defaultConfig.getString(s));
-        }
+        defaultProperties.loadFromXML(new FileInputStream(DEFAULT_PROPERTIES_FILE));
+
         return defaultProperties;
 	}
 	
-	private void setProperties(String[] stringContent) {
-        int equalsIndex;
-        String key;
-        String value;
-        
-        for(int i = 0; i < stringContent.length; i++) {
-            equalsIndex = stringContent[i].lastIndexOf("=");
-            
-            key = stringContent[i].substring(0, equalsIndex);
-            value = stringContent[i].substring(equalsIndex+1);
-            
-            _parameters.setProperty(key, value);
+	private void setProperties(Map<String, String> parameterList) {        
+        for(Map.Entry<String, String> entry : parameterList.entrySet()) {
+            _parameters.setProperty(entry.getKey(), entry.getValue());
         }
     }
 	
