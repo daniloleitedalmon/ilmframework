@@ -70,7 +70,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		
 		if(numberOfAssignments > 0) {
 			for(int i = 0; i < numberOfAssignments; i++) {
-				_assignmentList.add(loadAssignment(i));
+				_assignmentList.add(createAssignment(loadAssignmentString(i)));
 			}
 		}
 		else {
@@ -83,15 +83,14 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		return new Assignment("", initialState, initialState, null);
 	}
 
-	private Assignment loadAssignment(int assignmentIndex) {
-		String assignmentString = loadAssignmentString(assignmentIndex);	
+	private Assignment createAssignment(String assignmentString) {
 		AssignmentParser parser = new AssignmentParser();
 
-		String proposition = parser.proposition(assignmentString);
-		AssignmentState initialState = _model.convertStringToAssignment(parser.initialState(assignmentString));
-		AssignmentState currentState = _model.convertStringToAssignment(parser.currentState(assignmentString));
-		AssignmentState expectedState = _model.convertStringToAssignment(parser.expectedAnswer(assignmentString));
-		ArrayList<AssignmentModule> moduleList = _model.convertStringToModuleList(parser.moduleList(assignmentString));
+		String proposition = parser.getProposition(assignmentString);
+		AssignmentState initialState = parser.getInitialState(_model, assignmentString);
+		AssignmentState currentState = parser.getCurrentState(_model, assignmentString);
+		AssignmentState expectedState = parser.getExpectedAnswer(_model, assignmentString);
+		ArrayList<AssignmentModule> moduleList = parser.getModuleList(_model, assignmentString);
 		
 		Assignment assignment = new Assignment(proposition, initialState, currentState, expectedState);
 		for(AssignmentModule m : moduleList) {
@@ -156,7 +155,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	/**
 	 * @see IAssignmentOperator
 	 * 
-	 * @return the converter from file to domain objects and actions
+	 * @return the converter of file content to domain objects and actions
 	 * 		requested by the iLM Modules
 	 */
 	@Override

@@ -54,6 +54,10 @@ public abstract class DomainAction extends Observable implements Cloneable {
         _currentState = currentState;
     }
     
+    public final AssignmentState getState() {
+    	return _currentState;
+    }
+    
     
     public final String getName() {
         return _name;

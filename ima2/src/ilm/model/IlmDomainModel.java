@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.assignment.model.DomainObject;
-import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.domain.DomainModel;
 
 public class IlmDomainModel extends DomainModel {
@@ -56,20 +55,6 @@ public class IlmDomainModel extends DomainModel {
 
 	@Override
 	public String convertActionToString(ArrayList<DomainAction> actionList) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<AssignmentModule> convertStringToModuleList(
-			ArrayList<String> moduleListDescription) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<String> convertModuleListToString(
-			ArrayList<AssignmentModule> moduleList) {
 		// TODO Auto-generated method stub
 		return null;
 	}

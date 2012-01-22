@@ -1,30 +1,34 @@
 package ilm.framework.assignment;
 
+import ilm.framework.assignment.model.AssignmentState;
+import ilm.framework.assignment.modules.AssignmentModule;
+import ilm.framework.domain.DomainConverter;
+
 import java.util.ArrayList;
 
 final class AssignmentParser {
 
-	ArrayList<String> moduleList(String assignmentString) {
+	ArrayList<AssignmentModule> getModuleList(DomainConverter converter, String assignmentString) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	String currentState(String assignmentString) {
+	AssignmentState getCurrentState(DomainConverter converter, String assignmentString) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	String expectedAnswer(String assignmentString) {
+	AssignmentState getExpectedAnswer(DomainConverter converter, String assignmentString) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	String initialState(String assignmentString) {
+	AssignmentState getInitialState(DomainConverter converter, String assignmentString) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	String proposition(String assignmentString) {
+	String getProposition(String assignmentString) {
 		// TODO Auto-generated method stub
 		return null;
 	}

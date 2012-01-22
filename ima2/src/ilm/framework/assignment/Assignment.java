@@ -39,6 +39,9 @@ public class Assignment {
 
 	public void addModule(AssignmentModule module) {
 		_moduleList.put(module.getName(), module);
+		if(module.getObserverType() != AssignmentModule.ACTION_OBSERVER) {
+			_currentState.addObserver(module);
+		}
 	}
 	
 	public HashMap<String, AssignmentModule> getModuleList() {
