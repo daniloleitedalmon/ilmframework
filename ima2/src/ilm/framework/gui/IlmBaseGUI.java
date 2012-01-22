@@ -1,6 +1,6 @@
 package ilm.framework.gui;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
 import ilm.framework.config.SystemConfig;
@@ -17,7 +17,7 @@ public class IlmBaseGUI extends BaseGUI {
 	}
 
 	@Override
-	public void setIlmModulesGUI(ArrayList<IlmModule> moduleList) {
+	public void initIlmModules(Collection<IlmModule> moduleList) {
 		// TODO Auto-generated method stub
 		// get the GUI from each module
 		// set each GUI to a panel/menu

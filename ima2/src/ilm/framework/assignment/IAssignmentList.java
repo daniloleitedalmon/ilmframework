@@ -2,7 +2,7 @@ package ilm.framework.assignment;
 
 import ilm.framework.assignment.model.AssignmentState;
 
-public interface IAssignment {
+public interface IAssignmentList {
 	
 	public AssignmentState getCurrentState(int index);
 	

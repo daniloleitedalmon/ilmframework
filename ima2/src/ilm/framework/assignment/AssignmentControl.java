@@ -15,7 +15,7 @@ import ilm.framework.domain.DomainModel;
 import ilm.framework.modules.AutomaticCheckingModule;
 import ilm.framework.modules.IlmModule;
 
-public final class AssignmentControl implements IAssignment, IAssignmentOperator, IModulesLists {
+public final class AssignmentControl implements IAssignmentList, IAssignmentOperator, IModulesLists {
 
 	private SystemConfig _config;
 	private DomainModel _model;
@@ -129,7 +129,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	}
 
 	/**
-	 * @see IAssignment
+	 * @see IAssignmentList
 	 */
 	@Override
 	public AssignmentState getCurrentState(int index) {
@@ -137,7 +137,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	}
 
 	/**
-	 * @see IAssignment
+	 * @see IAssignmentList
 	 */
 	@Override
 	public AssignmentState getInitialState(int index) {
@@ -145,7 +145,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	}
 
 	/**
-	 * @see IAssignment
+	 * @see IAssignmentList
 	 */
 	@Override
 	public AssignmentState getExpectedAnswer(int index) {

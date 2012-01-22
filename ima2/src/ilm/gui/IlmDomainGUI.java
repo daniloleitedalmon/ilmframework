@@ -1,6 +1,6 @@
 package ilm.gui;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
 import ilm.framework.assignment.modules.AssignmentModule;
@@ -22,7 +22,7 @@ public class IlmDomainGUI extends DomainGUI {
 	}
 
 	@Override
-	public void setAssignmentModulesGUI(ArrayList<AssignmentModule> moduleList) {
+	public void setAssignmentModulesGUI(Collection<AssignmentModule> moduleList) {
 		// TODO Auto-generated method stub
 		
 	}

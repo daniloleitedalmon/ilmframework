@@ -43,10 +43,12 @@ public final class SystemControl {
 	}
 	
 	public void startDesktopGUI() {
+		_gui.initGUI();
 		_gui.startDesktop();
 	}
 	
 	public BaseGUI getAppletGUI() {
+		_gui.initGUI();
 		return _gui;
 	}
 
