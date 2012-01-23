@@ -2,18 +2,18 @@ package ilm.framework.modules;
 
 import javax.swing.JPanel;
 
-import ilm.framework.assignment.IAssignmentList;
+import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IAssignmentOperator;
 
 public abstract class IlmModule {
 
 	protected String _name;
 	protected int _assignmentIndex;
-	protected IAssignmentList _assignmentList;
+	protected IAssignment _assignmentList;
 	protected IAssignmentOperator _operator;
 	protected JPanel _gui;
 	
-	public IlmModule(IAssignmentList assignments, IAssignmentOperator operator) {
+	public IlmModule(IAssignment assignments, IAssignmentOperator operator) {
 		_assignmentList = assignments;
 		_operator = operator;
 	}

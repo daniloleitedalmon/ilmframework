@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observer;
 
-import ilm.framework.assignment.IAssignmentList;
+import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IModulesLists;
+import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.modules.IlmModule;
@@ -18,7 +19,7 @@ public abstract class BaseGUI extends JPanel implements Observer {
 
 	protected SystemConfig _config;
 	private ArrayList<DomainGUI> _domainGUIList;
-	private IAssignmentList _assignments;
+	private IAssignment _assignments;
 	private IModulesLists _modules;
 	protected int _activeDomainGUI;
 
@@ -29,14 +30,16 @@ public abstract class BaseGUI extends JPanel implements Observer {
 		_domainGUIList.add(domainGUI);
 	}
 
-	public void setAssignmentCommands(IAssignmentList assignments, IModulesLists modules) {
+	public void setAssignmentCommands(IAssignment assignments, IModulesLists modules) {
 		_assignments = assignments;
 		_modules = modules;
 	}
 
 	public void initGUI() {
 		initAssignments();
-		initAssignmentModules();
+		for(int i = 0; i < _domainGUIList.size(); i++) {
+			initAssignmentModules(_modules.getAssignmentModuleList(i).values());
+		}
 		initIlmModules(_modules.getIlmModuleList().values());
 	}
 
@@ -55,15 +58,11 @@ public abstract class BaseGUI extends JPanel implements Observer {
 		// 		set its tab active
 	}
 	
-	private void initAssignmentModules() {
-		// TODO Auto-generated method stub
-		// for each domainGUI (each assignment)
-		//		for each AssignmentModule in _modules
-		//			define a menu or button
-	}
+	protected abstract void initAssignmentModules(Collection<AssignmentModule> moduleList);
 	
 	protected abstract void initIlmModules(Collection<IlmModule> moduleList);
 
+	
 	public void startDesktop() {
 		// TODO Auto-generated method stub
 		// create a JForm
@@ -77,5 +76,18 @@ public abstract class BaseGUI extends JPanel implements Observer {
 		// TODO Auto-generated method stub
 		// change active tab in tab panel
 	}
+	
+	
+	protected abstract void setAuthoringButton();
+	
+	protected void startAuthoring() {
+		AuthoringGUI authoring = getAuthoringGUI();
+		authoring.setDomainGUI(_domainGUIList.get(_activeDomainGUI));
+		authoring.setModules(_modules.getAssignmentModuleList(_activeDomainGUI));
+		authoring.setAssignmentCommands(_assignments);
+		authoring.setVisible(true);
+	}
+	
+	protected abstract AuthoringGUI getAuthoringGUI();
 	
 }

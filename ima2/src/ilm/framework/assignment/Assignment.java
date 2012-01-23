@@ -12,13 +12,16 @@ public class Assignment {
 	private AssignmentState _currentState;
 	private AssignmentState _expectedAnswer;
 	private HashMap<String, AssignmentModule> _moduleList;
+	private HashMap<String, String> _config;
 	
-	public Assignment(String proposition, AssignmentState initial, AssignmentState current, AssignmentState expected) {
+	public Assignment(String proposition, AssignmentState initial, 
+					  AssignmentState current, AssignmentState expected) {
 		_proposition = proposition;
 		_initialState = initial;
 		_currentState = current;
 		_expectedAnswer = expected;
 		_moduleList = new HashMap<String, AssignmentModule>();
+		_config = new HashMap<String, String>();
 	}
 	
 	public String getProposition() {
@@ -46,6 +49,18 @@ public class Assignment {
 	
 	public HashMap<String, AssignmentModule> getModuleList() {
 		return _moduleList;
+	}
+	
+	public void setConfigParameter(String key, String value) {
+		_config.put(key, value);
+	}
+	
+	public String getConfigParameter(String key) {
+		return _config.get(key);
+	}
+
+	public void setConfig(HashMap<String, String> config) {
+		_config = config;
 	}
 	
 }

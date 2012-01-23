@@ -2,8 +2,10 @@ package ilm.framework.domain;
 
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainAction;
+import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.assignment.modules.AssignmentModule;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Observer;
@@ -38,4 +40,6 @@ public abstract class DomainGUI extends JPanel implements Observer {
 	
 	public abstract void setAssignmentModulesGUI(Collection<AssignmentModule> moduleList);
 
+	public abstract ArrayList<DomainObject> getSelectedObjects();
+	
 }

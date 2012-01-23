@@ -1,7 +1,7 @@
 package ilm.framework.modules;
 
 import ilm.framework.IlmProtocol;
-import ilm.framework.assignment.IAssignmentList;
+import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IAssignmentOperator;
 import ilm.framework.domain.DomainModel;
 
@@ -9,7 +9,7 @@ public class AutomaticCheckingModule extends IlmModule implements IlmProtocol {
 
 	private DomainModel _model;
 	
-	public AutomaticCheckingModule(IAssignmentList assignments, IAssignmentOperator operator) {
+	public AutomaticCheckingModule(IAssignment assignments, IAssignmentOperator operator) {
 		super(assignments, operator);
 		_name = "automatic_checking";
 	}

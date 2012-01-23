@@ -15,7 +15,7 @@ import ilm.framework.domain.DomainModel;
 import ilm.framework.modules.AutomaticCheckingModule;
 import ilm.framework.modules.IlmModule;
 
-public final class AssignmentControl implements IAssignmentList, IAssignmentOperator, IModulesLists {
+public final class AssignmentControl implements IAssignment, IAssignmentOperator, IModulesLists {
 
 	private SystemConfig _config;
 	private DomainModel _model;
@@ -129,7 +129,7 @@ public final class AssignmentControl implements IAssignmentList, IAssignmentOper
 	}
 
 	/**
-	 * @see IAssignmentList
+	 * @see IAssignment
 	 */
 	@Override
 	public AssignmentState getCurrentState(int index) {
@@ -137,7 +137,7 @@ public final class AssignmentControl implements IAssignmentList, IAssignmentOper
 	}
 
 	/**
-	 * @see IAssignmentList
+	 * @see IAssignment
 	 */
 	@Override
 	public AssignmentState getInitialState(int index) {
@@ -145,11 +145,24 @@ public final class AssignmentControl implements IAssignmentList, IAssignmentOper
 	}
 
 	/**
-	 * @see IAssignmentList
+	 * @see IAssignment
 	 */
 	@Override
 	public AssignmentState getExpectedAnswer(int index) {
 		return _assignmentList.get(index).getExpectedAnswer();
+	}
+	
+	/**
+	 * @see IAssignment
+	 * 
+	 * @return the index of newly created assignment
+	 * 		requested by AuthoringGUI in BaseGUI
+	 */
+	@Override
+	public int authorAssignment(Assignment assignment) {
+		// TODO Auto-generated method stub
+		// set in _config a new parameter regarding the authored assignment
+		return 0;
 	}
 
 	/**
