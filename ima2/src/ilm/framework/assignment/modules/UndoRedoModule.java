@@ -15,7 +15,7 @@ public class UndoRedoModule extends AssignmentModule {
 		_redoStack = new Stack<DomainAction>();
 		
 		_name = "undo_redo";
-		_gui = new UndoRedoModuleGUI();
+		_gui = new UndoRedoModuleToolbar();
 		_observerType = ACTION_OBSERVER;
 	}
 	

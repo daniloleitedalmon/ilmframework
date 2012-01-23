@@ -6,7 +6,7 @@ import java.util.Observer;
 public abstract class AssignmentModule extends Observable implements Observer, Cloneable {
 
 	protected String _name;
-	protected AssignmentModuleGUI _gui;
+	protected AssignmentModuleToolbar _gui;
 	
 	protected int _observerType;
 	public static final int ACTION_OBSERVER = 1;
@@ -25,7 +25,7 @@ public abstract class AssignmentModule extends Observable implements Observer, C
 		return _name;
 	}
 
-	public AssignmentModuleGUI getGUI() {
+	public AssignmentModuleToolbar getGUI() {
 		addObserver(_gui);
 		return _gui;
 	}

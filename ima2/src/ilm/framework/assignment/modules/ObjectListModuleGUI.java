@@ -1,16 +1,16 @@
 package ilm.framework.assignment.modules;
 
 import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
 
-public class ObjectListModuleGUI extends AssignmentModuleGUI {
+public class ObjectListModuleGUI extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
-
 	private ObjectListModule _objectList;
-	
 	private JList _list = new JList();
 	
 	public ObjectListModuleGUI() {

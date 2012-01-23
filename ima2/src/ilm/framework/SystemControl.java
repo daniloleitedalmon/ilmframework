@@ -24,9 +24,9 @@ public final class SystemControl {
 	
 	public void initialize(boolean isApplet, String[] parameterList, SystemFactory factory) {
 		Map<String,String> parsedParameterList = new HashMap<String, String>();
-		// TODO Criar o parser de parâmetros após definir com o Danilo
+		// TODO Criar o parser de parametros apos definir com o Danilo
 		
-		// Decidir se aqui as exceções serão tratadas ou repassadas.
+		// Decidir se aqui as excecoes serao tratadas ou repassadas.
 		try {
 			_config = new SystemConfig(isApplet, parsedParameterList);
 		} catch (InvalidPropertiesFormatException e) {

@@ -4,7 +4,7 @@ import java.util.Observable;
 
 import javax.swing.JButton;
 
-public class UndoRedoModuleGUI extends AssignmentModuleGUI {
+public class UndoRedoModuleToolbar extends AssignmentModuleToolbar {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -13,7 +13,7 @@ public class UndoRedoModuleGUI extends AssignmentModuleGUI {
 	private JButton _undoButton = new JButton();
 	private JButton _redoButton = new JButton();
 
-	public UndoRedoModuleGUI() {
+	public UndoRedoModuleToolbar() {
 		// TODO all user interface
 	}
 	

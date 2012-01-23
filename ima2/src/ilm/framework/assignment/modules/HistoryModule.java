@@ -13,7 +13,7 @@ public class HistoryModule extends AssignmentModule {
 		_history = new ArrayList<DomainAction>();
 		
 		_name = "history";
-		_gui = new HistoryModuleGUI();
+		_gui = new HistoryModuleToolbar();
 		_observerType = ACTION_OBSERVER;
 	}
 	

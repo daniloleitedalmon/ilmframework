@@ -14,7 +14,7 @@ public class ObjectListModule extends AssignmentModule {
 		_objectList = new ArrayList<DomainObject>();
 		
 		_name = "object_list";
-		_gui = new ObjectListModuleGUI();
+		_gui = new ObjectListModuleToolbar();
 		_observerType = OBJECT_OBSERVER;
 	}
 	

@@ -1,16 +1,16 @@
 package ilm.framework.assignment.modules;
 
 import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JFrame;
 
-public class HistoryModuleGUI extends AssignmentModuleGUI {
+public class HistoryModuleGUI extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	
 	private HistoryModule _history;
-	
 	private JList _list = new JList();
 	
 	public HistoryModuleGUI() {
