@@ -1,9 +1,11 @@
 package ilm.framework.comm;
 
+import java.util.ArrayList;
+
 public interface IEncrypter {
 
-	public String encryptFileContent(String fileContent);
+	public ArrayList<String> encryptFileContent(ArrayList<String> fileContent);
 	
-	public String decryptFromFile(String fileContent);
+	public ArrayList<String> decryptFromFile(ArrayList<String> fileContent);
 	
 }

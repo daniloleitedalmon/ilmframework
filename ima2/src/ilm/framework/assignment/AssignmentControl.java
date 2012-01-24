@@ -19,14 +19,16 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 
 	private SystemConfig _config;
 	private DomainModel _model;
+	private DomainConverter _converter;
 	private ICommunication _comm;
 	private ArrayList<Assignment> _assignmentList;
 	private HashMap<String, AssignmentModule> _availableAssignmentModules;
 	private HashMap<String, IlmModule> _ilmModuleList;
 	
-	public AssignmentControl(SystemConfig config, DomainModel model) {
+	public AssignmentControl(SystemConfig config, DomainModel model, DomainConverter converter) {
 		_config = config;
 		_model = model;
+		_converter = converter;
 		initAssignmentModuleList();
 		initIlmModuleList();
 		initAssignments();
@@ -87,10 +89,10 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		AssignmentParser parser = new AssignmentParser();
 
 		String proposition = parser.getProposition(assignmentString);
-		AssignmentState initialState = parser.getInitialState(_model, assignmentString);
-		AssignmentState currentState = parser.getCurrentState(_model, assignmentString);
-		AssignmentState expectedState = parser.getExpectedAnswer(_model, assignmentString);
-		ArrayList<AssignmentModule> moduleList = parser.getModuleList(_model, assignmentString);
+		AssignmentState initialState = parser.getInitialState(_converter, assignmentString);
+		AssignmentState currentState = parser.getCurrentState(_converter, assignmentString);
+		AssignmentState expectedState = parser.getExpectedAnswer(_converter, assignmentString);
+		ArrayList<AssignmentModule> moduleList = parser.getModuleList(_converter, assignmentString);
 		
 		Assignment assignment = new Assignment(proposition, initialState, currentState, expectedState);
 		for(AssignmentModule m : moduleList) {
@@ -173,7 +175,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	 */
 	@Override
 	public DomainConverter getConverter() {
-		return _model;
+		return _converter;
 	}
 
 	/**

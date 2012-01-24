@@ -1,17 +1,17 @@
 package ilm.framework.comm;
 
+import java.util.ArrayList;
+
 public class IlmEncrypter implements IEncrypter {
 
 	@Override
-	public String encryptFileContent(String fileContent) {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<String> encryptFileContent(ArrayList<String> fileContent) {
+		return fileContent;
 	}
 
 	@Override
-	public String decryptFromFile(String fileContent) {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<String> decryptFromFile(ArrayList<String> fileContent) {
+		return fileContent;
 	}
 
 }

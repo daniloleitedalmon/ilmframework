@@ -44,7 +44,7 @@ public final class SystemControl {
 	private void initComponents() {
 		_comm = _factory.createCommControl(_config);
 		_model = _factory.createDomainModel(_config);
-		_assignmentControl = _factory.createAssignmentControl(_config, _model);
+		_assignmentControl = _factory.createAssignmentControl(_config, _model, _factory.createDomainConverter());
 		_gui = _factory.createBaseGUI(_config, _factory.createDomainGUI(_config, _model));
 		initComponentsCommunication();
 	}
