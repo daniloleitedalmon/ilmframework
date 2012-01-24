@@ -1,5 +1,8 @@
 package ilm.framework.comm;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import ilm.framework.config.SystemConfig;
 
 public class CommControl implements ICommunication {
@@ -21,13 +24,50 @@ public class CommControl implements ICommunication {
 	}
 
 	@Override
-	public void writeToFile(String fileName, String fileContent) {
-		_fileRW.writeToFile(fileName, _encrypter.encryptFileContent(fileContent));
+	public String readMetadataFile(String packageName) {
+		try {
+			return _fileRW.readMetadataFile(packageName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
-	public String readFromFile(String fileName) {
-		return _encrypter.decryptFromFile(_fileRW.readFromFile(fileName));
+	public ArrayList<String> readResourceFiles(String packageName, ArrayList<String> resourceList) {
+		try {
+			return _fileRW.readResourceFiles(packageName, resourceList);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public ArrayList<String> readAssignmentFiles(String packageName, ArrayList<String> assignmentList) {
+		try {
+			return _encrypter.decryptFromFile(_fileRW.readAssignmentFiles(packageName, assignmentList));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void writeAssignmentPackage(String packageName, 
+										String metadata,
+										ArrayList<String> resourceList, 
+										ArrayList<String> assignmentList) {
+		try {
+			_fileRW.writeAssignmentPackage(packageName, metadata, resourceList, 
+											_encrypter.encryptFileContent(assignmentList));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

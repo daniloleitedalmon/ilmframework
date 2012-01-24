@@ -1,13 +1,17 @@
 package ilm.framework.assignment.modules;
 
+import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JPanel;
-
-public abstract class AssignmentModule implements Observer, Cloneable {
+public abstract class AssignmentModule extends Observable implements Observer, Cloneable {
 
 	protected String _name;
-	protected JPanel _gui;
+	protected AssignmentModuleToolbar _gui;
+	
+	protected int _observerType;
+	public static final int ACTION_OBSERVER = 1;
+	public static final int OBJECT_OBSERVER = 2;
+	public static final int ACTION_OBJECT_OBSERVER = 3;
 	
     public final Object clone() {
         try {
@@ -21,8 +25,13 @@ public abstract class AssignmentModule implements Observer, Cloneable {
 		return _name;
 	}
 
-	public JPanel getGUI() {
+	public AssignmentModuleToolbar getGUI() {
+		addObserver(_gui);
 		return _gui;
+	}
+	
+	public int getObserverType() {
+		return _observerType;
 	}
 	
 }

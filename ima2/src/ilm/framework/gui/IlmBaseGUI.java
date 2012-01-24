@@ -1,8 +1,9 @@
 package ilm.framework.gui;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
+import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.gui.BaseGUI;
@@ -17,10 +18,18 @@ public class IlmBaseGUI extends BaseGUI {
 	}
 
 	@Override
-	public void setIlmModulesGUI(ArrayList<IlmModule> moduleList) {
+	public void initIlmModules(Collection<IlmModule> moduleList) {
 		// TODO Auto-generated method stub
 		// get the GUI from each module
 		// set each GUI to a panel/menu
+	}
+	
+	@Override
+	protected void initAssignmentModules(Collection<AssignmentModule> moduleList) {
+		// TODO Auto-generated method stub
+		// for each domainGUI (each assignment)
+		//		for each AssignmentModule in _modules
+		//			define a menu or button
 	}
 
 	@Override
@@ -29,7 +38,19 @@ public class IlmBaseGUI extends BaseGUI {
 		// update comes from _config
 		// check for each property if changed
 		// check for language
+		// check for available assignments
 		// apply changes to _baseGUIPanel
 	}
-	
+
+	@Override
+	protected AuthoringGUI getAuthoringGUI() {
+		return new IlmAuthoringGUI();
+	}
+
+	@Override
+	protected void setAuthoringButton() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

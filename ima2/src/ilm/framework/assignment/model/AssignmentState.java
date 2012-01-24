@@ -11,27 +11,23 @@ public class AssignmentState extends Observable {
         _objectList = new ArrayList<DomainObject>();
     }
     
-    public final void add(DomainObject newObject) {
-        _objectList.add(newObject);
-        newObject.setAddedState();
+    public final void add(DomainObject object) {
+        _objectList.add(object);
         setChanged();
-        notifyObservers(newObject);
-        newObject.setPropertyChangeState();
+        notifyObservers();
     }
     
-    public final boolean remove(DomainObject objectToBeRemoved) {
-        objectToBeRemoved.setRemovedState();
-        boolean isRemoved = _objectList.remove(objectToBeRemoved);
+    public final boolean remove(DomainObject object) {
+        boolean isRemoved = _objectList.remove(object);
         setChanged();
-        notifyObservers(objectToBeRemoved);
+        notifyObservers();
         return isRemoved;
     }
     
     public final DomainObject remove(int index) {
-        _objectList.get(index).setRemovedState();
         DomainObject removedObject = _objectList.remove(index);
         setChanged();
-        notifyObservers(removedObject);
+        notifyObservers();
         return removedObject;
     }
     

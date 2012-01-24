@@ -1,8 +1,10 @@
 package ilm.gui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
+import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.domain.DomainModel;
@@ -22,9 +24,15 @@ public class IlmDomainGUI extends DomainGUI {
 	}
 
 	@Override
-	public void setAssignmentModulesGUI(ArrayList<AssignmentModule> moduleList) {
+	public void setAssignmentModulesGUI(Collection<AssignmentModule> moduleList) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ArrayList<DomainObject> getSelectedObjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

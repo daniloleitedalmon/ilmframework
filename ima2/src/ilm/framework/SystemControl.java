@@ -30,7 +30,7 @@ public final class SystemControl {
 		
 		Map<String,String> parsedParameterList = parser.Parse(parameterList);
 		
-		// Decidir se aqui as exceções serão tratadas ou repassadas.
+		// Decidir se aqui as excecoes serao tratadas ou repassadas.
 		try {
 			_config = new SystemConfig(isApplet, parsedParameterList);
 		} catch (InvalidPropertiesFormatException e) {
@@ -48,7 +48,7 @@ public final class SystemControl {
 	private void initComponents() {
 		_comm = _factory.createCommControl(_config);
 		_model = _factory.createDomainModel(_config);
-		_assignmentControl = _factory.createAssignmentControl(_config, _model);
+		_assignmentControl = _factory.createAssignmentControl(_config, _model, _factory.createDomainConverter());
 		_gui = _factory.createBaseGUI(_config, _factory.createDomainGUI(_config, _model));
 		initComponentsCommunication();
 	}
@@ -66,10 +66,12 @@ public final class SystemControl {
 	}
 	
 	public void startDesktopGUI() {
+		_gui.initGUI();
 		_gui.startDesktop();
 	}
 	
 	public BaseGUI getAppletGUI() {
+		_gui.initGUI();
 		return _gui;
 	}
 

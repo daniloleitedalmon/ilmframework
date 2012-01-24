@@ -10,4 +10,6 @@ public interface IAssignment {
 	
 	public AssignmentState getExpectedAnswer(int index);
 	
+	public int authorAssignment(Assignment assignment);
+	
 }

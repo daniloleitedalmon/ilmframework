@@ -1,8 +1,10 @@
 package ilm.framework.assignment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.assignment.modules.HistoryModule;
@@ -19,14 +21,16 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 
 	private SystemConfig _config;
 	private DomainModel _model;
+	private DomainConverter _converter;
 	private ICommunication _comm;
 	private ArrayList<Assignment> _assignmentList;
 	private HashMap<String, AssignmentModule> _availableAssignmentModules;
 	private HashMap<String, IlmModule> _ilmModuleList;
 	
-	public AssignmentControl(SystemConfig config, DomainModel model) {
+	public AssignmentControl(SystemConfig config, DomainModel model, DomainConverter converter) {
 		_config = config;
 		_model = model;
+		_converter = converter;
 		initAssignmentModuleList();
 		initIlmModuleList();
 		initAssignments();
@@ -59,18 +63,20 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 
 	
 	private void initAssignments() {
-		int numberOfAssignments;
+		int numberOfPackages;
 		try {
-			numberOfAssignments = Integer.parseInt(_config.getValue("numberOfAssignments"));
+			numberOfPackages = Integer.parseInt(_config.getValue("numberOfAssignments"));
 		}
-		catch(NumberFormatException e) { 
-			numberOfAssignments = 0;
-			// TODO warn the user that the number of assignment was wrong
+		catch(NumberFormatException e) {
+			numberOfPackages = 0;
+			// TODO inform the user that the number of assignment was wrong
 		}
 		
-		if(numberOfAssignments > 0) {
-			for(int i = 0; i < numberOfAssignments; i++) {
-				_assignmentList.add(loadAssignment(i));
+		if(numberOfPackages > 0) {
+			for(int i = 0; i < numberOfPackages; i++) {
+				String metadata = loadMetadataFile(i);
+				getConfigFromMetadataFile(metadata);
+				_assignmentList.addAll(createAssignments(loadAssignmentFiles(i, metadata)));
 			}
 		}
 		else {
@@ -83,28 +89,47 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		return new Assignment("", initialState, initialState, null);
 	}
 
-	private Assignment loadAssignment(int assignmentIndex) {
-		String assignmentString = loadAssignmentString(assignmentIndex);	
+	private ArrayList<Assignment> createAssignments(ArrayList<String> stringList) {
+		ArrayList<Assignment> assignmentList = new ArrayList<Assignment>();
 		AssignmentParser parser = new AssignmentParser();
-
-		String proposition = parser.proposition(assignmentString);
-		AssignmentState initialState = _model.convertStringToAssignment(parser.initialState(assignmentString));
-		AssignmentState currentState = _model.convertStringToAssignment(parser.currentState(assignmentString));
-		AssignmentState expectedState = _model.convertStringToAssignment(parser.expectedAnswer(assignmentString));
-		ArrayList<AssignmentModule> moduleList = _model.convertStringToModuleList(parser.moduleList(assignmentString));
-		
-		Assignment assignment = new Assignment(proposition, initialState, currentState, expectedState);
-		for(AssignmentModule m : moduleList) {
-			assignment.addModule(m);
+		for(String assignmentString : stringList) {
+			assignmentList.add(parser.convertStringToAssignment(_converter, assignmentString));
 		}
-		return assignment;
+		return assignmentList;
 	}
 	
-	private String loadAssignmentString(int assignmentIndex) {
-		// TODO checks if _config has the assignment data for the index received as string or the file path
-		//  loads the corresponding file
-		//  converts it to string
-		return "";
+	private String loadMetadataFile(int packageIndex) {
+		String packageFilePath = _config.getValue(IlmProtocol.NUMBER_OF_ASSIGNMENTS + "_" + packageIndex);
+		try {
+			return _comm.readMetadataFile(packageFilePath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private void getConfigFromMetadataFile(String metadataFileContent) {
+		MetadataParser parser = new MetadataParser();
+		HashMap<String, String> config = parser.getConfig(metadataFileContent);
+		for(String key : config.keySet()) {
+			_config.setParameter(key, config.get(key));
+		}
+	}
+	
+	private ArrayList<String> loadAssignmentFiles(int packageIndex, String metadataFileContent) {
+		String packageFilePath = _config.getValue(IlmProtocol.NUMBER_OF_ASSIGNMENTS + "_" + packageIndex);
+		MetadataParser parser = new MetadataParser();
+		HashMap<String, String> metadata = parser.getMetadata(metadataFileContent);
+		ArrayList<String> assignmentFileList = parser.getAssignmentFileList(metadataFileContent);
+		try {
+			ArrayList<String> assignmentList = _comm.readAssignmentFiles(packageFilePath, assignmentFileList);
+			return parser.mergeMetadata(assignmentList, metadata);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 
@@ -152,16 +177,29 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	public AssignmentState getExpectedAnswer(int index) {
 		return _assignmentList.get(index).getExpectedAnswer();
 	}
+	
+	/**
+	 * @see IAssignment
+	 * 
+	 * @return the index of newly created assignment
+	 * 		requested by AuthoringGUI in BaseGUI
+	 */
+	@Override
+	public int authorAssignment(Assignment assignment) {
+		// TODO Auto-generated method stub
+		// set in _config a new parameter regarding the authored assignment
+		return 0;
+	}
 
 	/**
 	 * @see IAssignmentOperator
 	 * 
-	 * @return the converter from file to domain objects and actions
+	 * @return the converter of file content to domain objects and actions
 	 * 		requested by the iLM Modules
 	 */
 	@Override
 	public DomainConverter getConverter() {
-		return _model;
+		return _converter;
 	}
 
 	/**
