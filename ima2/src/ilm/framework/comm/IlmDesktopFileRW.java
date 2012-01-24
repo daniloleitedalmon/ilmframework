@@ -41,23 +41,17 @@ public class IlmDesktopFileRW implements ICommunication {
 		try {
 			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
 			InputStream in;
-			ArrayList<String> assignmentContentList;
+			ArrayList<String> assignmentContentList = new ArrayList<String>();
 			for(String fileName : assignmentFileList) {
 				in = zipFile.getInputStream(zipFile.getEntry(fileName));
 				assignmentContentList.add(convertInputStreamToString(in));
 			}
-			
-			
 			zipFile.close();
+			return assignmentContentList;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// TODO open the package
-		// for each assignment in assignment list inside the package
-		// load it into an InputStream
-		// convert to string
-		// put them into a list
 		return null;
 	}
 
