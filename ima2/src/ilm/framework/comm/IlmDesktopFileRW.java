@@ -24,7 +24,7 @@ public class IlmDesktopFileRW implements ICommunication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		return "";
+		return null;
 	}
 
 	@Override

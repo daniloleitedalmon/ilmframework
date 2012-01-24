@@ -1,8 +1,10 @@
 package ilm.framework.assignment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.assignment.modules.HistoryModule;
@@ -61,18 +63,20 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 
 	
 	private void initAssignments() {
-		int numberOfAssignments;
+		int numberOfPackages;
 		try {
-			numberOfAssignments = Integer.parseInt(_config.getValue("numberOfAssignments"));
+			numberOfPackages = Integer.parseInt(_config.getValue("numberOfAssignments"));
 		}
-		catch(NumberFormatException e) { 
-			numberOfAssignments = 0;
-			// TODO warn the user that the number of assignment was wrong
+		catch(NumberFormatException e) {
+			numberOfPackages = 0;
+			// TODO inform the user that the number of assignment was wrong
 		}
 		
-		if(numberOfAssignments > 0) {
-			for(int i = 0; i < numberOfAssignments; i++) {
-				_assignmentList.add(createAssignment(loadAssignmentString(i)));
+		if(numberOfPackages > 0) {
+			for(int i = 0; i < numberOfPackages; i++) {
+				String metadata = loadMetadataFile(i);
+				getConfigFromMetadataFile(metadata);
+				_assignmentList.addAll(createAssignments(loadAssignmentFiles(i, metadata)));
 			}
 		}
 		else {
@@ -85,27 +89,47 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		return new Assignment("", initialState, initialState, null);
 	}
 
-	private Assignment createAssignment(String assignmentString) {
+	private ArrayList<Assignment> createAssignments(ArrayList<String> stringList) {
+		ArrayList<Assignment> assignmentList = new ArrayList<Assignment>();
 		AssignmentParser parser = new AssignmentParser();
-
-		String proposition = parser.getProposition(assignmentString);
-		AssignmentState initialState = parser.getInitialState(_converter, assignmentString);
-		AssignmentState currentState = parser.getCurrentState(_converter, assignmentString);
-		AssignmentState expectedState = parser.getExpectedAnswer(_converter, assignmentString);
-		ArrayList<AssignmentModule> moduleList = parser.getModuleList(_converter, assignmentString);
-		
-		Assignment assignment = new Assignment(proposition, initialState, currentState, expectedState);
-		for(AssignmentModule m : moduleList) {
-			assignment.addModule(m);
+		for(String assignmentString : stringList) {
+			assignmentList.add(parser.convertStringToAssignment(_converter, assignmentString));
 		}
-		return assignment;
+		return assignmentList;
 	}
 	
-	private String loadAssignmentString(int assignmentIndex) {
-		// TODO checks if _config has the assignment data for the index received as string or the file path
-		//  loads the corresponding file
-		//  converts it to string
-		return "";
+	private String loadMetadataFile(int packageIndex) {
+		String packageFilePath = _config.getValue(IlmProtocol.NUMBER_OF_ASSIGNMENTS + "_" + packageIndex);
+		try {
+			return _comm.readMetadataFile(packageFilePath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private void getConfigFromMetadataFile(String metadataFileContent) {
+		MetadataParser parser = new MetadataParser();
+		HashMap<String, String> config = parser.getConfig(metadataFileContent);
+		for(String key : config.keySet()) {
+			_config.setParameter(key, config.get(key));
+		}
+	}
+	
+	private ArrayList<String> loadAssignmentFiles(int packageIndex, String metadataFileContent) {
+		String packageFilePath = _config.getValue(IlmProtocol.NUMBER_OF_ASSIGNMENTS + "_" + packageIndex);
+		MetadataParser parser = new MetadataParser();
+		HashMap<String, String> metadata = parser.getMetadata(metadataFileContent);
+		ArrayList<String> assignmentFileList = parser.getAssignmentFileList(metadataFileContent);
+		try {
+			ArrayList<String> assignmentList = _comm.readAssignmentFiles(packageFilePath, assignmentFileList);
+			return parser.mergeMetadata(assignmentList, metadata);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 

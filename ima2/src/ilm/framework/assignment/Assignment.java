@@ -13,6 +13,7 @@ public class Assignment {
 	private AssignmentState _expectedAnswer;
 	private HashMap<String, AssignmentModule> _moduleList;
 	private HashMap<String, String> _config;
+	private HashMap<String, String> _metadata;
 	
 	public Assignment(String proposition, AssignmentState initial, 
 					  AssignmentState current, AssignmentState expected) {
@@ -22,6 +23,7 @@ public class Assignment {
 		_expectedAnswer = expected;
 		_moduleList = new HashMap<String, AssignmentModule>();
 		_config = new HashMap<String, String>();
+		_metadata = new HashMap<String, String>();
 	}
 	
 	public String getProposition() {
@@ -51,6 +53,7 @@ public class Assignment {
 		return _moduleList;
 	}
 	
+	
 	public void setConfigParameter(String key, String value) {
 		_config.put(key, value);
 	}
@@ -61,6 +64,19 @@ public class Assignment {
 
 	public void setConfig(HashMap<String, String> config) {
 		_config = config;
+	}
+	
+	
+	public void setMetadataParameter(String key, String value) {
+		_metadata.put(key, value);
+	}
+	
+	public String getMetadataParameter(String key) {
+		return _metadata.get(key);
+	}
+	
+	public void setMetadata(HashMap<String, String> metadata) {
+		_metadata = metadata;
 	}
 	
 }

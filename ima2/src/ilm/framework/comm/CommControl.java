@@ -36,14 +36,24 @@ public class CommControl implements ICommunication {
 
 	@Override
 	public ArrayList<String> readResourceFiles(String packageName, ArrayList<String> resourceList) {
-		// TODO handling exceptions
-		return _fileRW.readResourceFiles(packageName, resourceList);
+		try {
+			return _fileRW.readResourceFiles(packageName, resourceList);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
 	public ArrayList<String> readAssignmentFiles(String packageName, ArrayList<String> assignmentList) {
-		// TODO handling exceptions
-		return _encrypter.decryptFromFile(_fileRW.readAssignmentFiles(packageName, assignmentList));
+		try {
+			return _encrypter.decryptFromFile(_fileRW.readAssignmentFiles(packageName, assignmentList));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -51,9 +61,13 @@ public class CommControl implements ICommunication {
 										String metadata,
 										ArrayList<String> resourceList, 
 										ArrayList<String> assignmentList) {
-		// TODO handling exceptions
-		_fileRW.writeAssignmentPackage(packageName, metadata, resourceList, 
-										_encrypter.encryptFileContent(assignmentList));
+		try {
+			_fileRW.writeAssignmentPackage(packageName, metadata, resourceList, 
+											_encrypter.encryptFileContent(assignmentList));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
