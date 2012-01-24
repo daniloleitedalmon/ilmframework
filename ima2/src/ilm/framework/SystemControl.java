@@ -2,13 +2,12 @@ package ilm.framework;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 
 import ilm.framework.assignment.AssignmentControl;
 import ilm.framework.comm.CommControl;
-import ilm.framework.config.SystemConfig;
+import ilm.framework.config.*;
 import ilm.framework.domain.DomainModel;
 import ilm.framework.gui.BaseGUI;
 import ilm.framework.modules.AutomaticCheckingModule;
@@ -23,8 +22,13 @@ public final class SystemControl {
 	private BaseGUI _gui;
 	
 	public void initialize(boolean isApplet, String[] parameterList, SystemFactory factory) {
-		Map<String,String> parsedParameterList = new HashMap<String, String>();
-		// TODO Criar o parser de parâmetros após definir com o Danilo
+		IParameterListParser parser;
+		if (isApplet)
+			parser = new AppletParameterListParser();
+		else
+			parser = new DesktopParameterListParser();
+		
+		Map<String,String> parsedParameterList = parser.Parse(parameterList);
 		
 		// Decidir se aqui as exceções serão tratadas ou repassadas.
 		try {
