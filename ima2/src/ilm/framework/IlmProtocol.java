@@ -12,6 +12,7 @@ public interface IlmProtocol {
 	public static final String FEEDBACK = "iLM_PARAM_Feedback";
 	public static final String SEND_ANSWER = "iLM_PARAM_SendAnswer";
 	public static final String CHANGE_PAGE = "iLM_PARAM_ChangePage";
+	public static final String METADATA_FILENAME = "metadata.xml";
 	
 	public float getEvaluation();
 	

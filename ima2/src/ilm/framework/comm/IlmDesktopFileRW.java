@@ -1,5 +1,7 @@
 package ilm.framework.comm;
 
+import ilm.framework.IlmProtocol;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +18,7 @@ public class IlmDesktopFileRW implements ICommunication {
 		File sourceZipFile = new File(packageName);
 		try {
 			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
-			InputStream inMetadata = zipFile.getInputStream(zipFile.getEntry("metadata.xml"));
+			InputStream inMetadata = zipFile.getInputStream(zipFile.getEntry(IlmProtocol.METADATA_FILENAME));
 			String metadataContent = convertInputStreamToString(inMetadata);
 			zipFile.close();
 			return metadataContent;
@@ -28,22 +30,42 @@ public class IlmDesktopFileRW implements ICommunication {
 	}
 
 	@Override
-	public ArrayList<String> readResourceFiles(String packageName,
-			ArrayList<String> resourceList) {
+	public ArrayList<String> readResourceFiles(String packageName, ArrayList<String> resourceList) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<String> readAssignmentFiles(String packageName,
-			ArrayList<String> assignmentList) {
-		// TODO Auto-generated method stub
+	public ArrayList<String> readAssignmentFiles(String packageName, ArrayList<String> assignmentFileList) {
+		File sourceZipFile = new File(packageName);
+		try {
+			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
+			InputStream in;
+			ArrayList<String> assignmentContentList;
+			for(String fileName : assignmentFileList) {
+				in = zipFile.getInputStream(zipFile.getEntry(fileName));
+				assignmentContentList.add(convertInputStreamToString(in));
+			}
+			
+			
+			zipFile.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// TODO open the package
+		// for each assignment in assignment list inside the package
+		// load it into an InputStream
+		// convert to string
+		// put them into a list
 		return null;
 	}
 
 	@Override
-	public void writeAssignmentPackage(String packageName, String metadata,
-			ArrayList<String> resourceList, ArrayList<String> assignmentList) {
+	public void writeAssignmentPackage(String packageName, 
+										String metadata,
+										ArrayList<String> resourceList, 
+										ArrayList<String> assignmentList) {
 		// TODO Auto-generated method stub
 		
 	}
