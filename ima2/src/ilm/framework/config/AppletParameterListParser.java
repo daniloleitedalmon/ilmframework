@@ -20,8 +20,7 @@ public class AppletParameterListParser implements IParameterListParser {
             value = parameterList[i].substring(equalsIndex+1);
             
             result.put(key, value);
-        }
-		
+        }		
 		return result;
 	}
 

@@ -18,8 +18,7 @@ public class DesktopParameterListParser implements IParameterListParser {
 				result.put(key, value);
 				i++;
 			}
-        }
-		
+        }		
 		return result;
 	}
 

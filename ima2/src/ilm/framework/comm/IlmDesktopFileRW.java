@@ -36,7 +36,8 @@ public class IlmDesktopFileRW implements ICommunication {
 	}
 
 	@Override
-	public ArrayList<String> readAssignmentFiles(String packageName, ArrayList<String> assignmentFileList) {
+	public ArrayList<String> readAssignmentFiles(String packageName, 
+												 ArrayList<String> assignmentFileList) throws IOException {
 		File sourceZipFile = new File(packageName);
 		try {
 			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);

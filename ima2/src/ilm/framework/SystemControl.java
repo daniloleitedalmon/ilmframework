@@ -23,14 +23,18 @@ public final class SystemControl {
 	
 	public void initialize(boolean isApplet, String[] parameterList, SystemFactory factory) {
 		IParameterListParser parser;
-		if (isApplet)
+		if (isApplet) {
 			parser = new AppletParameterListParser();
-		else
+		}
+		else {
 			parser = new DesktopParameterListParser();
-		
+		}		
 		Map<String,String> parsedParameterList = parser.Parse(parameterList);
 		
-		// Decidir se aqui as excecoes serao tratadas ou repassadas.
+		// TODO Decidir se aqui as excecoes serao tratadas ou repassadas.
+		// eu acho que deveria ser a própria config que trata as exceções
+		// uma vez que são exceções específicas da configuração e o SystemControl
+		// deveria saber só coisas genéricas do sistema inteiro
 		try {
 			_config = new SystemConfig(isApplet, parsedParameterList);
 		} catch (InvalidPropertiesFormatException e) {
