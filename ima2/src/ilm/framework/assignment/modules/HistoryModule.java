@@ -5,21 +5,21 @@ import java.util.Observable;
 
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.domain.DomainConverter;
+import ilm.framework.modules.AssignmentModule;
 
 public class HistoryModule extends AssignmentModule {
 
-	private ArrayList<DomainAction> _history;
+	private ArrayList<ArrayList<DomainAction>> _history;
 	
 	public HistoryModule() {
-		_history = new ArrayList<DomainAction>();
-		
+		_history = new ArrayList<ArrayList<DomainAction>>();
 		_name = "history";
 		_gui = new HistoryModuleToolbar();
 		_observerType = ACTION_OBSERVER;
 	}
 	
 	ArrayList<DomainAction> getHistory() {
-		return _history;
+		return _history.get(_assignmentIndex);
 	}
 	
 	@Override
@@ -28,12 +28,12 @@ public class HistoryModule extends AssignmentModule {
 			DomainAction action = (DomainAction)o;
 			
 			if(action.isUndo()) {
-				_history.add(action);
+				_history.get(_assignmentIndex).add(action);
 				setChanged();
 				notifyObservers();
 			}
 			else {
-				_history.remove(action);
+				_history.get(_assignmentIndex).remove(action);
 				setChanged();
 				notifyObservers();
 			}
@@ -41,10 +41,14 @@ public class HistoryModule extends AssignmentModule {
 	}
 
 	@Override
-	public void setContentFromString(DomainConverter converter,
-			String moduleContent) {
+	public void setContentFromString(DomainConverter converter,	String moduleContent) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void addAssignment() {
+		_history.add(new ArrayList<DomainAction>());
 	}
 
 }

@@ -1,19 +1,21 @@
 package ilm.framework.assignment.modules;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Stack;
 
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.domain.DomainConverter;
+import ilm.framework.modules.AssignmentModule;
 
 public class UndoRedoModule extends AssignmentModule {
 
-	private Stack<DomainAction> _undoStack;
-	private Stack<DomainAction> _redoStack;
+	private ArrayList<Stack<DomainAction>> _undoStack;
+	private ArrayList<Stack<DomainAction>> _redoStack;
 	
 	public UndoRedoModule() {
-		_undoStack = new Stack<DomainAction>();
-		_redoStack = new Stack<DomainAction>();
+		_undoStack = new ArrayList<Stack<DomainAction>>();
+		_redoStack = new ArrayList<Stack<DomainAction>>();
 		
 		_name = "undo_redo";
 		_gui = new UndoRedoModuleToolbar();
@@ -21,24 +23,24 @@ public class UndoRedoModule extends AssignmentModule {
 	}
 	
 	public void undo() {
-		DomainAction action = _undoStack.pop();
-		_redoStack.push(action);
+		DomainAction action = _undoStack.get(_assignmentIndex).pop();
+		_redoStack.get(_assignmentIndex).push(action);
 		action.undo();
 	}
 	
 	public void redo() {
-		DomainAction action = _redoStack.pop();
+		DomainAction action = _redoStack.get(_assignmentIndex).pop();
 		action.setRedo(true);
 		//_undoStack.push(action); -> it is already done within action.execute()
 		action.execute();
 	}
 	
 	public boolean isUndoStackEmpty() {
-		return _undoStack.isEmpty();
+		return _undoStack.get(_assignmentIndex).isEmpty();
 	}
 	
 	public boolean isRedoStackEmpty() {
-		return _redoStack.isEmpty();
+		return _redoStack.get(_assignmentIndex).isEmpty();
 	}
 	
 	@Override
@@ -52,9 +54,9 @@ public class UndoRedoModule extends AssignmentModule {
 			}
 			else {
 				if(!action.isRedo()) {
-					_redoStack.clear();
+					_redoStack.get(_assignmentIndex).clear();
 				}
-				_undoStack.push((DomainAction)action.clone());
+				_undoStack.get(_assignmentIndex).push((DomainAction)action.clone());
 				setChanged();
 				notifyObservers();
 			}
@@ -62,10 +64,15 @@ public class UndoRedoModule extends AssignmentModule {
 	}
 
 	@Override
-	public void setContentFromString(DomainConverter converter,
-			String moduleContent) {
+	public void setContentFromString(DomainConverter converter,	String moduleContent) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void addAssignment() {
+		_undoStack.add(new Stack<DomainAction>());
+		_redoStack.add(new Stack<DomainAction>());
 	}
 
 }

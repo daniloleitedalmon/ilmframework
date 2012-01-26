@@ -2,8 +2,9 @@ package ilm.framework.assignment;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
-import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.domain.DomainConverter;
+import ilm.framework.modules.AssignmentModule;
+import ilm.framework.modules.IlmModule;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -23,29 +24,22 @@ import org.xml.sax.SAXException;
 final class AssignmentParser {
 
 	public Assignment convertStringToAssignment(DomainConverter converter,	
-												String assignmentString,
-												HashMap<String, AssignmentModule> availableModules) {
+												String assignmentString) {
 		String proposition = getProposition(assignmentString);
 		AssignmentState initialState = getInitialState(converter, assignmentString);
 		AssignmentState currentState = getCurrentState(converter, assignmentString);
 		AssignmentState expectedState = getExpectedAnswer(converter, assignmentString);
-		HashMap<String, AssignmentModule> moduleList = getModuleList(converter, assignmentString, availableModules);
 		HashMap<String, String> config = getConfig(assignmentString);
 		HashMap<String, String> metadata = getMetadata(assignmentString);
 		
 		Assignment assignment = new Assignment(proposition, initialState, currentState, expectedState);
-		
-		for(AssignmentModule m : moduleList.values()) {
-			assignment.addModule(m);
-		}
 		assignment.setConfig(config);
 		assignment.setMetadata(metadata);
 		return assignment;
 	}
 	
-	private HashMap<String, AssignmentModule> getModuleList(DomainConverter converter, 
-													  String assignmentString,
-													  HashMap<String, AssignmentModule> availableList) {
+	void setAssignmentModulesData(DomainConverter converter, String assignmentString,
+								  HashMap<String, IlmModule> availableList) {
 		HashMap<String, AssignmentModule> moduleList = new HashMap<String, AssignmentModule>();
 		Document doc = convertXMLStringToDoc(assignmentString);
 		Node moduleNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_MODULES_NODE).item(0);
@@ -53,12 +47,12 @@ final class AssignmentParser {
 		for(int i = 0; i < moduleDataNodeList.getLength(); i++) {
 			String nodeName = moduleDataNodeList.item(i).getNodeName();
 			if(availableList.containsKey(nodeName)) {
-				AssignmentModule module = (AssignmentModule)availableList.get(nodeName).clone();
-				module.setContentFromString(converter, moduleDataNodeList.item(i).getTextContent());
-				moduleList.put(module.getName(), module);
+				AssignmentModule module = (AssignmentModule)availableList.get(nodeName);
+				AssignmentModule clone = (AssignmentModule)module.clone();
+				clone.setContentFromString(converter, moduleDataNodeList.item(i).getTextContent());
+				moduleList.put(clone.getName(), clone);
 			}
 		}
-		return moduleList;
 	}
 
 	private AssignmentState getCurrentState(DomainConverter converter, String assignmentString) {

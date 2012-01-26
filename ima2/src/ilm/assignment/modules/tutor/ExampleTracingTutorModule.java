@@ -2,8 +2,8 @@ package ilm.assignment.modules.tutor;
 
 import java.util.Observable;
 
-import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.domain.DomainConverter;
+import ilm.framework.modules.AssignmentModule;
 
 public class ExampleTracingTutorModule extends AssignmentModule {
 
@@ -16,6 +16,12 @@ public class ExampleTracingTutorModule extends AssignmentModule {
 	@Override
 	public void setContentFromString(DomainConverter converter,
 			String moduleContent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addAssignment() {
 		// TODO Auto-generated method stub
 		
 	}

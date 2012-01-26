@@ -2,12 +2,13 @@ package ilm.modules.scorm;
 
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IAssignmentOperator;
-import ilm.framework.modules.IlmModule;
+import ilm.framework.modules.OperationModule;
 
-public class ScormModule extends IlmModule {
+public class ScormModule extends OperationModule {
 
 	public ScormModule(IAssignment assignments, IAssignmentOperator operator) {
-		super(assignments, operator);
+		setAssignmentList(assignments);
+		setAssignmentOperator(operator);
 		// TODO Auto-generated constructor stub
 	}
 

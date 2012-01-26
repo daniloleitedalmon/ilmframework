@@ -5,7 +5,6 @@ import java.util.HashMap;
 import ilm.framework.assignment.Assignment;
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.model.AssignmentState;
-import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.domain.DomainGUI;
 
 import javax.swing.JFrame;
@@ -15,15 +14,10 @@ public abstract class AuthoringGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private IAssignment _authoringCommands;
 	protected DomainGUI _domainGUI;
-	protected HashMap<String, AssignmentModule> _modules;
 	protected Assignment _assignment;
 
 	public void setDomainGUI(DomainGUI domainGUI) {
 		_domainGUI = domainGUI;
-	}
-
-	public void setModules(HashMap<String, AssignmentModule> assignmentModuleList) {
-		_modules = assignmentModuleList;
 	}
 
 	public void setAssignmentCommands(IAssignment commands) {

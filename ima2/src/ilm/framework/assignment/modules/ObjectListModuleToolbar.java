@@ -1,10 +1,12 @@
 package ilm.framework.assignment.modules;
 
+import ilm.framework.modules.IlmModuleToolbar;
+
 import java.util.Observable;
 
 import javax.swing.JButton;
 
-public class ObjectListModuleToolbar extends AssignmentModuleToolbar {
+public class ObjectListModuleToolbar extends IlmModuleToolbar {
 
 	private static final long serialVersionUID = 1L;
 	private ObjectListModuleGUI _gui;

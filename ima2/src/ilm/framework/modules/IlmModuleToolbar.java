@@ -1,15 +1,15 @@
-package ilm.framework.assignment.modules;
+package ilm.framework.modules;
 
 import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public abstract class AssignmentModuleToolbar extends JPanel implements Observer {
+public abstract class IlmModuleToolbar extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
-	public AssignmentModuleToolbar() {
+	public IlmModuleToolbar() {
 		// TODO somehow define a height limit of 25 pixels
 	}
 

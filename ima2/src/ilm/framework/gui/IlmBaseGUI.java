@@ -3,7 +3,6 @@ package ilm.framework.gui;
 import java.util.Collection;
 import java.util.Observable;
 
-import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.gui.BaseGUI;
@@ -22,14 +21,6 @@ public class IlmBaseGUI extends BaseGUI {
 		// TODO Auto-generated method stub
 		// get the GUI from each module
 		// set each GUI to a panel/menu
-	}
-	
-	@Override
-	protected void initAssignmentModules(Collection<AssignmentModule> moduleList) {
-		// TODO Auto-generated method stub
-		// for each domainGUI (each assignment)
-		//		for each AssignmentModule in _modules
-		//			define a menu or button
 	}
 
 	@Override

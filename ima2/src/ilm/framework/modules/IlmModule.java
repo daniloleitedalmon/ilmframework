@@ -1,28 +1,19 @@
 package ilm.framework.modules;
 
-import javax.swing.JPanel;
+import java.util.Observable;
 
-import ilm.framework.assignment.IAssignment;
-import ilm.framework.assignment.IAssignmentOperator;
-
-public abstract class IlmModule {
+public abstract class IlmModule extends Observable {
 
 	protected String _name;
 	protected int _assignmentIndex;
-	protected IAssignment _assignmentList;
-	protected IAssignmentOperator _operator;
-	protected JPanel _gui;
-	
-	public IlmModule(IAssignment assignments, IAssignmentOperator operator) {
-		_assignmentList = assignments;
-		_operator = operator;
-	}
+	protected IlmModuleToolbar _gui;
 	
 	public String getName() {
 		return _name;
 	}
 	
-	public JPanel getGUI() {
+	public IlmModuleToolbar getGUI() {
+		addObserver(_gui);
 		return _gui;
 	}
 	

@@ -35,8 +35,8 @@ public class IlmSystemFactory extends SystemFactory {
 													 DomainModel model,
 													 DomainConverter converter) {
 		AssignmentControl assignControl = new AssignmentControl(config, model, converter);
-		assignControl.addAssignmentModule(new ScriptModule());
-		assignControl.addAssignmentModule(new ExampleTracingTutorModule());
+		assignControl.addIlmModule(new ScriptModule());
+		assignControl.addIlmModule(new ExampleTracingTutorModule());
 		assignControl.addIlmModule(new ScormModule(assignControl, assignControl));
 		return assignControl;
 	}

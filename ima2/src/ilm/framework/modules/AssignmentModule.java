@@ -1,14 +1,10 @@
-package ilm.framework.assignment.modules;
+package ilm.framework.modules;
 
 import ilm.framework.domain.DomainConverter;
 
-import java.util.Observable;
 import java.util.Observer;
 
-public abstract class AssignmentModule extends Observable implements Observer, Cloneable {
-
-	protected String _name;
-	protected AssignmentModuleToolbar _gui;
+public abstract class AssignmentModule extends IlmModule implements Observer, Cloneable {
 	
 	protected int _observerType;
 	public static final int ACTION_OBSERVER = 1;
@@ -22,19 +18,12 @@ public abstract class AssignmentModule extends Observable implements Observer, C
             return null;
         }
     }
-
-	public String getName() {
-		return _name;
-	}
-
-	public AssignmentModuleToolbar getGUI() {
-		addObserver(_gui);
-		return _gui;
-	}
 	
 	public int getObserverType() {
 		return _observerType;
 	}
+	
+	public abstract void addAssignment();
 	
 	public abstract void setContentFromString(DomainConverter converter, String moduleContent);
 	

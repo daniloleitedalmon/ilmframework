@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Observable;
 
 import ilm.framework.assignment.model.DomainObject;
-import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.domain.DomainModel;
+import ilm.framework.modules.AssignmentModule;
 
 public class IlmDomainGUI extends DomainGUI {
 

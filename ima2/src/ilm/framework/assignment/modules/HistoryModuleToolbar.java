@@ -1,10 +1,12 @@
 package ilm.framework.assignment.modules;
 
+import ilm.framework.modules.IlmModuleToolbar;
+
 import java.util.Observable;
 
 import javax.swing.JButton;
 
-public class HistoryModuleToolbar extends AssignmentModuleToolbar {
+public class HistoryModuleToolbar extends IlmModuleToolbar {
 
 	private static final long serialVersionUID = 1L;
 	private HistoryModuleGUI _gui;

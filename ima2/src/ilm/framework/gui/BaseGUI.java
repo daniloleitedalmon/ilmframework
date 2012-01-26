@@ -6,7 +6,6 @@ import java.util.Observer;
 
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IModulesLists;
-import ilm.framework.assignment.modules.AssignmentModule;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.modules.IlmModule;
@@ -37,9 +36,6 @@ public abstract class BaseGUI extends JPanel implements Observer {
 
 	public void initGUI() {
 		initAssignments();
-		for(int i = 0; i < _domainGUIList.size(); i++) {
-			initAssignmentModules(_modules.getAssignmentModuleList(i).values());
-		}
 		initIlmModules(_modules.getIlmModuleList().values());
 	}
 
@@ -57,8 +53,6 @@ public abstract class BaseGUI extends JPanel implements Observer {
 		// 		check for active assignment in _config
 		// 		set its tab active
 	}
-	
-	protected abstract void initAssignmentModules(Collection<AssignmentModule> moduleList);
 	
 	protected abstract void initIlmModules(Collection<IlmModule> moduleList);
 
@@ -83,7 +77,6 @@ public abstract class BaseGUI extends JPanel implements Observer {
 	protected void startAuthoring() {
 		AuthoringGUI authoring = getAuthoringGUI();
 		authoring.setDomainGUI(_domainGUIList.get(_activeDomainGUI));
-		authoring.setModules(_modules.getAssignmentModuleList(_activeDomainGUI));
 		authoring.setAssignmentCommands(_assignments);
 		authoring.setVisible(true);
 	}

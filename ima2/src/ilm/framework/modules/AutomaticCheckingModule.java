@@ -5,12 +5,13 @@ import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IAssignmentOperator;
 import ilm.framework.domain.DomainModel;
 
-public class AutomaticCheckingModule extends IlmModule implements IlmProtocol {
+public class AutomaticCheckingModule extends OperationModule implements IlmProtocol {
 
 	private DomainModel _model;
 	
 	public AutomaticCheckingModule(IAssignment assignments, IAssignmentOperator operator) {
-		super(assignments, operator);
+		setAssignmentList(assignments);
+		setAssignmentOperator(operator);
 		_name = "automatic_checking";
 	}
 	
