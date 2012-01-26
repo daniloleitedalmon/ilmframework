@@ -1,0 +1,15 @@
+<header>
+<title>Titulo<title>
+</header>
+<initial>
+<object>Point<object>
+</initial>
+<expected>
+<object>Point<object>
+</expected>
+<modules>
+</modules>
+<config>
+</config>
+<metadata>
+</metadata>

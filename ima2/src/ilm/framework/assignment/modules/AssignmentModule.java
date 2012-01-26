@@ -1,5 +1,7 @@
 package ilm.framework.assignment.modules;
 
+import ilm.framework.domain.DomainConverter;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -33,5 +35,7 @@ public abstract class AssignmentModule extends Observable implements Observer, C
 	public int getObserverType() {
 		return _observerType;
 	}
+	
+	public abstract void setContentFromString(DomainConverter converter, String moduleContent);
 	
 }

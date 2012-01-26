@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import ilm.framework.assignment.model.DomainAction;
+import ilm.framework.domain.DomainConverter;
 
 public class HistoryModule extends AssignmentModule {
 
@@ -37,6 +38,13 @@ public class HistoryModule extends AssignmentModule {
 				notifyObservers();
 			}
 		}
+	}
+
+	@Override
+	public void setContentFromString(DomainConverter converter,
+			String moduleContent) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

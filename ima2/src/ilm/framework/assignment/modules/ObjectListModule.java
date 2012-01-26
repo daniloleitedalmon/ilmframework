@@ -5,6 +5,7 @@ import java.util.Observable;
 
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
+import ilm.framework.domain.DomainConverter;
 
 public class ObjectListModule extends AssignmentModule {
 
@@ -35,6 +36,13 @@ public class ObjectListModule extends AssignmentModule {
 			setChanged();
 			notifyObservers();
 		}
+	}
+
+	@Override
+	public void setContentFromString(DomainConverter converter,
+			String moduleContent) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

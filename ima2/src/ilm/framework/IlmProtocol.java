@@ -2,6 +2,9 @@ package ilm.framework;
 
 public interface IlmProtocol {
 
+	/**
+	 * Parameters from iLM specification
+	 */
 	public static final String WIDTH = "width";
 	public static final String HEIGHT = "height";
 	public static final String LANGUAGE = "language";
@@ -13,10 +16,32 @@ public interface IlmProtocol {
 	public static final String SEND_ANSWER = "iLM_PARAM_SendAnswer";
 	public static final String CHANGE_PAGE = "iLM_PARAM_ChangePage";
 	
+	/**
+	 * File attributes from iLM specification
+	 */
 	public static final String METADATA_FILENAME = "metadata.xml";
+	public static final String FILE_LIST_NODE = "files";
+	public static final String ASSIGNMENT_FILE_NODE = "assignment";
+	public static final String RESOURCE_FILE_NODE = "resource";
+	public static final String CONFIG_LIST_NODE = "config";
+	public static final String METADATA_LIST_NODE = "metadata";
+	public static final String ASSIGNMENT_HEADER_NODE = "header";
+	public static final String ASSIGNMENT_PROPOSITION = "proposition";
+	public static final String ASSIGNMENT_INITIAL_NODE = "initial";
+	public static final String ASSIGNMENT_CURRENT_NODE = "current";
+	public static final String ASSIGNMENT_EXPECTED_NODE = "expected";
+	public static final String ASSIGNMENT_MODULES_NODE = "modules";
 	
+	/**
+	 * @return a number which represents the grade obtained by the
+	 * 		student for this assignment (percentage of correctness)
+	 */
 	public float getEvaluation();
 	
+	/**
+	 * @return a string with the converted solution created by the 
+	 * 		student for this assignment
+	 */
 	public String getAnswer();
 
 }

@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Stack;
 
 import ilm.framework.assignment.model.DomainAction;
+import ilm.framework.domain.DomainConverter;
 
 public class UndoRedoModule extends AssignmentModule {
 
@@ -58,6 +59,13 @@ public class UndoRedoModule extends AssignmentModule {
 				notifyObservers();
 			}
 		}
+	}
+
+	@Override
+	public void setContentFromString(DomainConverter converter,
+			String moduleContent) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
