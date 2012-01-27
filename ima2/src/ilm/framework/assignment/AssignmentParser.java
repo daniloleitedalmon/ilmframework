@@ -86,7 +86,7 @@ final class AssignmentParser {
 		for(int i = 0; i < header.getChildNodes().getLength(); i++) {
 			String nodeName = header.getChildNodes().item(i).getNodeName();
 			if(nodeName.equals(IlmProtocol.ASSIGNMENT_PROPOSITION)) {
-				return header.getChildNodes().item(i).getNodeValue();
+				return header.getChildNodes().item(i).getTextContent();
 			}
 		}
 		return null;
@@ -99,7 +99,7 @@ final class AssignmentParser {
 		NodeList assignmentNodeList = fileNode.getChildNodes();
 		for(int i = 0; i < assignmentNodeList.getLength(); i++) {
 			if(assignmentNodeList.item(i).getNodeName().equals(IlmProtocol.ASSIGNMENT_FILE_NODE)) {
-				assignmentFileList.add(assignmentNodeList.item(i).getNodeValue());
+				assignmentFileList.add(assignmentNodeList.item(i).getTextContent());
 			}
 		}
 		return assignmentFileList;
@@ -111,7 +111,7 @@ final class AssignmentParser {
 		Node configNode = doc.getElementsByTagName(IlmProtocol.CONFIG_LIST_NODE).item(0);
 		NodeList valuesNodeList = configNode.getChildNodes();
 		for(int i = 0; i < valuesNodeList.getLength(); i++) {
-			configMap.put(valuesNodeList.item(i).getNodeName(), valuesNodeList.item(i).getNodeValue());
+			configMap.put(valuesNodeList.item(i).getNodeName(), valuesNodeList.item(i).getTextContent());
 		}
 		return configMap;
 	}
@@ -122,7 +122,7 @@ final class AssignmentParser {
 		Node metadataNode = doc.getElementsByTagName(IlmProtocol.METADATA_LIST_NODE).item(0);
 		NodeList valuesNodeList = metadataNode.getChildNodes();
 		for(int i = 0; i < valuesNodeList.getLength(); i++) {
-			metadataMap.put(valuesNodeList.item(i).getNodeName(), valuesNodeList.item(i).getNodeValue());
+			metadataMap.put(valuesNodeList.item(i).getNodeName(), valuesNodeList.item(i).getTextContent());
 		}
 		return metadataMap;
 	}

@@ -12,6 +12,12 @@ public abstract class DomainAction extends Observable implements Cloneable {
     private boolean _isUndo;
     private boolean _isRedo;
 
+    public DomainAction(String name, String description) {
+    	_name = name;
+    	_description = description;
+    	_parameterList = new ArrayList<DomainObject>();
+    }
+    
     public final void execute() {
         executeAction();
         _isUndo = false;

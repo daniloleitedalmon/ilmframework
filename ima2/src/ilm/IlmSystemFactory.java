@@ -1,7 +1,5 @@
 package ilm;
 
-import ilm.assignment.modules.script.ScriptModule;
-import ilm.assignment.modules.tutor.ExampleTracingTutorModule;
 import ilm.framework.SystemFactory;
 import ilm.framework.assignment.AssignmentControl;
 import ilm.framework.config.SystemConfig;
@@ -11,7 +9,6 @@ import ilm.framework.domain.DomainModel;
 import ilm.gui.IlmDomainGUI;
 import ilm.model.IlmDomainConverter;
 import ilm.model.IlmDomainModel;
-import ilm.modules.scorm.ScormModule;
 
 public class IlmSystemFactory extends SystemFactory {
 
@@ -27,7 +24,9 @@ public class IlmSystemFactory extends SystemFactory {
 
 	@Override
 	public DomainGUI createDomainGUI(SystemConfig config, DomainModel model) {
-		return new IlmDomainGUI(model);
+		IlmDomainGUI domainGUI = new IlmDomainGUI();
+		domainGUI.setDomainModel(model);
+		return domainGUI;
 	}
 
 	@Override
@@ -35,9 +34,9 @@ public class IlmSystemFactory extends SystemFactory {
 													 DomainModel model,
 													 DomainConverter converter) {
 		AssignmentControl assignControl = new AssignmentControl(config, model, converter);
-		assignControl.addIlmModule(new ScriptModule());
-		assignControl.addIlmModule(new ExampleTracingTutorModule());
-		assignControl.addIlmModule(new ScormModule(assignControl, assignControl));
+//		assignControl.addIlmModule(new ScriptModule());
+//		assignControl.addIlmModule(new ExampleTracingTutorModule());
+//		assignControl.addIlmModule(new ScormModule(assignControl, assignControl));
 		return assignControl;
 	}
 	

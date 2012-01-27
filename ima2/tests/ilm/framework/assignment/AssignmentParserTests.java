@@ -77,47 +77,62 @@ public class AssignmentParserTests {
 	
 	@Test
 	public void testConvertStringToAssignment() {
-		
+		//no
 	}
 	
 	@Test
 	public void testSetAssignmentModulesData() {
-		
+		//no
 	}
 	
 	@Test
 	public void testGetCurrentState() {
-		
+		//no
 	}
 	
 	@Test
 	public void testGetExpectedAnswer() {
-		
+		//no
 	}
 	
 	@Test
 	public void testGetInitialState() {
-	
+		//no
 	}
 	
 	@Test
 	public void testGetProposition() {
-		
+		String expectedProposition = "Bla bla bla";
+		String resultProposition = objUnderTest.getProposition(testAssignmentString);
+		assertEquals(expectedProposition, resultProposition);
 	}
 	
 	@Test
 	public void testGetAssignmentFileList() {
-		
+		ArrayList<String> expectedList = new ArrayList<String>();
+		expectedList.add("exercicio_teste.geo");
+		expectedList.add("exercicio_teste2.geo");
+	    ArrayList<String> resultList = objUnderTest.getAssignmentFileList(testMetadataString);
+	    assertEquals(expectedList, resultList);
 	}
 	
 	@Test
 	public void testGetConfig() {
-		
+		HashMap<String, String> expectedMap = new HashMap<String, String>();
+		expectedMap.put("color", "Blue");
+		expectedMap.put("speed", "Fast");
+	    HashMap<String, String> resultMap = objUnderTest.getConfig(testMetadataString);
+	    assertEquals(expectedMap, resultMap);
 	}
 	
 	@Test
 	public void testGetMetadata() {
-		
+	    HashMap<String, String> expectedMap = new HashMap<String, String>();
+	    expectedMap.put("title", "Titulo");
+	    expectedMap.put("country", "Brasil");
+	    expectedMap.put("date", "25/01/2012");
+	    HashMap<String, String> resultMap = objUnderTest.getMetadata(testMetadataString);
+	    assertEquals(expectedMap, resultMap);
 	}
 	
 	@Test
@@ -133,8 +148,6 @@ public class AssignmentParserTests {
 		ArrayList<String> assignmentList = new ArrayList<String>();
 		assignmentList.add(testAssignmentString);
 		ArrayList<String> resultString = objUnderTest.mergeMetadata(assignmentList, metadataMap);
-		System.out.println(expectedString);
-		System.out.println(resultString.get(0).substring(AUTO_GEN_HEADER_SIZE));
 		assertEquals(expectedString, resultString.get(0).substring(AUTO_GEN_HEADER_SIZE));
 	}
 	

@@ -18,12 +18,7 @@ public abstract class DomainGUI extends JPanel implements Observer {
 	private static final long serialVersionUID = 1L;
 
 	protected AssignmentState _state;
-	protected DomainModel _model;
 	protected HashMap<String, DomainAction> _actionList;
-	
-	public void setDomainModel(DomainModel model) {
-		_model = model;
-	}
 	
 	public void setAssignment(AssignmentState curState, Collection<IlmModule> moduleList) {
 		_state = curState;
@@ -42,8 +37,8 @@ public abstract class DomainGUI extends JPanel implements Observer {
 		}
 	}
 	
-	public abstract void setAssignmentModulesGUI(Collection<AssignmentModule> moduleList);
-
+	public abstract void setDomainModel(DomainModel model);
+	
 	public abstract ArrayList<DomainObject> getSelectedObjects();
 	
 }
