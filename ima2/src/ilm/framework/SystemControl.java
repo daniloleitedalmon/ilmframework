@@ -59,7 +59,7 @@ public final class SystemControl {
 	
 	private void initComponentsCommunication() {
 		_assignmentControl.setCommProtocol(_comm);
-		_gui.setAssignmentCommands(_assignmentControl, _assignmentControl);
+		_gui.setAssignmentCommands(_assignmentControl);
 	}
 	
 	public IlmProtocol getProtocol() {

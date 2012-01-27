@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Observer;
 
 import ilm.framework.assignment.IAssignment;
-import ilm.framework.assignment.IModulesLists;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.modules.IlmModule;
@@ -19,7 +18,6 @@ public abstract class BaseGUI extends JPanel implements Observer {
 	protected SystemConfig _config;
 	private ArrayList<DomainGUI> _domainGUIList;
 	private IAssignment _assignments;
-	private IModulesLists _modules;
 	protected int _activeDomainGUI;
 
 	public BaseGUI(SystemConfig config, DomainGUI domainGUI) {
@@ -29,14 +27,13 @@ public abstract class BaseGUI extends JPanel implements Observer {
 		_domainGUIList.add(domainGUI);
 	}
 
-	public void setAssignmentCommands(IAssignment assignments, IModulesLists modules) {
+	public void setAssignmentCommands(IAssignment assignments) {
 		_assignments = assignments;
-		_modules = modules;
 	}
 
 	public void initGUI() {
 		initAssignments();
-		initIlmModules(_modules.getIlmModuleList().values());
+		initIlmModules(_assignments.getIlmModuleList().values());
 	}
 
 	private void initAssignments() {
@@ -64,7 +61,7 @@ public abstract class BaseGUI extends JPanel implements Observer {
 	}
 	
 	protected void setActiveAssignment(int index) {
-		for(IlmModule module: _modules.getIlmModuleList().values()) {
+		for(IlmModule module: _assignments.getIlmModuleList().values()) {
 			module.setAssignmentIndex(index);
 		}
 		// TODO Auto-generated method stub

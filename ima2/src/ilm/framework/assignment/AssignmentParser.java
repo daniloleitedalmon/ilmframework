@@ -6,19 +6,26 @@ import ilm.framework.domain.DomainConverter;
 import ilm.framework.modules.AssignmentModule;
 import ilm.framework.modules.IlmModule;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 final class AssignmentParser {
@@ -38,7 +45,7 @@ final class AssignmentParser {
 		return assignment;
 	}
 	
-	void setAssignmentModulesData(DomainConverter converter, String assignmentString,
+	public void setAssignmentModulesData(DomainConverter converter, String assignmentString,
 								  HashMap<String, IlmModule> availableList) {
 		HashMap<String, AssignmentModule> moduleList = new HashMap<String, AssignmentModule>();
 		Document doc = convertXMLStringToDoc(assignmentString);
@@ -55,25 +62,25 @@ final class AssignmentParser {
 		}
 	}
 
-	private AssignmentState getCurrentState(DomainConverter converter, String assignmentString) {
+	public AssignmentState getCurrentState(DomainConverter converter, String assignmentString) {
 		Document doc = convertXMLStringToDoc(assignmentString);
 		Node initialStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_CURRENT_NODE).item(0);
 		return converter.convertStringToAssignment(initialStateNode.getTextContent());
 	}
 
-	private AssignmentState getExpectedAnswer(DomainConverter converter, String assignmentString) {
+	public AssignmentState getExpectedAnswer(DomainConverter converter, String assignmentString) {
 		Document doc = convertXMLStringToDoc(assignmentString);
 		Node initialStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_EXPECTED_NODE).item(0);
 		return converter.convertStringToAssignment(initialStateNode.getTextContent());
 	}
 
-	private AssignmentState getInitialState(DomainConverter converter, String assignmentString) {
+	public AssignmentState getInitialState(DomainConverter converter, String assignmentString) {
 		Document doc = convertXMLStringToDoc(assignmentString);
 		Node initialStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_INITIAL_NODE).item(0);
 		return converter.convertStringToAssignment(initialStateNode.getTextContent());
 	}
 
-	private String getProposition(String assignmentString) {
+	public String getProposition(String assignmentString) {
 		Document doc = convertXMLStringToDoc(assignmentString);
 		Node header = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_HEADER_NODE).item(0);
 		for(int i = 0; i < header.getChildNodes().getLength(); i++) {
@@ -121,30 +128,58 @@ final class AssignmentParser {
 	}
 
 	public ArrayList<String> mergeMetadata(ArrayList<String> assignmentList, HashMap<String, String> metadata) {
-		String metadataString = "";
-		for(String key : metadata.keySet()) {
-			metadataString.concat("<"+key+">"+metadata.get(key)+"</"+key+">");
-		}
+		ArrayList<String> mergedList = new ArrayList<String>();
 		for(String assignment : assignmentList) {
-			assignment.concat(metadataString);
+			Document doc = convertXMLStringToDoc(assignment);
+			Node metadataNode = doc.getElementsByTagName(IlmProtocol.METADATA_LIST_NODE).item(0);
+			for(String key : metadata.keySet()) {
+				if(doc.getElementsByTagName(key).getLength() == 0) {
+					Node newNode = doc.createElement(key);
+					newNode.setTextContent(metadata.get(key));
+					metadataNode.appendChild(newNode);
+				}
+			}
+			mergedList.add(convertDocToXMLString(doc));
 		}
-		return null;
+		return mergedList;
 	}
 	
-	private Document convertXMLStringToDoc(String xmlString) {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	public static String convertDocToXMLString(Document doc) {
+		TransformerFactory factory = TransformerFactory.newInstance();
+		Transformer transformer;
 		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-		    InputSource is = new InputSource();
-		    is.setCharacterStream(new StringReader(xmlString));
-			return db.parse(is);
-		} catch (SAXException e) {
+			transformer = factory.newTransformer();
+			StringWriter writer = new StringWriter();
+			transformer.transform(new DOMSource(doc), new StreamResult(writer));
+			writer.close();
+			return writer.toString();
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Document convertXMLStringToDoc(String xmlString) {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder builder;
+		try {
+			builder = factory.newDocumentBuilder();
+	        InputStream is = new ByteArrayInputStream(xmlString.getBytes());
+	        return builder.parse(is);
 		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -17,7 +17,7 @@ import ilm.framework.modules.AssignmentModule;
 import ilm.framework.modules.AutomaticCheckingModule;
 import ilm.framework.modules.IlmModule;
 
-public final class AssignmentControl implements IAssignment, IAssignmentOperator, IModulesLists {
+public final class AssignmentControl implements IAssignment, IAssignmentOperator {
 
 	private SystemConfig _config;
 	private DomainModel _model;
