@@ -8,15 +8,23 @@ public class ActionAddSubString extends DomainAction {
     private IlmDomainModel _domain;
     
     public ActionAddSubString(String name, 
-                              String description,
-                              IlmDomainModel domain) {
+                              String description) {
         super(name, description);
+
+    }
+    
+    public void setDomain(IlmDomainModel domain) {
         _domain = domain;
     }
     
     
     public void setSubString(String substring) {
         _substring = substring;
+        _description = "add: " + substring;
+    }
+
+    public String getSubString() {
+    	return _substring;
     }
     
 

@@ -8,17 +8,24 @@ public class ActionRemoveSubString extends DomainAction {
     private IlmDomainModel _domain;
     
     public ActionRemoveSubString(String name, 
-                                 String description,
-                                 IlmDomainModel domain) {
+                                 String description) {
         super(name, description);
-        _domain = domain;
+    }
+    
+    public void setDomain(IlmDomainModel domain) {
+    	_domain = domain;
     }
     
     public void setSubString(String substring) {
         _substring = substring;
+        _description = "del: " + substring;
     }
     
 
+    public String getSubString() {
+    	return _substring;
+    }
+    
     protected void executeAction() {
         _domain.RemoveSubString(_currentState);
     }

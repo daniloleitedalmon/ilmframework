@@ -11,6 +11,10 @@ public class AssignmentState extends Observable {
         _objectList = new ArrayList<DomainObject>();
     }
     
+    public AssignmentState(ArrayList<DomainObject> list) {
+        _objectList = list;
+    }
+    
     public final void add(DomainObject object) {
         _objectList.add(object);
         setChanged();

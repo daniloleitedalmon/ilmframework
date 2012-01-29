@@ -6,7 +6,7 @@ import java.util.Observable;
 public abstract class DomainAction extends Observable implements Cloneable {
 
     private String _name;
-    private String _description;
+    protected String _description;
     protected ArrayList<DomainObject> _parameterList;
     protected AssignmentState _currentState;
     private boolean _isUndo;

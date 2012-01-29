@@ -1,8 +1,11 @@
 package ilm.framework.modules;
 
+import java.util.ArrayList;
+
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IAssignmentOperator;
+import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.domain.DomainModel;
 
 public class AutomaticCheckingModule extends OperationModule implements IlmProtocol {
@@ -23,8 +26,11 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 
 	@Override
 	public String getAnswer() {
-		return _operator.getConverter().convertAssignmentToString(
-							_assignmentList.getCurrentState(_assignmentIndex));
+		ArrayList<DomainObject> list = new ArrayList<DomainObject>();
+		for(int i = 0; i < _assignmentList.getCurrentState(_assignmentIndex).size(); i++) {
+			list.add(_assignmentList.getCurrentState(_assignmentIndex).get(i));
+		}
+		return _operator.getConverter().convertObjectToString(list);
 	}
 
 	public void setModel(DomainModel model) {

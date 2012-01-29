@@ -2,6 +2,7 @@ package ilm.framework.assignment;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
+import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.modules.AssignmentModule;
 import ilm.framework.modules.IlmModule;
@@ -64,20 +65,23 @@ final class AssignmentParser {
 
 	public AssignmentState getCurrentState(DomainConverter converter, String assignmentString) {
 		Document doc = convertXMLStringToDoc(assignmentString);
-		Node initialStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_CURRENT_NODE).item(0);
-		return converter.convertStringToAssignment(initialStateNode.getTextContent());
+		Node currentStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_CURRENT_NODE).item(0);
+		ArrayList<DomainObject> list = converter.convertStringToObject(currentStateNode.getTextContent());
+		return new AssignmentState(list);
 	}
 
 	public AssignmentState getExpectedAnswer(DomainConverter converter, String assignmentString) {
 		Document doc = convertXMLStringToDoc(assignmentString);
-		Node initialStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_EXPECTED_NODE).item(0);
-		return converter.convertStringToAssignment(initialStateNode.getTextContent());
+		Node expectedStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_EXPECTED_NODE).item(0);
+		ArrayList<DomainObject> list = converter.convertStringToObject(expectedStateNode.getTextContent());
+		return new AssignmentState(list);
 	}
 
 	public AssignmentState getInitialState(DomainConverter converter, String assignmentString) {
 		Document doc = convertXMLStringToDoc(assignmentString);
 		Node initialStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_INITIAL_NODE).item(0);
-		return converter.convertStringToAssignment(initialStateNode.getTextContent());
+		ArrayList<DomainObject> list = converter.convertStringToObject(initialStateNode.getTextContent());
+		return new AssignmentState(list);
 	}
 
 	public String getProposition(String assignmentString) {

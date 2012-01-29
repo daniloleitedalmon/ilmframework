@@ -7,14 +7,14 @@ public class IlmDomainModel extends DomainModel {
 
 	private int _objCount = 1;
 	
-	void AddSubString(AssignmentState state, String substring) {
+	public void AddSubString(AssignmentState state, String substring) {
 	    String name = substring + _objCount;	    
 	    _objCount++;
 	    ObjectSubString objectSubString = new ObjectSubString(name, substring, substring);
 	    state.add(objectSubString);
 	}
 
-	void RemoveSubString(AssignmentState state) {
+	public void RemoveSubString(AssignmentState state) {
 	    state.remove(state.size()-1);
 	}
 	
