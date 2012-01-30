@@ -34,9 +34,9 @@ final class AssignmentParser {
 	public Assignment convertStringToAssignment(DomainConverter converter,	
 												String assignmentString) {
 		String proposition = getProposition(assignmentString);
-		AssignmentState initialState = getInitialState(converter, assignmentString);
-		AssignmentState currentState = getCurrentState(converter, assignmentString);
-		AssignmentState expectedState = getExpectedAnswer(converter, assignmentString);
+		AssignmentState initialState = getState(converter, assignmentString, IlmProtocol.ASSIGNMENT_INITIAL_NODE);
+		AssignmentState currentState = getState(converter, assignmentString, IlmProtocol.ASSIGNMENT_CURRENT_NODE);
+		AssignmentState expectedState = getState(converter, assignmentString, IlmProtocol.ASSIGNMENT_EXPECTED_NODE);
 		HashMap<String, String> config = getConfig(assignmentString);
 		HashMap<String, String> metadata = getMetadata(assignmentString);
 		
@@ -47,7 +47,7 @@ final class AssignmentParser {
 	}
 	
 	public void setAssignmentModulesData(DomainConverter converter, String assignmentString,
-								  HashMap<String, IlmModule> availableList) {
+								  		 HashMap<String, IlmModule> availableList) {
 		HashMap<String, AssignmentModule> moduleList = new HashMap<String, AssignmentModule>();
 		Document doc = convertXMLStringToDoc(assignmentString);
 		Node moduleNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_MODULES_NODE).item(0);
@@ -63,87 +63,102 @@ final class AssignmentParser {
 		}
 	}
 
-	public AssignmentState getCurrentState(DomainConverter converter, String assignmentString) {
-		Document doc = convertXMLStringToDoc(assignmentString);
-		Node currentStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_CURRENT_NODE).item(0);
-		ArrayList<DomainObject> list = converter.convertStringToObject(currentStateNode.getTextContent());
-		return new AssignmentState(list);
+	public AssignmentState getState(DomainConverter converter, String assignmentString, String nodeName) {
+		int startIndex = assignmentString.indexOf("<" + nodeName + ">") + 2 + nodeName.length();
+		int endIndex = assignmentString.indexOf("</" + nodeName + ">");
+		String objectListString = assignmentString.substring(startIndex, endIndex);
+		ArrayList<DomainObject> list = converter.convertStringToObject(objectListString);
+		AssignmentState state = new AssignmentState();
+		state.setList(list);
+		return state;
 	}
-
-	public AssignmentState getExpectedAnswer(DomainConverter converter, String assignmentString) {
-		Document doc = convertXMLStringToDoc(assignmentString);
-		Node expectedStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_EXPECTED_NODE).item(0);
-		ArrayList<DomainObject> list = converter.convertStringToObject(expectedStateNode.getTextContent());
-		return new AssignmentState(list);
-	}
-
-	public AssignmentState getInitialState(DomainConverter converter, String assignmentString) {
-		Document doc = convertXMLStringToDoc(assignmentString);
-		Node initialStateNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_INITIAL_NODE).item(0);
-		ArrayList<DomainObject> list = converter.convertStringToObject(initialStateNode.getTextContent());
-		return new AssignmentState(list);
-	}
-
+	
 	public String getProposition(String assignmentString) {
-		Document doc = convertXMLStringToDoc(assignmentString);
-		Node header = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_HEADER_NODE).item(0);
-		for(int i = 0; i < header.getChildNodes().getLength(); i++) {
-			String nodeName = header.getChildNodes().item(i).getNodeName();
-			if(nodeName.equals(IlmProtocol.ASSIGNMENT_PROPOSITION)) {
-				return header.getChildNodes().item(i).getTextContent();
-			}
-		}
-		return null;
+		int startIndex = assignmentString.indexOf("<" + IlmProtocol.ASSIGNMENT_PROPOSITION + ">");
+		int endIndex = assignmentString.indexOf("</" + IlmProtocol.ASSIGNMENT_PROPOSITION + ">");
+		return assignmentString.substring(startIndex + 2 + IlmProtocol.ASSIGNMENT_PROPOSITION.length(), endIndex);
 	}
 
 	public ArrayList<String> getAssignmentFileList(String metadataFileContent) {
+		int listLength = IlmProtocol.FILE_LIST_NODE.length();
+		int startIndex = metadataFileContent.indexOf("<" + IlmProtocol.FILE_LIST_NODE + ">");
+		int endIndex = metadataFileContent.indexOf("</" + IlmProtocol.FILE_LIST_NODE + ">");
+		String fileListString = metadataFileContent.substring(startIndex, endIndex + 3 + listLength);
+
 		ArrayList<String> assignmentFileList = new ArrayList<String>();
-		Document doc = convertXMLStringToDoc(metadataFileContent);
-		Node fileNode = doc.getElementsByTagName(IlmProtocol.FILE_LIST_NODE).item(0);
-		NodeList assignmentNodeList = fileNode.getChildNodes();
-		for(int i = 0; i < assignmentNodeList.getLength(); i++) {
-			if(assignmentNodeList.item(i).getNodeName().equals(IlmProtocol.ASSIGNMENT_FILE_NODE)) {
-				assignmentFileList.add(assignmentNodeList.item(i).getTextContent());
-			}
-		}
+		int fileLength = IlmProtocol.ASSIGNMENT_FILE_NODE.length();
+		endIndex = 0;
+		do {
+			startIndex = fileListString.indexOf("<" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">", endIndex) + 2 + fileLength;
+			endIndex = fileListString.indexOf("</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">", startIndex);
+			assignmentFileList.add(fileListString.substring(startIndex, endIndex));
+		} while (endIndex < fileListString.length() - 6 - listLength - fileLength);
 		return assignmentFileList;
 	}
 
 	public HashMap<String, String> getConfig(String metadataFileContent) {
+		int listLength = IlmProtocol.CONFIG_LIST_NODE.length();
+		int startIndex = metadataFileContent.indexOf("<" + IlmProtocol.CONFIG_LIST_NODE + ">");
+		int endIndex = metadataFileContent.indexOf("</" + IlmProtocol.CONFIG_LIST_NODE + ">");
+		String configListString = metadataFileContent.substring(startIndex, endIndex + 3 + listLength);
+
 		HashMap<String, String> configMap = new HashMap<String, String>();
-		Document doc = convertXMLStringToDoc(metadataFileContent);
-		Node configNode = doc.getElementsByTagName(IlmProtocol.CONFIG_LIST_NODE).item(0);
-		NodeList valuesNodeList = configNode.getChildNodes();
-		for(int i = 0; i < valuesNodeList.getLength(); i++) {
-			configMap.put(valuesNodeList.item(i).getNodeName(), valuesNodeList.item(i).getTextContent());
-		}
+		int configLength = 0;
+		endIndex = listLength;
+		do {
+			startIndex = configListString.indexOf("<", endIndex + 1);
+			configLength = configListString.indexOf(">", startIndex) - startIndex;
+			endIndex = configListString.indexOf("</", startIndex);
+			configMap.put(configListString.substring(startIndex + 1, startIndex + configLength), 
+						  configListString.substring(startIndex + configLength + 1, endIndex));
+		} while(endIndex < configListString.length() - 6 - listLength - configLength);
 		return configMap;
 	}
 
 	public HashMap<String, String> getMetadata(String metadataFileContent) {
+		int listLength = IlmProtocol.METADATA_LIST_NODE.length();
+		int startIndex = metadataFileContent.indexOf("<" + IlmProtocol.METADATA_LIST_NODE + ">");
+		int endIndex = metadataFileContent.indexOf("</" + IlmProtocol.METADATA_LIST_NODE + ">");
+		String metadataListString = metadataFileContent.substring(startIndex, endIndex + 3 + listLength);
+
 		HashMap<String, String> metadataMap = new HashMap<String, String>();
-		Document doc = convertXMLStringToDoc(metadataFileContent);
-		Node metadataNode = doc.getElementsByTagName(IlmProtocol.METADATA_LIST_NODE).item(0);
-		NodeList valuesNodeList = metadataNode.getChildNodes();
-		for(int i = 0; i < valuesNodeList.getLength(); i++) {
-			metadataMap.put(valuesNodeList.item(i).getNodeName(), valuesNodeList.item(i).getTextContent());
-		}
+		int metadataLength = 0;
+		endIndex = listLength;
+		do {
+			startIndex = metadataListString.indexOf("<", endIndex + 1);
+			metadataLength = metadataListString.indexOf(">", startIndex) - startIndex;
+			endIndex = metadataListString.indexOf("</", startIndex);
+			metadataMap.put(metadataListString.substring(startIndex + 1, startIndex + metadataLength), 
+						  metadataListString.substring(startIndex + metadataLength + 1, endIndex));
+		} while(endIndex < metadataListString.length() - 6 - listLength - metadataLength);
 		return metadataMap;
 	}
 
 	public ArrayList<String> mergeMetadata(ArrayList<String> assignmentList, HashMap<String, String> metadata) {
+		String metadataString = "";
+		for(String key : metadata.keySet()) {
+			metadataString += "<" + key + ">" + metadata.get(key) + "</" + key + ">";  
+		}
+		
+		int metadataIndex = 0;
+		String mergedAssignment = "";
 		ArrayList<String> mergedList = new ArrayList<String>();
 		for(String assignment : assignmentList) {
-			Document doc = convertXMLStringToDoc(assignment);
-			Node metadataNode = doc.getElementsByTagName(IlmProtocol.METADATA_LIST_NODE).item(0);
-			for(String key : metadata.keySet()) {
-				if(doc.getElementsByTagName(key).getLength() == 0) {
-					Node newNode = doc.createElement(key);
-					newNode.setTextContent(metadata.get(key));
-					metadataNode.appendChild(newNode);
-				}
+			metadataIndex = assignment.indexOf("<" + IlmProtocol.METADATA_LIST_NODE + ">");
+			if(metadataIndex == -1) {
+				metadataString = "<" + IlmProtocol.METADATA_LIST_NODE + ">" +
+								 metadataString +
+								 "</" + IlmProtocol.METADATA_LIST_NODE + ">";
+				mergedAssignment = assignment.substring(0, assignment.indexOf("</" + IlmProtocol.PACKAGE_NODE + ">"));
+				mergedAssignment += metadataString + "</" + IlmProtocol.PACKAGE_NODE + ">";
+				mergedList.add(mergedAssignment);
+			} else {
+				int endIndex = assignment.indexOf("</" + IlmProtocol.METADATA_LIST_NODE + ">");
+				mergedAssignment = assignment.substring(0, endIndex);
+				mergedAssignment += metadataString + "</" + IlmProtocol.METADATA_LIST_NODE + ">" +
+									assignment.substring(endIndex +	3 + IlmProtocol.METADATA_LIST_NODE.length());
+				mergedList.add(mergedAssignment);
 			}
-			mergedList.add(convertDocToXMLString(doc));
 		}
 		return mergedList;
 	}

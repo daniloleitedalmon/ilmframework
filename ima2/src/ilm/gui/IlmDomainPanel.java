@@ -1,6 +1,7 @@
 package ilm.gui;
 
 import ilm.framework.assignment.model.AssignmentState;
+import ilm.framework.assignment.model.DomainObject;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -80,13 +81,10 @@ public class IlmDomainPanel extends JPanel {
     public void update(Observable o, Object arg) {
         if(o instanceof AssignmentState) {
             AssignmentState state = (AssignmentState)o;
-            
             String temp = "";
-            
-            for(int i = 0; i < state.size(); i++) {
-                temp = temp + state.get(i).getDescription();
-            }
-            
+            for(DomainObject obj : state.getList()) {
+            	temp += obj.getDescription();
+            }            
             resultLabel.setText(temp);
         }
         

@@ -2,6 +2,13 @@ package ilm.framework.assignment;
 
 import static org.junit.Assert.*;
 
+import ilm.framework.IlmProtocol;
+import ilm.framework.assignment.model.AssignmentState;
+import ilm.framework.assignment.model.DomainObject;
+import ilm.framework.domain.DomainConverter;
+import ilm.model.IlmDomainConverter;
+import ilm.model.ObjectSubString;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,21 +51,55 @@ public class AssignmentParserTests {
 								"<proposition>Bla bla bla</proposition>" +
 							  "</header>" +
 							  "<initial>" +
-								"<object>Point1</object>" +
-								"<object>Point2</object>" +
-								"<object>Point3</object>" +
-								"<object>Point4</object>" +
+									"<objects>" +
+									"<objectsubstring>" +
+									"<name>a</name>" +
+									"<description>a</description>" +
+									"<substring>a</substring>" +
+									"</objectsubstring>" +
+									"<objectsubstring>" +
+									"<name>s</name>" +
+									"<description>s</description>" +
+									"<substring>s</substring>" +
+									"</objectsubstring>" +
+									"<objectsubstring>" +
+									"<name>q</name>" +
+									"<description>q</description>" +
+									"<substring>q</substring>" +
+									"</objectsubstring>" +
+									"<objectsubstring>" +
+									"<name>t</name>" +
+									"<description>t</description>" +
+									"<substring>t</substring>" +
+									"</objectsubstring>" +
+									"</objects>" +					
 							  "</initial>" +
-							  "<expected>" +
-								"<object>Point5</object>" +
-								"<object>Point6</object>" +
-							  "</expected>" +
+							  "<current/>" +
+							  "<expected/>" +
 							  "<modules>" +
 							  	"<objectlist>" +
-								  "<object>Point1</object>" +
-								  "<object>Point2</object>" +
-								  "<object>Point3</object>" +
-								  "<object>Point4</object>" +
+								  	"<objects>" +
+									"<objectsubstring>" +
+									"<name>a</name>" +
+									"<description>a</description>" +
+									"<substring>a</substring>" +
+									"</objectsubstring>" +
+									"<objectsubstring>" +
+									"<name>s</name>" +
+									"<description>s</description>" +
+									"<substring>s</substring>" +
+									"</objectsubstring>" +
+									"<objectsubstring>" +
+									"<name>q</name>" +
+									"<description>q</description>" +
+									"<substring>q</substring>" +
+									"</objectsubstring>" +
+									"<objectsubstring>" +
+									"<name>t</name>" +
+									"<description>t</description>" +
+									"<substring>t</substring>" +
+									"</objectsubstring>" +
+									"</objects>" +
 								"</objectlist>" +
 								"<history/>" +
 								"<undoredo/>" +
@@ -77,43 +118,55 @@ public class AssignmentParserTests {
 	
 	@Test
 	public void testConvertStringToAssignment() {
-		//no
+		//ok
 	}
 	
 	@Test
 	public void testSetAssignmentModulesData() {
-		//no
+		//ok
 	}
 	
 	@Test
-	public void testGetCurrentState() {
-		//no
+	public void testGetState() {
+		AssignmentState expected = new AssignmentState();
+		ArrayList<DomainObject> objList = new ArrayList<DomainObject>();
+		objList.add(new ObjectSubString("a", "a", "a"));
+		objList.add(new ObjectSubString("s", "s", "s"));
+		objList.add(new ObjectSubString("q", "q", "q"));
+		objList.add(new ObjectSubString("t", "t", "t"));
+		expected.setList(objList);
+		
+		DomainConverter converter = new IlmDomainConverter();
+		AssignmentState result = objUnderTest.getState(converter, testAssignmentString, IlmProtocol.ASSIGNMENT_INITIAL_NODE);
+		assertTrue(compareDomainObjectList(expected.getList(), result.getList()));
 	}
 	
-	@Test
-	public void testGetExpectedAnswer() {
-		//no
-	}
-	
-	@Test
-	public void testGetInitialState() {
-		//no
+	private boolean compareDomainObjectList(ArrayList<DomainObject> listA, ArrayList<DomainObject> listB) {
+		if(listA.size() != listB.size()) {
+			return false;
+		}
+		for(int i = 0; i < listA.size(); i++) {
+			if(!listA.get(i).equals(listB.get(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Test
 	public void testGetProposition() {
-		String expectedProposition = "Bla bla bla";
-		String resultProposition = objUnderTest.getProposition(testAssignmentString);
-		assertEquals(expectedProposition, resultProposition);
+		String expected = "Bla bla bla";
+		String result = objUnderTest.getProposition(testAssignmentString);
+		assertEquals(expected, result);
 	}
 	
 	@Test
 	public void testGetAssignmentFileList() {
-		ArrayList<String> expectedList = new ArrayList<String>();
-		expectedList.add("exercicio_teste.geo");
-		expectedList.add("exercicio_teste2.geo");
-	    ArrayList<String> resultList = objUnderTest.getAssignmentFileList(testMetadataString);
-	    assertEquals(expectedList, resultList);
+		ArrayList<String> expected = new ArrayList<String>();
+		expected.add("exercicio_teste.geo");
+		expected.add("exercicio_teste2.geo");
+	    ArrayList<String> result = objUnderTest.getAssignmentFileList(testMetadataString);
+	    assertEquals(expected, result);
 	}
 	
 	@Test
@@ -140,15 +193,17 @@ public class AssignmentParserTests {
 		HashMap<String, String> metadataMap = new HashMap<String, String>();
 		metadataMap.put("color", "Red");
 		metadataMap.put("size", "Big");
-		String expectedString = testAssignmentString.substring(0, 554) + 
+		String expected = testAssignmentString.substring(0, testAssignmentString.length() - 6 - 
+															IlmProtocol.METADATA_LIST_NODE.length() -
+															IlmProtocol.ASSIGNMENT_FILE_NODE.length()) + 
 											  "<color>Red</color>" +
 											  "<size>Big</size>" +
 											"</metadata>" +
 										  "</assignment>";
 		ArrayList<String> assignmentList = new ArrayList<String>();
 		assignmentList.add(testAssignmentString);
-		ArrayList<String> resultString = objUnderTest.mergeMetadata(assignmentList, metadataMap);
-		assertEquals(expectedString, resultString.get(0).substring(AUTO_GEN_HEADER_SIZE));
+		ArrayList<String> result = objUnderTest.mergeMetadata(assignmentList, metadataMap);
+		assertEquals(expected, result.get(0));
 	}
 	
 	@Test

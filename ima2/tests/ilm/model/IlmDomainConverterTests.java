@@ -82,19 +82,20 @@ public class IlmDomainConverterTests {
 	
 	@Test
 	public void testConvertStringToObject() {
-		ArrayList<DomainObject> resultList = objUnderTest.convertStringToObject(objListString);
-		// TODO implement methods to compare domain objects
-		// otherwise it will be impossible to use "assertEquals"
-		printObjList(objList, "expected");
-		printObjList(resultList, "result");
-		assertEquals(objList, resultList);
+		ArrayList<DomainObject> result = objUnderTest.convertStringToObject(objListString);
+		assertTrue(compareDomainObjectList(objList, result));
 	}
 	
-	private void printObjList(ArrayList<DomainObject> list, String listName) {
-		System.out.println(listName + ": ");
-		for(DomainObject o : list) {
-			System.out.println(o.getName() + ": " + o.getDescription());
+	private boolean compareDomainObjectList(ArrayList<DomainObject> listA, ArrayList<DomainObject> listB) {
+		if(listA.size() != listB.size()) {
+			return false;
 		}
+		for(int i = 0; i < listA.size(); i++) {
+			if(!listA.get(i).equals(listB.get(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Test
@@ -105,19 +106,20 @@ public class IlmDomainConverterTests {
 	
 	@Test
 	public void testConvertStringToAction() {
-		ArrayList<DomainAction> resultList = objUnderTest.convertStringToAction(actionListString);
-		// TODO implement methods to compare domain objects
-		// otherwise it will be impossible to use "assertEquals"
-		printActionList(actionList, "expected");
-		printActionList(resultList, "result");
-		assertEquals(actionList, resultList);
+		ArrayList<DomainAction> result = objUnderTest.convertStringToAction(actionListString);
+		assertTrue(compareDomainActionList(actionList, result));
 	}
 	
-	private void printActionList(ArrayList<DomainAction> list, String listName) {
-		System.out.println(listName + ": ");
-		for(DomainAction a : list) {
-			System.out.println(a.getName() + ": " + a.getDescription());
+	private boolean compareDomainActionList(ArrayList<DomainAction> listA, ArrayList<DomainAction> listB) {
+		if(listA.size() != listB.size()) {
+			return false;
 		}
+		for(int i = 0; i < listA.size(); i++) {
+			if(!listA.get(i).equals(listB.get(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Test

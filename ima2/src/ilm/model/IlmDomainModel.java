@@ -15,7 +15,7 @@ public class IlmDomainModel extends DomainModel {
 	}
 
 	public void RemoveSubString(AssignmentState state) {
-	    state.remove(state.size()-1);
+	    state.remove(state.getList().size()-1);
 	}
 	
 

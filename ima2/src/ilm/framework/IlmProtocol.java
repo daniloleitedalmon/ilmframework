@@ -20,6 +20,7 @@ public interface IlmProtocol {
 	 * File attributes from iLM specification
 	 */
 	public static final String METADATA_FILENAME = "metadata.xml";
+	public static final String PACKAGE_NODE = "package";
 	public static final String FILE_LIST_NODE = "files";
 	public static final String ASSIGNMENT_FILE_NODE = "assignment";
 	public static final String RESOURCE_FILE_NODE = "resource";

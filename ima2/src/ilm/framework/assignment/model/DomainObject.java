@@ -17,5 +17,7 @@ public abstract class DomainObject {
 	public String getDescription() {
 		return _description;
 	}
+	
+	public abstract boolean equals(DomainObject o);
     
 }

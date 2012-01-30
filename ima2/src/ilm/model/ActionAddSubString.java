@@ -7,10 +7,13 @@ public class ActionAddSubString extends DomainAction {
     private String _substring; 
     private IlmDomainModel _domain;
     
-    public ActionAddSubString(String name, 
-                              String description) {
+    public ActionAddSubString(String name, String description) {
         super(name, description);
-
+    }
+    
+    public ActionAddSubString(String name, String description, String substring) {
+    	super(name, description);
+    	setSubString(substring);
     }
     
     public void setDomain(IlmDomainModel domain) {
@@ -35,5 +38,14 @@ public class ActionAddSubString extends DomainAction {
     protected void undoAction() {
         _domain.RemoveSubString(_currentState);
     }
+
+	@Override
+	public boolean equals(DomainAction a) {
+		if(getName().equals(a.getName()) &
+			getDescription().equals(a.getDescription())) {
+			return true;
+		}
+		return false;
+	}
 
 }

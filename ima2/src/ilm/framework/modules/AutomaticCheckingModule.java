@@ -26,10 +26,7 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 
 	@Override
 	public String getAnswer() {
-		ArrayList<DomainObject> list = new ArrayList<DomainObject>();
-		for(int i = 0; i < _assignmentList.getCurrentState(_assignmentIndex).size(); i++) {
-			list.add(_assignmentList.getCurrentState(_assignmentIndex).get(i));
-		}
+		ArrayList<DomainObject> list = _assignmentList.getCurrentState(_assignmentIndex).getList();
 		return _operator.getConverter().convertObjectToString(list);
 	}
 

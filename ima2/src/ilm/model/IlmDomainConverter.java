@@ -1,17 +1,6 @@
 package ilm.model;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.assignment.model.DomainObject;
@@ -20,17 +9,21 @@ import ilm.framework.domain.DomainConverter;
 public class IlmDomainConverter implements DomainConverter {
 
 	@Override
-	public ArrayList<DomainObject> convertStringToObject(String objectListDescription) {
+	public ArrayList<DomainObject> convertStringToObject(String string) {
 		ArrayList<DomainObject> list = new ArrayList<DomainObject>();
-		Document doc = convertXMLStringToDoc(objectListDescription);
-		NodeList objectList = doc.getChildNodes().item(0).getChildNodes();
-		for(int i = 0; i < objectList.getLength(); i++) {
-			NodeList objAtt = objectList.item(i).getChildNodes();
-			ObjectSubString obj = new ObjectSubString(objAtt.item(0).getTextContent(),
-												  	  objAtt.item(1).getTextContent(),
-												  	  objAtt.item(2).getTextContent());
-			list.add(obj);
-		}
+		int startIndex, endIndex = 0;
+		String name, description, substring = "";
+		do {
+			startIndex = string.indexOf("<objectsubstring>", endIndex);
+			name = string.substring(string.indexOf("<name>", startIndex) + "<name>".length(), 
+					string.indexOf("</name>", startIndex));
+			description = string.substring(string.indexOf("<description>", startIndex) + "<description>".length(), 
+										   string.indexOf("</description>", startIndex));
+			substring = string.substring(string.indexOf("<substring>", startIndex) + "<substring>".length(), 
+					   					 string.indexOf("</substring>", startIndex));
+			endIndex = string.indexOf("</objectsubstring>", startIndex);
+			list.add(new ObjectSubString(name, description, substring));
+		} while (endIndex < string.length() - "</objectsubstring>".length() - "</objects>".length());
 		return list;
 	}
 
@@ -50,25 +43,27 @@ public class IlmDomainConverter implements DomainConverter {
 	}
 
 	@Override
-	public ArrayList<DomainAction> convertStringToAction(String actionListDescription) {
+	public ArrayList<DomainAction> convertStringToAction(String string) {
 		ArrayList<DomainAction> list = new ArrayList<DomainAction>();
-		Document doc = convertXMLStringToDoc(actionListDescription);
-		NodeList actionList = doc.getChildNodes().item(0).getChildNodes();
-		for(int i = 0; i < actionList.getLength(); i++) {
-			NodeList actionAtt = actionList.item(i).getChildNodes();
-			if(actionList.item(i).getNodeName().equals("addaction")) {
-				ActionAddSubString action = new ActionAddSubString(actionAtt.item(0).getTextContent(),
-	 															   actionAtt.item(1).getTextContent()); 
-				action.setSubString(actionAtt.item(2).getTextContent());
-				list.add(action);
+		int startIndex, endIndex = 0;
+		String name, description, substring = "";
+		do {
+			startIndex = string.indexOf("action>", endIndex);
+			name = string.substring(string.indexOf("<name>", startIndex) + "<name>".length(), 
+					string.indexOf("</name>", startIndex));
+			description = string.substring(string.indexOf("<description>", startIndex) + "<description>".length(), 
+										   string.indexOf("</description>", startIndex));
+			substring = string.substring(string.indexOf("<substring>", startIndex) + "<substring>".length(), 
+					   					 string.indexOf("</substring>", startIndex));
+			endIndex = string.indexOf("action>", startIndex + 1) + 1;
+			
+			if(string.substring(startIndex - "add".length(), startIndex).equals("add")) {
+				list.add(new ActionAddSubString(name, description, substring));
+			} else {
+				list.add(new ActionRemoveSubString(name, description, substring));
 			}
-			else if(actionList.item(i).getNodeName().equals("removeaction")) {
-				ActionRemoveSubString action = new ActionRemoveSubString(actionAtt.item(0).getTextContent(),
-						   												 actionAtt.item(1).getTextContent()); 
-				action.setSubString(actionAtt.item(2).getTextContent());
-				list.add(action);
-			}
-		}
+		} while (endIndex < string.length() - "</addaction>".length() - "</actions>".length() |
+				 endIndex < string.length() - "</removeaction>".length() - "</actions>".length());
 		return list;
 	}
 
@@ -96,26 +91,6 @@ public class IlmDomainConverter implements DomainConverter {
 		}
 		actionListString += "</actions>";
 		return actionListString;
-	}
-
-	private static Document convertXMLStringToDoc(String xmlString) {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder builder;
-		try {
-			builder = factory.newDocumentBuilder();
-	        InputStream is = new ByteArrayInputStream(xmlString.getBytes());
-	        return builder.parse(is);
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 }

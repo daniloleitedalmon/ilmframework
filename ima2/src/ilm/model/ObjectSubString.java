@@ -14,5 +14,16 @@ public class ObjectSubString extends DomainObject {
     public String getSubString() {
         return _substring;
     }
+
+	@Override
+	public boolean equals(DomainObject o) {
+		ObjectSubString obj = (ObjectSubString)o;
+		if(getSubString().equals(obj.getSubString()) & 
+		   getName().equals(obj.getName()) &
+		   getDescription().equals(obj.getDescription())) {
+			return true;
+		}
+		return false;
+	}
     
 }

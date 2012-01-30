@@ -32,8 +32,8 @@ public class ObjectListModule extends AssignmentModule {
 			
 			// TODO need a better non-brute force way to do this
 			_objectList.get(_assignmentIndex).clear();
-			for(int i = 0; i < state.size(); i++) { 
-				_objectList.get(_assignmentIndex).add(state.get(i));
+			for(DomainObject obj : state.getList()) { 
+				_objectList.get(_assignmentIndex).add(obj);
 			}
 			setChanged();
 			notifyObservers();

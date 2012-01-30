@@ -81,5 +81,7 @@ public abstract class DomainAction extends Observable implements Cloneable {
             return null;
         }
     }
+    
+    public abstract boolean equals(DomainAction a);
 
 }

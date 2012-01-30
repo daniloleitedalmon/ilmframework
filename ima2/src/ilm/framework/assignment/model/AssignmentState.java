@@ -3,18 +3,14 @@ package ilm.framework.assignment.model;
 import java.util.ArrayList;
 import java.util.Observable;
 
-public class AssignmentState extends Observable {
+public final class AssignmentState extends Observable {
 
 	private ArrayList<DomainObject> _objectList;
 
     public AssignmentState() {
         _objectList = new ArrayList<DomainObject>();
     }
-    
-    public AssignmentState(ArrayList<DomainObject> list) {
-        _objectList = list;
-    }
-    
+        
     public final void add(DomainObject object) {
         _objectList.add(object);
         setChanged();
@@ -39,8 +35,12 @@ public class AssignmentState extends Observable {
         return _objectList.get(index);
     }
     
-    public final int size() {
-        return _objectList.size();
+    public final ArrayList<DomainObject> getList() {
+    	return _objectList;
+    }
+    
+    public final void setList(ArrayList<DomainObject> list) {
+    	_objectList = list;
     }
     
 }
