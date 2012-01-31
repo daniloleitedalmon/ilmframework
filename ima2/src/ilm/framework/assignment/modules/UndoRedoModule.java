@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Stack;
 
+import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.modules.AssignmentModule;
@@ -17,7 +18,7 @@ public class UndoRedoModule extends AssignmentModule {
 		_undoStack = new ArrayList<Stack<DomainAction>>();
 		_redoStack = new ArrayList<Stack<DomainAction>>();
 		
-		_name = "undo_redo";
+		_name = IlmProtocol.UNDO_REDO_MODULE_NAME;
 		_gui = new UndoRedoModuleToolbar();
 		_observerType = ACTION_OBSERVER;
 	}
@@ -65,8 +66,12 @@ public class UndoRedoModule extends AssignmentModule {
 
 	@Override
 	public void setContentFromString(DomainConverter converter,	String moduleContent) {
-		// TODO Auto-generated method stub
-		
+		ArrayList<DomainAction> actionList = converter.convertStringToAction(moduleContent);
+		Stack<DomainAction> actionStack = new Stack<DomainAction>();
+		for(DomainAction action : actionList) {
+			actionStack.push(action);
+		}
+		_undoStack.add(actionStack);
 	}
 
 	@Override

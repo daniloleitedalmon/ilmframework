@@ -25,14 +25,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 final class AssignmentParser {
 
-	public Assignment convertStringToAssignment(DomainConverter converter,	
-												String assignmentString) {
+	public Assignment convertStringToAssignment(DomainConverter converter, String assignmentString) {
 		String proposition = getProposition(assignmentString);
 		AssignmentState initialState = getState(converter, assignmentString, IlmProtocol.ASSIGNMENT_INITIAL_NODE);
 		AssignmentState currentState = getState(converter, assignmentString, IlmProtocol.ASSIGNMENT_CURRENT_NODE);
@@ -48,17 +45,21 @@ final class AssignmentParser {
 	
 	public void setAssignmentModulesData(DomainConverter converter, String assignmentString,
 								  		 HashMap<String, IlmModule> availableList) {
-		HashMap<String, AssignmentModule> moduleList = new HashMap<String, AssignmentModule>();
-		Document doc = convertXMLStringToDoc(assignmentString);
-		Node moduleNode = doc.getElementsByTagName(IlmProtocol.ASSIGNMENT_MODULES_NODE).item(0);
-		NodeList moduleDataNodeList = moduleNode.getChildNodes();
-		for(int i = 0; i < moduleDataNodeList.getLength(); i++) {
-			String nodeName = moduleDataNodeList.item(i).getNodeName();
-			if(availableList.containsKey(nodeName)) {
-				AssignmentModule module = (AssignmentModule)availableList.get(nodeName);
-				AssignmentModule clone = (AssignmentModule)module.clone();
-				clone.setContentFromString(converter, moduleDataNodeList.item(i).getTextContent());
-				moduleList.put(clone.getName(), clone);
+		int startIndex = assignmentString.indexOf("<" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">");
+		int endIndex = assignmentString.indexOf("</" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">");
+		String moduleListString = assignmentString.substring(startIndex + IlmProtocol.ASSIGNMENT_MODULES_NODE.length() + 2, 
+															 endIndex);
+		String moduleString = "";
+		for(String key : availableList.keySet()) {
+			startIndex = moduleListString.indexOf("<" + key);
+			endIndex = moduleListString.indexOf("</" + key);
+			if(endIndex != -1) {
+				moduleString = moduleListString.substring(startIndex + key.length() + 2, endIndex);
+			} else {
+				moduleString = "";
+			}
+			if(availableList.get(key) instanceof AssignmentModule) {
+				((AssignmentModule)availableList.get(key)).setContentFromString(converter, moduleString);
 			}
 		}
 	}

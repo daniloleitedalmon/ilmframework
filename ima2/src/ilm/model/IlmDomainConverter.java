@@ -11,6 +11,10 @@ public class IlmDomainConverter implements DomainConverter {
 	@Override
 	public ArrayList<DomainObject> convertStringToObject(String string) {
 		ArrayList<DomainObject> list = new ArrayList<DomainObject>();
+		if(string.length() == 0) {
+			return list;
+		}
+		
 		int startIndex, endIndex = 0;
 		String name, description, substring = "";
 		do {
@@ -45,6 +49,10 @@ public class IlmDomainConverter implements DomainConverter {
 	@Override
 	public ArrayList<DomainAction> convertStringToAction(String string) {
 		ArrayList<DomainAction> list = new ArrayList<DomainAction>();
+		if(string.length() == 0) {
+			return list;
+		}
+		
 		int startIndex, endIndex = 0;
 		String name, description, substring = "";
 		do {

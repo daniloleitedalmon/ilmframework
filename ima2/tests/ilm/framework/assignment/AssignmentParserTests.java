@@ -5,7 +5,11 @@ import static org.junit.Assert.*;
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
+import ilm.framework.assignment.modules.HistoryModule;
+import ilm.framework.assignment.modules.ObjectListModule;
+import ilm.framework.assignment.modules.UndoRedoModule;
 import ilm.framework.domain.DomainConverter;
+import ilm.framework.modules.IlmModule;
 import ilm.model.IlmDomainConverter;
 import ilm.model.ObjectSubString;
 
@@ -77,7 +81,7 @@ public class AssignmentParserTests {
 							  "<current/>" +
 							  "<expected/>" +
 							  "<modules>" +
-							  	"<objectlist>" +
+							  	"<" + IlmProtocol.OBJECT_LIST_MODULE_NAME + ">" +
 								  	"<objects>" +
 									"<objectsubstring>" +
 									"<name>a</name>" +
@@ -100,9 +104,9 @@ public class AssignmentParserTests {
 									"<substring>t</substring>" +
 									"</objectsubstring>" +
 									"</objects>" +
-								"</objectlist>" +
-								"<history/>" +
-								"<undoredo/>" +
+								"</" + IlmProtocol.OBJECT_LIST_MODULE_NAME + ">" +
+								"<" + IlmProtocol.HISTORY_MODULE_NAME + "/>" +
+								"<" + IlmProtocol.UNDO_REDO_MODULE_NAME + "/>" +
 							  "</modules>" +
 							  "<config>" +
 							  	"<disablebuttons>" +
@@ -118,12 +122,29 @@ public class AssignmentParserTests {
 	
 	@Test
 	public void testConvertStringToAssignment() {
-		//ok
+		assertTrue(true);
 	}
 	
 	@Test
 	public void testSetAssignmentModulesData() {
-		//ok
+		DomainConverter converter = new IlmDomainConverter();
+		HashMap<String, IlmModule> ilmModuleList = new HashMap<String, IlmModule>();
+		IlmModule module = new UndoRedoModule();
+		ilmModuleList.put(module.getName(), module);
+		module = new HistoryModule();
+		ilmModuleList.put(module.getName(), module);
+		module = new ObjectListModule();
+		ilmModuleList.put(module.getName(), module);
+		objUnderTest.setAssignmentModulesData(converter, testAssignmentString, ilmModuleList);
+		
+		ArrayList<DomainObject> expected = new ArrayList<DomainObject>();
+		expected.add(new ObjectSubString("a", "a", "a"));
+		expected.add(new ObjectSubString("s", "s", "s"));
+		expected.add(new ObjectSubString("q", "q", "q"));
+		expected.add(new ObjectSubString("t", "t", "t"));
+		
+		ArrayList<DomainObject> result = ((ObjectListModule)ilmModuleList.get(IlmProtocol.OBJECT_LIST_MODULE_NAME)).getObjectList();
+		assertTrue(compareDomainObjectList(expected, result));
 	}
 	
 	@Test

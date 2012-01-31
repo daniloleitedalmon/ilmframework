@@ -58,16 +58,14 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		
 		if(numberOfPackages > 0) {
 			for(int i = 0; i < numberOfPackages; i++) {
-				String metadata = loadMetadataFile(i);
-				getConfigFromMetadataFile(metadata);
+				String metadata = loadPackageFile(i);
 				_assignmentList.addAll(createAssignments(loadAssignmentFiles(i, metadata)));
+				getConfigFromMetadataFile(metadata);
 			}
 		}
 		else {
 			_assignmentList.add(createNewAssignment());
-		}
-		for(Assignment a : _assignmentList) {
-			initAssignmentModules(a);
+			addAssignmentModules();
 		}
 	}
 
@@ -75,7 +73,10 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		ArrayList<Assignment> assignmentList = new ArrayList<Assignment>();
 		AssignmentParser parser = new AssignmentParser();
 		for(String assignmentString : stringList) {
-			assignmentList.add(parser.convertStringToAssignment(_converter, assignmentString));
+			Assignment a = parser.convertStringToAssignment(_converter, assignmentString);
+			assignmentList.add(a);
+			setModulesObservers(a);
+			parser.setAssignmentModulesData(_converter, assignmentString, _ilmModuleList);
 		}
 		return assignmentList;
 	}
@@ -85,19 +86,25 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		return new Assignment("", initialState, initialState, null);
 	}
 	
-	private void initAssignmentModules(Assignment assignment) {
-		for(String moduleName : _ilmModuleList.keySet()) {
-			if(_ilmModuleList.get(moduleName) instanceof AssignmentModule) {
-				AssignmentModule module = (AssignmentModule)_ilmModuleList.get(moduleName);
-				if(module.getObserverType() != AssignmentModule.ACTION_OBSERVER) {
-					assignment.getCurrentState().addObserver(module);
-					module.addAssignment();
+	private void addAssignmentModules() {
+		for(String key : _ilmModuleList.keySet()) {
+			if(_ilmModuleList.get(key) instanceof AssignmentModule) {
+				((AssignmentModule)_ilmModuleList.get(key)).addAssignment();
+			}
+		}
+	}
+	
+	private void setModulesObservers(Assignment assignment) {
+		for(String key : _ilmModuleList.keySet()) {
+			if(_ilmModuleList.get(key) instanceof AssignmentModule) {
+				if(((AssignmentModule)_ilmModuleList.get(key)).getObserverType() != AssignmentModule.ACTION_OBSERVER) {
+					assignment.getCurrentState().addObserver((AssignmentModule)_ilmModuleList.get(key));
 				}
 			}
 		}
 	}
 	
-	private String loadMetadataFile(int packageIndex) {
+	private String loadPackageFile(int packageIndex) {
 		String packageFilePath = _config.getValue(IlmProtocol.NUMBER_OF_ASSIGNMENTS + "_" + packageIndex);
 		try {
 			return _comm.readMetadataFile(packageFilePath);

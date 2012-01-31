@@ -32,6 +32,10 @@ public interface IlmProtocol {
 	public static final String ASSIGNMENT_CURRENT_NODE = "current";
 	public static final String ASSIGNMENT_EXPECTED_NODE = "expected";
 	public static final String ASSIGNMENT_MODULES_NODE = "modules";
+	public static final String OBJECT_LIST_MODULE_NAME = "object_list";
+	public static final String HISTORY_MODULE_NAME = "history";
+	public static final String UNDO_REDO_MODULE_NAME = "undo_redo";
+	public static final String AUTO_CHECKING_MODULE_NAME = "automatic_checking";
 	
 	/**
 	 * @return a number which represents the grade obtained by the

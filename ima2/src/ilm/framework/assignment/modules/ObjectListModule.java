@@ -3,6 +3,7 @@ package ilm.framework.assignment.modules;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.domain.DomainConverter;
@@ -15,13 +16,13 @@ public class ObjectListModule extends AssignmentModule {
 	public ObjectListModule() {
 		_objectList = new ArrayList<ArrayList<DomainObject>>();
 		
-		_name = "object_list";
+		_name = IlmProtocol.OBJECT_LIST_MODULE_NAME;
 		_gui = new ObjectListModuleToolbar();
 		_assignmentIndex = 0;
 		_observerType = OBJECT_OBSERVER;
 	}
 	
-	ArrayList<DomainObject> getObjectList() {
+	public ArrayList<DomainObject> getObjectList() {
 		return _objectList.get(_assignmentIndex);
 	}
 	
@@ -42,8 +43,7 @@ public class ObjectListModule extends AssignmentModule {
 
 	@Override
 	public void setContentFromString(DomainConverter converter,	String moduleContent) {
-		// TODO Auto-generated method stub
-		
+		_objectList.add(converter.convertStringToObject(moduleContent));
 	}
 
 	@Override

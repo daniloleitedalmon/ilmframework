@@ -3,6 +3,7 @@ package ilm.framework.assignment.modules;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.modules.AssignmentModule;
@@ -13,7 +14,7 @@ public class HistoryModule extends AssignmentModule {
 	
 	public HistoryModule() {
 		_history = new ArrayList<ArrayList<DomainAction>>();
-		_name = "history";
+		_name = IlmProtocol.HISTORY_MODULE_NAME;
 		_gui = new HistoryModuleToolbar();
 		_observerType = ACTION_OBSERVER;
 	}
@@ -42,8 +43,7 @@ public class HistoryModule extends AssignmentModule {
 
 	@Override
 	public void setContentFromString(DomainConverter converter,	String moduleContent) {
-		// TODO Auto-generated method stub
-		
+		_history.add(converter.convertStringToAction(moduleContent));
 	}
 
 	@Override
