@@ -1,7 +1,9 @@
 package ilm.framework;
 
 import ilm.framework.assignment.AssignmentControl;
+import ilm.framework.assignment.IAssignment;
 import ilm.framework.comm.CommControl;
+import ilm.framework.comm.ICommunication;
 import ilm.framework.comm.IlmAppletFileRW;
 import ilm.framework.comm.IlmDesktopFileRW;
 import ilm.framework.comm.IlmEncrypter;
@@ -20,8 +22,8 @@ public abstract class SystemFactory {
 	
 	public abstract DomainGUI createDomainGUI(SystemConfig config, DomainModel domainModel);
 	
-	public BaseGUI createBaseGUI(SystemConfig config, DomainGUI domainGUI) {
-		return new IlmBaseGUI(config, domainGUI);
+	public BaseGUI createBaseGUI(SystemConfig config, IAssignment assignment, DomainGUI domainGUI) {
+		return new IlmBaseGUI(config, assignment, domainGUI);
 	}
 
 	public CommControl createCommControl(SystemConfig config) {
@@ -37,9 +39,10 @@ public abstract class SystemFactory {
 	}
 
 	public AssignmentControl createAssignmentControl(SystemConfig config,
+													 ICommunication comm,
 													 DomainModel model,
 													 DomainConverter converter) {
-		AssignmentControl assignControl = new AssignmentControl(config, model, converter);
+		AssignmentControl assignControl = new AssignmentControl(config, comm, model, converter);
 		return assignControl;
 	}
 	

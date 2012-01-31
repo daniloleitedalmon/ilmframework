@@ -21,4 +21,6 @@ public abstract class IlmModule extends Observable {
 		_assignmentIndex = index;
 	}
 	
+	public abstract void print();
+	
 }

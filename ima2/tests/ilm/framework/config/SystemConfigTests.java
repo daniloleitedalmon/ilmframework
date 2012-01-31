@@ -29,7 +29,6 @@ public class SystemConfigTests {
 	@Test
 	public void testDefaultConstructor() {
 		try {
-		
 			Map<String, String> parameterList = new HashMap<String, String>();
 			parameterList.put("test", "success");
 			objUnderTest = new SystemConfig(true, parameterList);
@@ -37,7 +36,6 @@ public class SystemConfigTests {
 			assertEquals("pt-br", objUnderTest.getLanguage().toString());
 			assertEquals("0", objUnderTest.getValue("numberOfAssignments"));
 			assertEquals("success", objUnderTest.getValue("test"));
-			
 		} catch (InvalidPropertiesFormatException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -48,16 +46,13 @@ public class SystemConfigTests {
 	}
 	
 	@Test
-	public void testConstructorWithParameterProperties()
-	{
+	public void testConstructorWithParameterProperties() {
 		try {
-			
 			Map<String, String> parameterList = new HashMap<String, String>();
 			parameterList.put("config", "tests/ilm/framework/config/test2.properties");
 			objUnderTest = new SystemConfig(true, parameterList);
 			
 			assertEquals("fr-fr", objUnderTest.getLanguage().toString());
-			
 		} catch (InvalidPropertiesFormatException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {

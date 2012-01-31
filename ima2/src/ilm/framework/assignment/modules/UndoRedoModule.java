@@ -80,4 +80,15 @@ public class UndoRedoModule extends AssignmentModule {
 		_redoStack.add(new Stack<DomainAction>());
 	}
 
+	@Override
+	public void print() {
+		System.out.println("Name: " + _name + " size: " + _undoStack.size());
+		for(Stack<DomainAction> stack : _undoStack) {
+			System.out.println("size: " + stack.size());
+			for(DomainAction a : stack) {
+				System.out.println(a.getName() + " " + a.getDescription());
+			}
+		}
+	}
+
 }

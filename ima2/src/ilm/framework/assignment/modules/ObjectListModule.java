@@ -51,4 +51,15 @@ public class ObjectListModule extends AssignmentModule {
 		_objectList.add(new ArrayList<DomainObject>());
 	}
 
+	@Override
+	public void print() {
+		System.out.println("Name: " + _name + "size: " + _objectList.size());
+		for(ArrayList<DomainObject> list : _objectList) {
+			System.out.println("size: " + list.size());
+			for(DomainObject obj : list) {
+				System.out.println(obj.getName() + " " + obj.getDescription());
+			}
+		}
+	}
+
 }

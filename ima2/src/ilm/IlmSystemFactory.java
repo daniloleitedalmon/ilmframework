@@ -2,6 +2,7 @@ package ilm;
 
 import ilm.framework.SystemFactory;
 import ilm.framework.assignment.AssignmentControl;
+import ilm.framework.comm.ICommunication;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.domain.DomainGUI;
@@ -31,9 +32,10 @@ public class IlmSystemFactory extends SystemFactory {
 
 	@Override
 	public AssignmentControl createAssignmentControl(SystemConfig config,
+													 ICommunication comm,
 													 DomainModel model,
 													 DomainConverter converter) {
-		AssignmentControl assignControl = new AssignmentControl(config, model, converter);
+		AssignmentControl assignControl = new AssignmentControl(config, comm, model, converter);
 //		assignControl.addIlmModule(new ScriptModule());
 //		assignControl.addIlmModule(new ExampleTracingTutorModule());
 //		assignControl.addIlmModule(new ScormModule(assignControl, assignControl));

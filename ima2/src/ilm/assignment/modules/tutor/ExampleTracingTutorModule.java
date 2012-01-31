@@ -26,4 +26,10 @@ public class ExampleTracingTutorModule extends AssignmentModule {
 		
 	}
 
+	@Override
+	public void print() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

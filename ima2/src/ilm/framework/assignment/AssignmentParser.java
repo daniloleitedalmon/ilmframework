@@ -65,11 +65,14 @@ final class AssignmentParser {
 	}
 
 	public AssignmentState getState(DomainConverter converter, String assignmentString, String nodeName) {
+		AssignmentState state = new AssignmentState();
 		int startIndex = assignmentString.indexOf("<" + nodeName + ">") + 2 + nodeName.length();
 		int endIndex = assignmentString.indexOf("</" + nodeName + ">");
+		if(startIndex == -1 | endIndex == -1) {
+			return state;
+		}
 		String objectListString = assignmentString.substring(startIndex, endIndex);
 		ArrayList<DomainObject> list = converter.convertStringToObject(objectListString);
-		AssignmentState state = new AssignmentState();
 		state.setList(list);
 		return state;
 	}
@@ -93,7 +96,7 @@ final class AssignmentParser {
 			startIndex = fileListString.indexOf("<" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">", endIndex) + 2 + fileLength;
 			endIndex = fileListString.indexOf("</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">", startIndex);
 			assignmentFileList.add(fileListString.substring(startIndex, endIndex));
-		} while (endIndex < fileListString.length() - 6 - listLength - fileLength);
+		} while (endIndex < fileListString.lastIndexOf("</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">"));
 		return assignmentFileList;
 	}
 
@@ -112,7 +115,8 @@ final class AssignmentParser {
 			endIndex = configListString.indexOf("</", startIndex);
 			configMap.put(configListString.substring(startIndex + 1, startIndex + configLength), 
 						  configListString.substring(startIndex + configLength + 1, endIndex));
-		} while(endIndex < configListString.length() - 6 - listLength - configLength);
+			// TODO define a better threshold - differences when there are breaklines chars
+		} while(endIndex < configListString.lastIndexOf("</" + IlmProtocol.CONFIG_LIST_NODE + ">") - configLength - 4);
 		return configMap;
 	}
 
@@ -130,8 +134,9 @@ final class AssignmentParser {
 			metadataLength = metadataListString.indexOf(">", startIndex) - startIndex;
 			endIndex = metadataListString.indexOf("</", startIndex);
 			metadataMap.put(metadataListString.substring(startIndex + 1, startIndex + metadataLength), 
-						  metadataListString.substring(startIndex + metadataLength + 1, endIndex));
-		} while(endIndex < metadataListString.length() - 6 - listLength - metadataLength);
+						    metadataListString.substring(startIndex + metadataLength + 1, endIndex));
+			// TODO define a better threshold - differences when there are breaklines chars
+		} while(endIndex < metadataListString.lastIndexOf("</" + IlmProtocol.METADATA_LIST_NODE + ">") - metadataLength - 4);
 		return metadataMap;
 	}
 

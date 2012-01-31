@@ -13,30 +13,27 @@ import java.util.Properties;
 public final class SystemConfig extends Observable {
 
 	private static final String CUSTOM_PROPERTIES_KEY = "config";
-	private static final String DEFAULT_PROPERTIES_FILE = "DefaultConfig.properties";
+	private static final String DEFAULT_PROPERTIES_FILE = "src/ilm/framework/config/defaultConfig.properties";
 	private Properties _parameters;
 	private boolean _isApplet;
     private Locale _currentLocale;
     
-	public SystemConfig(boolean isApplet, Map<String, String> parameterList) throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
+	public SystemConfig(boolean isApplet, Map<String, String> parameterList) 
+			throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
 		this(isApplet, parameterList, null);
 	}
 	
-	public SystemConfig(boolean isApplet, Map<String, String> parameterList, Properties properties) throws InvalidPropertiesFormatException, FileNotFoundException, IOException
-	{
-		if(properties != null)
-		{
+	public SystemConfig(boolean isApplet, Map<String, String> parameterList, Properties properties) 
+			throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
+		if(properties != null) {
 			_parameters = properties;
 		}
-		else
-		{
-			if(parameterList.containsKey(CUSTOM_PROPERTIES_KEY))
-			{
+		else {
+			if(parameterList.containsKey(CUSTOM_PROPERTIES_KEY)) {
 				_parameters = new Properties();
 				_parameters.loadFromXML(new FileInputStream(parameterList.get(CUSTOM_PROPERTIES_KEY)));
 			}
-			else
-			{
+			else {
 				_parameters = getDefaultProperties();
 			}
 		}
@@ -45,10 +42,10 @@ public final class SystemConfig extends Observable {
 		setLanguage(_parameters.getProperty("language"));
 	}
 
-	private Properties getDefaultProperties() throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
+	private Properties getDefaultProperties() 
+			throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
         Properties defaultProperties = new Properties();
         defaultProperties.loadFromXML(new FileInputStream(DEFAULT_PROPERTIES_FILE));
-
         return defaultProperties;
 	}
 	

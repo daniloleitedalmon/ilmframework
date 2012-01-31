@@ -20,15 +20,12 @@ public abstract class BaseGUI extends JPanel implements Observer {
 	private IAssignment _assignments;
 	protected int _activeDomainGUI;
 
-	public BaseGUI(SystemConfig config, DomainGUI domainGUI) {
+	public BaseGUI(SystemConfig config, IAssignment commands, DomainGUI domainGUI) {
 		_config = config;
 		_config.addObserver(this);
+		_assignments = commands;
 		_domainGUIList = new ArrayList<DomainGUI>();
 		_domainGUIList.add(domainGUI);
-	}
-
-	public void setAssignmentCommands(IAssignment assignments) {
-		_assignments = assignments;
 	}
 
 	public void initGUI() {

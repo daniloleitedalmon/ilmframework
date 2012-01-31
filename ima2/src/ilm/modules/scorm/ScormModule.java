@@ -12,4 +12,10 @@ public class ScormModule extends OperationModule {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public void print() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

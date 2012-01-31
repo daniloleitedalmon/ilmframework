@@ -3,7 +3,7 @@ package ilm.framework.modules;
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IAssignmentOperator;
 
-public class OperationModule extends IlmModule {
+public abstract class OperationModule extends IlmModule {
 
 	protected IAssignment _assignmentList;
 	protected IAssignmentOperator _operator;

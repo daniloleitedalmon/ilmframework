@@ -51,4 +51,15 @@ public class HistoryModule extends AssignmentModule {
 		_history.add(new ArrayList<DomainAction>());
 	}
 
+	@Override
+	public void print() {
+		System.out.println("Name: " + _name + " size: " + _history.size());
+		for(ArrayList<DomainAction> list : _history) {
+			System.out.println("size: " + list.size());
+			for(DomainAction a : list) {
+				System.out.println(a.getName() + " " + a.getDescription());
+			}
+		}
+	}
+
 }

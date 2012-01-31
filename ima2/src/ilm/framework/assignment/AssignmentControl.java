@@ -24,10 +24,11 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	private DomainConverter _converter;
 	private ICommunication _comm;
 	private ArrayList<Assignment> _assignmentList;
-	private HashMap<String, IlmModule> _ilmModuleList;
+	private HashMap<String, IlmModule> _moduleList;
 	
-	public AssignmentControl(SystemConfig config, DomainModel model, DomainConverter converter) {
+	public AssignmentControl(SystemConfig config, ICommunication comm, DomainModel model, DomainConverter converter) {
 		_config = config;
+		_comm = comm;
 		_model = model;
 		_converter = converter;
 		initIlmModuleList();
@@ -35,27 +36,28 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	}
 	
 	private void initIlmModuleList() {
-		_ilmModuleList = new HashMap<String, IlmModule>();
+		_moduleList = new HashMap<String, IlmModule>();
 		IlmModule module = new AutomaticCheckingModule(this, this);
-		_ilmModuleList.put(module.getName(), module);
+		((AutomaticCheckingModule)module).setModel(_model);
+		_moduleList.put(module.getName(), module);
 		module = new UndoRedoModule();
-		_ilmModuleList.put(module.getName(), module);
+		_moduleList.put(module.getName(), module);
 		module = new HistoryModule();
-		_ilmModuleList.put(module.getName(), module);
+		_moduleList.put(module.getName(), module);
 		module = new ObjectListModule();
-		_ilmModuleList.put(module.getName(), module);
+		_moduleList.put(module.getName(), module);
 	}	
 	
 	private void initAssignments() {
 		int numberOfPackages;
 		try {
-			numberOfPackages = Integer.parseInt(_config.getValue(IlmProtocol.NUMBER_OF_ASSIGNMENTS));
+			numberOfPackages = Integer.parseInt(_config.getValue(IlmProtocol.NUMBER_OF_PACKAGES));
 		}
 		catch(NumberFormatException e) {
 			numberOfPackages = 0;
 			// TODO inform the user that the number of assignment was wrong
 		}
-		
+		_assignmentList = new ArrayList<Assignment>();
 		if(numberOfPackages > 0) {
 			for(int i = 0; i < numberOfPackages; i++) {
 				String metadata = loadPackageFile(i);
@@ -76,7 +78,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 			Assignment a = parser.convertStringToAssignment(_converter, assignmentString);
 			assignmentList.add(a);
 			setModulesObservers(a);
-			parser.setAssignmentModulesData(_converter, assignmentString, _ilmModuleList);
+			parser.setAssignmentModulesData(_converter, assignmentString, _moduleList);
 		}
 		return assignmentList;
 	}
@@ -87,25 +89,25 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	}
 	
 	private void addAssignmentModules() {
-		for(String key : _ilmModuleList.keySet()) {
-			if(_ilmModuleList.get(key) instanceof AssignmentModule) {
-				((AssignmentModule)_ilmModuleList.get(key)).addAssignment();
+		for(String key : _moduleList.keySet()) {
+			if(_moduleList.get(key) instanceof AssignmentModule) {
+				((AssignmentModule)_moduleList.get(key)).addAssignment();
 			}
 		}
 	}
 	
 	private void setModulesObservers(Assignment assignment) {
-		for(String key : _ilmModuleList.keySet()) {
-			if(_ilmModuleList.get(key) instanceof AssignmentModule) {
-				if(((AssignmentModule)_ilmModuleList.get(key)).getObserverType() != AssignmentModule.ACTION_OBSERVER) {
-					assignment.getCurrentState().addObserver((AssignmentModule)_ilmModuleList.get(key));
+		for(String key : _moduleList.keySet()) {
+			if(_moduleList.get(key) instanceof AssignmentModule) {
+				if(((AssignmentModule)_moduleList.get(key)).getObserverType() != AssignmentModule.ACTION_OBSERVER) {
+					assignment.getCurrentState().addObserver((AssignmentModule)_moduleList.get(key));
 				}
 			}
 		}
 	}
 	
 	private String loadPackageFile(int packageIndex) {
-		String packageFilePath = _config.getValue(IlmProtocol.NUMBER_OF_ASSIGNMENTS + "_" + packageIndex);
+		String packageFilePath = _config.getValue(IlmProtocol.ASSIGNMENT_PACKAGE_PATH + "_" + packageIndex);
 		try {
 			return _comm.readMetadataFile(packageFilePath);
 		} catch (IOException e) {
@@ -124,7 +126,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	}
 	
 	private ArrayList<String> loadAssignmentFiles(int packageIndex, String metadataFileContent) {
-		String packageFilePath = _config.getValue(IlmProtocol.NUMBER_OF_ASSIGNMENTS + "_" + packageIndex);
+		String packageFilePath = _config.getValue(IlmProtocol.ASSIGNMENT_PACKAGE_PATH + "_" + packageIndex);
 		AssignmentParser parser = new AssignmentParser();
 		HashMap<String, String> metadata = parser.getMetadata(metadataFileContent);
 		ArrayList<String> assignmentFileList = parser.getAssignmentFileList(metadataFileContent);
@@ -137,14 +139,9 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		}
 		return null;
 	}
-	
-
-	public void setCommProtocol(ICommunication commProtocol) {
-		_comm = commProtocol;
-	}
 
 	public void addIlmModule(IlmModule module) {
-		_ilmModuleList.put(module.getName(), module);
+		_moduleList.put(module.getName(), module);
 	}
 	
 	
@@ -153,7 +150,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	 */
 	@Override
 	public HashMap<String, IlmModule> getIlmModuleList() {
-		return _ilmModuleList;
+		return _moduleList;
 	}
 
 	/**
@@ -215,4 +212,15 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		return _comm;
 	}
 
+	public void print() {
+		System.out.println("Assignments: " + _assignmentList.size());
+		for(Assignment a : _assignmentList) {
+			a.print();
+		}
+		System.out.println("Modules:");
+		for(String key : _moduleList.keySet()) {
+			_moduleList.get(key).print();
+		}
+	}
+	
 }

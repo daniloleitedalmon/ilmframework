@@ -1,6 +1,7 @@
 package ilm.framework.assignment;
 
 import ilm.framework.assignment.model.AssignmentState;
+import ilm.framework.assignment.model.DomainObject;
 
 import java.util.HashMap;
 
@@ -63,6 +64,32 @@ public class Assignment {
 	
 	public void setMetadata(HashMap<String, String> metadata) {
 		_metadata = metadata;
+	}
+	
+	public void print() {
+		System.out.println("Proposition:" + _proposition);
+		System.out.println("Initial:");
+		for(DomainObject obj : _initialState.getList()) {
+			System.out.println(obj.getName() + " " + obj.getDescription());
+		}
+		System.out.println("Current:");
+		for(DomainObject obj : _currentState.getList()) {
+			System.out.println(obj.getName() + " " + obj.getDescription());
+		}
+		if(_expectedAnswer != null) {
+			System.out.println("Expected:");
+			for(DomainObject obj : _expectedAnswer.getList()) {
+				System.out.println(obj.getName() + " " + obj.getDescription());
+			}
+		}
+		System.out.println("Config:");
+		for(String key : _config.keySet()) {
+			System.out.println(key + ": " + _config.get(key));
+		}
+		System.out.println("Metadata:");
+		for(String key : _metadata.keySet()) {
+			System.out.println(key + ": " + _metadata.get(key));
+		}
 	}
 	
 }

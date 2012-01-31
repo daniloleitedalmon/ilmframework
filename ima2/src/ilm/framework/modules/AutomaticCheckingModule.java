@@ -34,4 +34,8 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 		_model = model;
 	}
 
+	public void print() {
+		System.out.println("Name: " + _name + " index: " + _assignmentIndex + " model: " + _model.toString());
+	}
+	
 }

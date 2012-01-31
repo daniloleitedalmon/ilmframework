@@ -27,7 +27,7 @@ public class IlmDomainConverter implements DomainConverter {
 					   					 string.indexOf("</substring>", startIndex));
 			endIndex = string.indexOf("</objectsubstring>", startIndex);
 			list.add(new ObjectSubString(name, description, substring));
-		} while (endIndex < string.length() - "</objectsubstring>".length() - "</objects>".length());
+		} while (endIndex < string.lastIndexOf("</objectsubstring>"));
 		return list;
 	}
 
@@ -70,8 +70,8 @@ public class IlmDomainConverter implements DomainConverter {
 			} else {
 				list.add(new ActionRemoveSubString(name, description, substring));
 			}
-		} while (endIndex < string.length() - "</addaction>".length() - "</actions>".length() |
-				 endIndex < string.length() - "</removeaction>".length() - "</actions>".length());
+		} while (endIndex < string.lastIndexOf("</addaction>") |
+				 endIndex < string.lastIndexOf("</removeaction>"));
 		return list;
 	}
 

@@ -3,6 +3,7 @@ package ilm.framework.gui;
 import java.util.Collection;
 import java.util.Observable;
 
+import ilm.framework.assignment.IAssignment;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.gui.BaseGUI;
@@ -12,8 +13,8 @@ public class IlmBaseGUI extends BaseGUI {
 
 	private static final long serialVersionUID = 1L;
 
-	public IlmBaseGUI(SystemConfig config, DomainGUI domainGUI) {
-		super(config, domainGUI);
+	public IlmBaseGUI(SystemConfig config, IAssignment commands, DomainGUI domainGUI) {
+		super(config, commands, domainGUI);
 	}
 
 	@Override

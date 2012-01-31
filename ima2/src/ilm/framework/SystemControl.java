@@ -52,17 +52,12 @@ public final class SystemControl {
 	private void initComponents() {
 		_comm = _factory.createCommControl(_config);
 		_model = _factory.createDomainModel(_config);
-		_assignmentControl = _factory.createAssignmentControl(_config, _model, _factory.createDomainConverter());
-		_gui = _factory.createBaseGUI(_config, _factory.createDomainGUI(_config, _model));
-		initComponentsCommunication();
-	}
-	
-	private void initComponentsCommunication() {
-		_assignmentControl.setCommProtocol(_comm);
-		_gui.setAssignmentCommands(_assignmentControl);
+		_assignmentControl = _factory.createAssignmentControl(_config, _comm, _model, _factory.createDomainConverter());
+		_gui = _factory.createBaseGUI(_config, _assignmentControl, _factory.createDomainGUI(_config, _model));
 	}
 	
 	public IlmProtocol getProtocol() {
+		// TODO make this module correspond to the one within AssignmentControl
 		AutomaticCheckingModule module = (AutomaticCheckingModule)
 									_assignmentControl.getIlmModuleList().get("automatic_checking");
 		module.setModel(_model);
