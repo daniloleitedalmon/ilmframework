@@ -18,23 +18,32 @@ public final class SystemConfig extends Observable {
 	private boolean _isApplet;
     private Locale _currentLocale;
     
-	public SystemConfig(boolean isApplet, Map<String, String> parameterList) 
-			throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
+	public SystemConfig(boolean isApplet, Map<String, String> parameterList) {
 		this(isApplet, parameterList, null);
 	}
 	
-	public SystemConfig(boolean isApplet, Map<String, String> parameterList, Properties properties) 
-			throws InvalidPropertiesFormatException, FileNotFoundException, IOException {
+	public SystemConfig(boolean isApplet, Map<String, String> parameterList, Properties properties) {
 		if(properties != null) {
 			_parameters = properties;
 		}
 		else {
-			if(parameterList.containsKey(CUSTOM_PROPERTIES_KEY)) {
-				_parameters = new Properties();
-				_parameters.loadFromXML(new FileInputStream(parameterList.get(CUSTOM_PROPERTIES_KEY)));
-			}
-			else {
-				_parameters = getDefaultProperties();
+			try {
+				if(parameterList.containsKey(CUSTOM_PROPERTIES_KEY)) {
+					_parameters = new Properties();
+					_parameters.loadFromXML(new FileInputStream(parameterList.get(CUSTOM_PROPERTIES_KEY)));
+				}
+				else {
+					_parameters = getDefaultProperties();		
+				}
+			} catch (InvalidPropertiesFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		_isApplet = isApplet;

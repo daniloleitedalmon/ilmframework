@@ -1,8 +1,5 @@
 package ilm.framework;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 
 import ilm.framework.assignment.AssignmentControl;
@@ -30,21 +27,7 @@ public final class SystemControl {
 			parser = new DesktopParameterListParser();
 		}		
 		Map<String,String> parsedParameterList = parser.Parse(parameterList);
-		
-		// TODO Decidir se aqui as excecoes serao tratadas ou repassadas.
-		// eu acho que deveria ser a própria config que trata as exceções
-		// uma vez que são exceções específicas da configuração e o SystemControl
-		// deveria saber só coisas genéricas do sistema inteiro
-		try {
-			_config = new SystemConfig(isApplet, parsedParameterList);
-		} catch (InvalidPropertiesFormatException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		_config = new SystemConfig(isApplet, parsedParameterList);
 		_factory = factory;
 		initComponents();
 	}
@@ -57,11 +40,7 @@ public final class SystemControl {
 	}
 	
 	public IlmProtocol getProtocol() {
-		// TODO make this module correspond to the one within AssignmentControl
-		AutomaticCheckingModule module = (AutomaticCheckingModule)
-									_assignmentControl.getIlmModuleList().get("automatic_checking");
-		module.setModel(_model);
-		return module;
+		return (AutomaticCheckingModule)_assignmentControl.getIlmModuleList().get(IlmProtocol.AUTO_CHECKING_MODULE_NAME);
 	}
 	
 	public void startDesktopGUI() {

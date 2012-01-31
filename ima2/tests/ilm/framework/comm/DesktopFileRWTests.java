@@ -2,6 +2,8 @@ package ilm.framework.comm;
 
 import static org.junit.Assert.*;
 
+import ilm.framework.IlmProtocol;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,15 +16,99 @@ import org.junit.Test;
 public class DesktopFileRWTests {
 
 	private IlmDesktopFileRW objUnderTest;
+	private String testMetadataString;
+	private String testAssignmentString;
 	
 	@Before
 	public void setUp() throws Exception {
 		objUnderTest = new IlmDesktopFileRW();
-	}
-	
-	@Test
-	public void testConstructor() {
 		
+		testMetadataString = 
+				  "<package>" + 
+				    "<files>" +
+				      "<assignment>exercicio_teste.geo</assignment>" +
+				      "<assignment>exercicio_teste2.geo</assignment>" +
+				    "</files>" +
+				    "<config>" +
+				      "<color>Blue</color>" +
+				      "<speed>Fast</speed>" +
+				    "</config>" +
+				    "<metadata>" +
+				      "<title>Titulo</title>" +
+				      "<country>Brasil</country>" +
+				      "<date>25/01/2012</date>" +
+				    "</metadata>" +
+				  "</package>";
+		testAssignmentString =
+				"<assignment>" +
+				  "<header>" +
+					"<title>Titulo</title>" +
+					"<proposition>Bla bla bla</proposition>" +
+				  "</header>" +
+				  "<initial>" +
+						"<objects>" +
+						"<objectsubstring>" +
+						"<name>a</name>" +
+						"<description>a</description>" +
+						"<substring>a</substring>" +
+						"</objectsubstring>" +
+						"<objectsubstring>" +
+						"<name>s</name>" +
+						"<description>s</description>" +
+						"<substring>s</substring>" +
+						"</objectsubstring>" +
+						"<objectsubstring>" +
+						"<name>q</name>" +
+						"<description>q</description>" +
+						"<substring>q</substring>" +
+						"</objectsubstring>" +
+						"<objectsubstring>" +
+						"<name>t</name>" +
+						"<description>t</description>" +
+						"<substring>t</substring>" +
+						"</objectsubstring>" +
+						"</objects>" +					
+				  "</initial>" +
+				  "<current/>" +
+				  "<expected/>" +
+				  "<modules>" +
+				  	"<" + IlmProtocol.OBJECT_LIST_MODULE_NAME + ">" +
+					  	"<objects>" +
+						"<objectsubstring>" +
+						"<name>a</name>" +
+						"<description>a</description>" +
+						"<substring>a</substring>" +
+						"</objectsubstring>" +
+						"<objectsubstring>" +
+						"<name>s</name>" +
+						"<description>s</description>" +
+						"<substring>s</substring>" +
+						"</objectsubstring>" +
+						"<objectsubstring>" +
+						"<name>q</name>" +
+						"<description>q</description>" +
+						"<substring>q</substring>" +
+						"</objectsubstring>" +
+						"<objectsubstring>" +
+						"<name>t</name>" +
+						"<description>t</description>" +
+						"<substring>t</substring>" +
+						"</objectsubstring>" +
+						"</objects>" +
+					"</" + IlmProtocol.OBJECT_LIST_MODULE_NAME + ">" +
+					"<" + IlmProtocol.HISTORY_MODULE_NAME + "/>" +
+					"<" + IlmProtocol.UNDO_REDO_MODULE_NAME + "/>" +
+				  "</modules>" +
+				  "<config>" +
+				  	"<disablebuttons>" +
+				  		"<button>Button1</button>" +
+				  		"<button>Button2</button>" +
+				  	"</disablebuttons>" +
+				  "</config>" +
+				  "<metadata>" +
+				  	"<author>Danilo</author>" +
+				  "</metadata>" +
+				"</assignment>";
 	}
 	
 	@Test
@@ -66,6 +152,17 @@ public class DesktopFileRWTests {
 			e.printStackTrace();
 			fail();
 		}
+	}
+
+	@Test
+	public void testWriteAssignmentPackage() {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(testAssignmentString);
+		list.add(testAssignmentString);
+		ArrayList<String> nameList = new ArrayList<String>();
+		nameList.add("exercicio_teste.geo");
+		nameList.add("exercicio_teste2.geo");
+		objUnderTest.writeAssignmentPackage("test.zip", testMetadataString, null, null, nameList, list);
 	}
 	
 }

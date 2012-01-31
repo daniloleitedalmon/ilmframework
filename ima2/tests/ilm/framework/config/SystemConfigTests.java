@@ -3,10 +3,7 @@ package ilm.framework.config;
 import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 import java.util.Properties;
 import org.junit.Before;
@@ -28,38 +25,22 @@ public class SystemConfigTests {
 
 	@Test
 	public void testDefaultConstructor() {
-		try {
-			Map<String, String> parameterList = new HashMap<String, String>();
-			parameterList.put("test", "success");
-			objUnderTest = new SystemConfig(true, parameterList);
+		Map<String, String> parameterList = new HashMap<String, String>();
+		parameterList.put("test", "success");
+		objUnderTest = new SystemConfig(true, parameterList);
 			
-			assertEquals("pt-br", objUnderTest.getLanguage().toString());
-			assertEquals("0", objUnderTest.getValue("numberOfAssignments"));
-			assertEquals("success", objUnderTest.getValue("test"));
-		} catch (InvalidPropertiesFormatException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		assertEquals("pt-br", objUnderTest.getLanguage().toString());
+		assertEquals("0", objUnderTest.getValue("numberOfAssignments"));
+		assertEquals("success", objUnderTest.getValue("test"));
 	}
 	
 	@Test
 	public void testConstructorWithParameterProperties() {
-		try {
-			Map<String, String> parameterList = new HashMap<String, String>();
-			parameterList.put("config", "tests/ilm/framework/config/test2.properties");
-			objUnderTest = new SystemConfig(true, parameterList);
+		Map<String, String> parameterList = new HashMap<String, String>();
+		parameterList.put("config", "tests/ilm/framework/config/test2.properties");
+		objUnderTest = new SystemConfig(true, parameterList);
 			
-			assertEquals("fr-fr", objUnderTest.getLanguage().toString());
-		} catch (InvalidPropertiesFormatException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		assertEquals("fr-fr", objUnderTest.getLanguage().toString());
 	}
 
 	@Test

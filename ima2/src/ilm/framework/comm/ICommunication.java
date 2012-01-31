@@ -16,7 +16,9 @@ public interface ICommunication {
 	
 	public void writeAssignmentPackage(String packageName, 
 										String metadata, 
-										ArrayList<String> resourceList,
+										ArrayList<String> resourceNameList,
+										ArrayList<String> resourceList, 
+										ArrayList<String> assignmentNameList,
 										ArrayList<String> assignmentList)
 			throws IOException;
 	

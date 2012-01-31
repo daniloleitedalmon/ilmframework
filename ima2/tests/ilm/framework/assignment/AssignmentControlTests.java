@@ -2,10 +2,7 @@ package ilm.framework.assignment;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.InvalidPropertiesFormatException;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.comm.CommControl;
@@ -30,23 +27,12 @@ public class AssignmentControlTests {
 
 	@Before
 	public void setUp() {
-		try {
-			config = new SystemConfig(false, new HashMap<String, String>());
-			model = new IlmDomainModel();
-			converter = new IlmDomainConverter();
-			comm = new CommControl(config);
-			comm.SetEncrypter(new IlmEncrypter());
-			comm.SetFileRW(new IlmDesktopFileRW());
-		} catch (InvalidPropertiesFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		config = new SystemConfig(false, new HashMap<String, String>());
+		model = new IlmDomainModel();
+		converter = new IlmDomainConverter();
+		comm = new CommControl(config);
+		comm.SetEncrypter(new IlmEncrypter());
+		comm.SetFileRW(new IlmDesktopFileRW());
 	}
 	
 	@Test

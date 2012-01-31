@@ -3,13 +3,20 @@ package ilm.framework.comm;
 import ilm.framework.IlmProtocol;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class IlmDesktopFileRW implements ICommunication {
 
@@ -59,12 +66,57 @@ public class IlmDesktopFileRW implements ICommunication {
 	@Override
 	public void writeAssignmentPackage(String packageName, 
 										String metadata,
+										ArrayList<String> resourceNameList,
 										ArrayList<String> resourceList, 
+										ArrayList<String> assignmentNameList,
 										ArrayList<String> assignmentList) {
-		// TODO Auto-generated method stub
+		writeFile(metadata, IlmProtocol.METADATA_FILENAME);
+		for(int i = 0; i < assignmentNameList.size(); i++) {
+			writeFile(assignmentList.get(i), assignmentNameList.get(i));
+		}
 		
+		try {
+			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(packageName));
+			BufferedReader in = new BufferedReader(new FileReader(IlmProtocol.METADATA_FILENAME));
+			zos.putNextEntry(new ZipEntry(IlmProtocol.METADATA_FILENAME));
+			int c;
+			while ((c = in.read()) != -1)
+		        zos.write(c);
+			in.close();
+			zos.closeEntry();
+			for(String fileName : assignmentNameList) {
+				in = new BufferedReader(new FileReader(fileName));
+				zos.putNextEntry(new ZipEntry(fileName));
+				while ((c = in.read()) != -1)
+			        zos.write(c);
+				in.close();
+				zos.closeEntry();
+			}
+			zos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+
+	private void writeFile(String content, String fileName) {
+		try {
+			FileWriter fstream = new FileWriter(fileName);
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(content);
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public String convertInputStreamToString(InputStream in) {
 		if(in != null) {

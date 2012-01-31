@@ -59,11 +59,13 @@ public class CommControl implements ICommunication {
 	@Override
 	public void writeAssignmentPackage(String packageName, 
 										String metadata,
+										ArrayList<String> resourceNameList,
 										ArrayList<String> resourceList, 
+										ArrayList<String> assignmentNameList,
 										ArrayList<String> assignmentList) {
 		try {
-			_fileRW.writeAssignmentPackage(packageName, metadata, resourceList, 
-											_encrypter.encryptFileContent(assignmentList));
+			_fileRW.writeAssignmentPackage(packageName, metadata, resourceNameList, resourceList, 
+											assignmentNameList, _encrypter.encryptFileContent(assignmentList));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
