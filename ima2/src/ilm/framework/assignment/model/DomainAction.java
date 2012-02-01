@@ -73,6 +73,10 @@ public abstract class DomainAction extends Observable implements Cloneable {
         return _description;
     }
     
+	public void setDescription(String string) {
+		_description = string;
+	}
+    
     
     public final Object clone() {
         try {

@@ -2,6 +2,7 @@ package ilm.framework.modules;
 
 import java.util.Observer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -20,16 +21,7 @@ public abstract class IlmModuleToolbar extends JPanel implements Observer {
 		JButton button = new JButton();
 		button.setActionCommand(actionCommand);
 		button.setToolTipText(toolTipText);
-		/* TODO image load and association to button
-		String imgLocation = "images/" + imageName + ".gif";
-		URL imageURL = ToolBarDemo.class.getResource(imgLocation);
-		if (imageURL != null) {                      //image found
-			button.setIcon(new ImageIcon(imageURL, altText));
-		} else {                                     //no image found
-			button.setText(altText);
-			System.err.println("Resource not found: " + imgLocation);
-		}
-		*/
+		button.setIcon(new ImageIcon("resources/" + imageName + ".png", altText));
 		return button;
 	}
 

@@ -18,16 +18,23 @@ public class IlmDomainModel extends DomainModel {
 	    state.remove(state.getList().size()-1);
 	}
 	
-
 	@Override
 	public AssignmentState getNewAssignmentState() {
 		return new AssignmentState();
 	}
 
 	@Override
-	public float AutomaticChecking(AssignmentState currentState, AssignmentState expectedAnswer) {
-		// TODO Auto-generated method stub
-		return 0;
+	public float AutomaticChecking(AssignmentState cur, AssignmentState expected) {
+		if(cur.getList().size() != expected.getList().size()) {
+			return 0;
+		}
+		int grade = 0;
+		for(int i = 0; i < cur.getList().size(); i++) {
+			if(cur.get(i).equals(expected.get(i))) {
+				grade++;
+			}
+		}
+		return grade/cur.getList().size();
 	}
 
 }
