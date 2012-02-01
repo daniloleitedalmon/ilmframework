@@ -7,61 +7,35 @@ import ilm.framework.domain.DomainConverter;
 import ilm.framework.modules.AssignmentModule;
 import ilm.framework.modules.IlmModule;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
 final class AssignmentParser {
 
+	/**
+	 * CONVERSÃO DE STRING PARA ATIVIDADE (LEITURA DE ARQUIVOS)
+	 * @param converter
+	 * @param assignmentString
+	 * @return
+	 */
 	public Assignment convertStringToAssignment(DomainConverter converter, String assignmentString) {
 		String proposition = getProposition(assignmentString);
 		AssignmentState initialState = getState(converter, assignmentString, IlmProtocol.ASSIGNMENT_INITIAL_NODE);
 		AssignmentState currentState = getState(converter, assignmentString, IlmProtocol.ASSIGNMENT_CURRENT_NODE);
 		AssignmentState expectedState = getState(converter, assignmentString, IlmProtocol.ASSIGNMENT_EXPECTED_NODE);
-		HashMap<String, String> config = getConfig(assignmentString);
-		HashMap<String, String> metadata = getMetadata(assignmentString);
+		HashMap<String, String> config = convertStringToMap(assignmentString, IlmProtocol.CONFIG_LIST_NODE);
+		HashMap<String, String> metadata = convertStringToMap(assignmentString, IlmProtocol.METADATA_LIST_NODE);
 		
 		Assignment assignment = new Assignment(proposition, initialState, currentState, expectedState);
 		assignment.setConfig(config);
 		assignment.setMetadata(metadata);
 		return assignment;
 	}
-	
-	public void setAssignmentModulesData(DomainConverter converter, String assignmentString,
-								  		 HashMap<String, IlmModule> availableList) {
-		int startIndex = assignmentString.indexOf("<" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">");
-		int endIndex = assignmentString.indexOf("</" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">");
-		String moduleListString = assignmentString.substring(startIndex + IlmProtocol.ASSIGNMENT_MODULES_NODE.length() + 2, 
-															 endIndex);
-		String moduleString = "";
-		for(String key : availableList.keySet()) {
-			startIndex = moduleListString.indexOf("<" + key);
-			endIndex = moduleListString.indexOf("</" + key);
-			if(endIndex != -1) {
-				moduleString = moduleListString.substring(startIndex + key.length() + 2, endIndex);
-			} else {
-				moduleString = "";
-			}
-			if(availableList.get(key) instanceof AssignmentModule) {
-				((AssignmentModule)availableList.get(key)).setContentFromString(converter, moduleString);
-			}
-		}
+
+	public String getProposition(String assignmentString) {
+		int startIndex = assignmentString.indexOf("<" + IlmProtocol.ASSIGNMENT_PROPOSITION + ">");
+		int endIndex = assignmentString.indexOf("</" + IlmProtocol.ASSIGNMENT_PROPOSITION + ">");
+		return assignmentString.substring(startIndex + 2 + IlmProtocol.ASSIGNMENT_PROPOSITION.length(), endIndex);
 	}
 
 	public AssignmentState getState(DomainConverter converter, String assignmentString, String nodeName) {
@@ -76,13 +50,72 @@ final class AssignmentParser {
 		state.setList(list);
 		return state;
 	}
-	
-	public String getProposition(String assignmentString) {
-		int startIndex = assignmentString.indexOf("<" + IlmProtocol.ASSIGNMENT_PROPOSITION + ">");
-		int endIndex = assignmentString.indexOf("</" + IlmProtocol.ASSIGNMENT_PROPOSITION + ">");
-		return assignmentString.substring(startIndex + 2 + IlmProtocol.ASSIGNMENT_PROPOSITION.length(), endIndex);
+
+	public HashMap<String, String> convertStringToMap(String xmlContent, String nodeName) {
+		int listLength = nodeName.length();
+		int startIndex = xmlContent.indexOf("<" + nodeName + ">");
+		int endIndex = xmlContent.indexOf("</" + nodeName + ">");
+		String listString = xmlContent.substring(startIndex, endIndex + 3 + listLength);
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		int nodeLength = 0;
+		endIndex = listLength;
+		do {
+			startIndex = listString.indexOf("<", endIndex + 1);
+			nodeLength = listString.indexOf(">", startIndex) - startIndex;
+			endIndex = listString.indexOf("</", startIndex);
+			map.put(listString.substring(startIndex + 1, startIndex + nodeLength), 
+						  listString.substring(startIndex + nodeLength + 1, endIndex));
+			// TODO define a better threshold - differences when there are breaklines chars
+		} while(endIndex < listString.lastIndexOf("</" + nodeName + ">") - nodeLength - 4);
+		return map;
 	}
 
+	/**
+	 * CONVERSÃO DE ATIVIDADE PARA STRING (GRAVAÇÃO DE ARQUIVOS)
+	 * @param converter
+	 * @param assignment
+	 * @return
+	 */
+	public String convertAssignmentToString(DomainConverter converter, Assignment assignment) {
+		String string = "<" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">";
+		string += "<proposition>" + assignment.getProposition() + "</proposition>";
+		string += "<initial>" + converter.convertObjectToString(assignment.getInitialState().getList()) + "</initial>";
+		if(assignment.getCurrentState().getList().size() > 0) {
+			string += "<current>" + converter.convertObjectToString(assignment.getCurrentState().getList()) + "</current>";
+		} else {
+			string += "<current/>";
+		}
+		if(assignment.getExpectedAnswer().getList().size() > 0) {
+			string += "<expected>" + converter.convertObjectToString(assignment.getExpectedAnswer().getList()) + "</expected>";
+		} else {
+			string += "<expected/>";
+		}
+		string += "<config>" + convertMapToString(assignment.getConfig()) + "</config>";
+		string += "<metadata>" + convertMapToString(assignment.getMetadata()) + "</metadata>";
+		string += "</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">";
+		return string;
+	}
+	
+	/**
+	 * Convert a HashMap<String, String> to a XMLString with its contents.
+	 * The order of the parameters is inverse alphabetical order of the keys.
+	 * @param map - the HashMap<String, String> to be converted
+	 * @return - the String containing the map content in XML form
+	 */
+	public String convertMapToString(HashMap<String, String> map) {
+		String string = "";
+		for(String key : map.keySet()) {
+			string += "<" + key + ">" + map.get(key) + "</" + key + ">";
+		}
+		return string;
+	}
+
+	/**
+	 * COLETA/ESCRITA DE DADOS DO ARQUIVO DE METADADOS
+	 * @param metadataFileContent
+	 * @return
+	 */
 	public ArrayList<String> getAssignmentFileList(String metadataFileContent) {
 		int listLength = IlmProtocol.FILE_LIST_NODE.length();
 		int startIndex = metadataFileContent.indexOf("<" + IlmProtocol.FILE_LIST_NODE + ">");
@@ -99,47 +132,7 @@ final class AssignmentParser {
 		} while (endIndex < fileListString.lastIndexOf("</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">"));
 		return assignmentFileList;
 	}
-
-	public HashMap<String, String> getConfig(String metadataFileContent) {
-		int listLength = IlmProtocol.CONFIG_LIST_NODE.length();
-		int startIndex = metadataFileContent.indexOf("<" + IlmProtocol.CONFIG_LIST_NODE + ">");
-		int endIndex = metadataFileContent.indexOf("</" + IlmProtocol.CONFIG_LIST_NODE + ">");
-		String configListString = metadataFileContent.substring(startIndex, endIndex + 3 + listLength);
-
-		HashMap<String, String> configMap = new HashMap<String, String>();
-		int configLength = 0;
-		endIndex = listLength;
-		do {
-			startIndex = configListString.indexOf("<", endIndex + 1);
-			configLength = configListString.indexOf(">", startIndex) - startIndex;
-			endIndex = configListString.indexOf("</", startIndex);
-			configMap.put(configListString.substring(startIndex + 1, startIndex + configLength), 
-						  configListString.substring(startIndex + configLength + 1, endIndex));
-			// TODO define a better threshold - differences when there are breaklines chars
-		} while(endIndex < configListString.lastIndexOf("</" + IlmProtocol.CONFIG_LIST_NODE + ">") - configLength - 4);
-		return configMap;
-	}
-
-	public HashMap<String, String> getMetadata(String metadataFileContent) {
-		int listLength = IlmProtocol.METADATA_LIST_NODE.length();
-		int startIndex = metadataFileContent.indexOf("<" + IlmProtocol.METADATA_LIST_NODE + ">");
-		int endIndex = metadataFileContent.indexOf("</" + IlmProtocol.METADATA_LIST_NODE + ">");
-		String metadataListString = metadataFileContent.substring(startIndex, endIndex + 3 + listLength);
-
-		HashMap<String, String> metadataMap = new HashMap<String, String>();
-		int metadataLength = 0;
-		endIndex = listLength;
-		do {
-			startIndex = metadataListString.indexOf("<", endIndex + 1);
-			metadataLength = metadataListString.indexOf(">", startIndex) - startIndex;
-			endIndex = metadataListString.indexOf("</", startIndex);
-			metadataMap.put(metadataListString.substring(startIndex + 1, startIndex + metadataLength), 
-						    metadataListString.substring(startIndex + metadataLength + 1, endIndex));
-			// TODO define a better threshold - differences when there are breaklines chars
-		} while(endIndex < metadataListString.lastIndexOf("</" + IlmProtocol.METADATA_LIST_NODE + ">") - metadataLength - 4);
-		return metadataMap;
-	}
-
+	
 	public ArrayList<String> mergeMetadata(ArrayList<String> assignmentList, HashMap<String, String> metadata) {
 		String metadataString = "";
 		for(String key : metadata.keySet()) {
@@ -169,46 +162,46 @@ final class AssignmentParser {
 		return mergedList;
 	}
 	
-	public static String convertDocToXMLString(Document doc) {
-		TransformerFactory factory = TransformerFactory.newInstance();
-		Transformer transformer;
-		try {
-			transformer = factory.newTransformer();
-			StringWriter writer = new StringWriter();
-			transformer.transform(new DOMSource(doc), new StreamResult(writer));
-			writer.close();
-			return writer.toString();
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public String getMetadataFileContent() {
+		return "";
 	}
 
-	public static Document convertXMLStringToDoc(String xmlString) {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder builder;
-		try {
-			builder = factory.newDocumentBuilder();
-	        InputStream is = new ByteArrayInputStream(xmlString.getBytes());
-	        return builder.parse(is);
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	/**
+	 * CONVERSÃO DE DADOS DOS MÓDULOS DE ATIVIDADES
+	 * @param converter
+	 * @param assignmentString
+	 * @param availableList
+	 */
+	public void setAssignmentModulesData(DomainConverter converter, String assignmentString,
+										 HashMap<String, IlmModule> availableList) {
+		int startIndex = assignmentString.indexOf("<" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">");
+		int endIndex = assignmentString.indexOf("</" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">");
+		String moduleListString = assignmentString.substring(startIndex + IlmProtocol.ASSIGNMENT_MODULES_NODE.length() + 2, 
+															 endIndex);
+		String moduleString = "";
+		for(String key : availableList.keySet()) {
+			startIndex = moduleListString.indexOf("<" + key);
+			endIndex = moduleListString.indexOf("</" + key);
+			if(endIndex != -1) {
+				moduleString = moduleListString.substring(startIndex + key.length() + 2, endIndex);
+			} else {
+				moduleString = "";
+			}
+			if(availableList.get(key) instanceof AssignmentModule) {
+				((AssignmentModule)availableList.get(key)).setContentFromString(converter, moduleString);
+			}
 		}
-		return null;
+	}
+	
+	public String getAssignmentModulesData(DomainConverter converter, HashMap<String, IlmModule> availableList) {
+		String string = "<" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">";
+		for(String key : availableList.keySet()) {
+			if(availableList.get(key) instanceof AssignmentModule) {
+				string += ((AssignmentModule)availableList.get(key)).getStringContent(converter);
+			}
+		}
+		string += "</" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">";
+		return string;
 	}
 
 }

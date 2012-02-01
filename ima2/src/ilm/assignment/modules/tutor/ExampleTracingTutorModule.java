@@ -32,4 +32,10 @@ public class ExampleTracingTutorModule extends AssignmentModule {
 		
 	}
 
+	@Override
+	public String getStringContent(DomainConverter converter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

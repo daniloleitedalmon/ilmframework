@@ -62,4 +62,17 @@ public class ObjectListModule extends AssignmentModule {
 		}
 	}
 
+	@Override
+	public String getStringContent(DomainConverter converter) {
+		if(_objectList.get(_assignmentIndex).size() == 0) {
+			return "<" + _name + "/>";
+		}
+		String string = "<" + _name + "><objects>";
+		for(DomainObject obj : _objectList.get(_assignmentIndex)) {
+			string += obj.toXMLString();
+		}
+		string += "</objects></" + _name + ">";
+		return string;
+	}
+
 }

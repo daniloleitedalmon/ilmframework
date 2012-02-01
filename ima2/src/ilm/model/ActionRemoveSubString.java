@@ -47,4 +47,10 @@ public class ActionRemoveSubString extends DomainAction {
 		return false;
 	}
 
+	@Override
+	public String toXMLString() {
+		return "<removeaction><name>" + getName() + "</name><description>" + getDescription() + 
+				"</description><substring>" + _substring + "</substring></removeaction>";
+	}
+
 }

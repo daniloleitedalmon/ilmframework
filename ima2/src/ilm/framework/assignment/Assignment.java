@@ -53,6 +53,10 @@ public class Assignment {
 		_config = config;
 	}
 	
+	public HashMap<String, String> getConfig() {
+		return _config;
+	}
+	
 	
 	public void setMetadataParameter(String key, String value) {
 		_metadata.put(key, value);
@@ -64,6 +68,10 @@ public class Assignment {
 	
 	public void setMetadata(HashMap<String, String> metadata) {
 		_metadata = metadata;
+	}
+	
+	public HashMap<String, String> getMetadata() {
+		return _metadata;
 	}
 	
 	public void print() {

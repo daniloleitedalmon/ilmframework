@@ -19,5 +19,7 @@ public abstract class DomainObject {
 	}
 	
 	public abstract boolean equals(DomainObject o);
+	
+	public abstract String toXMLString();
     
 }

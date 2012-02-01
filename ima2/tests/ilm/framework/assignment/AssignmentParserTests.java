@@ -9,6 +9,7 @@ import ilm.framework.assignment.modules.HistoryModule;
 import ilm.framework.assignment.modules.ObjectListModule;
 import ilm.framework.assignment.modules.UndoRedoModule;
 import ilm.framework.domain.DomainConverter;
+import ilm.framework.modules.AssignmentModule;
 import ilm.framework.modules.IlmModule;
 import ilm.model.IlmDomainConverter;
 import ilm.model.ObjectSubString;
@@ -18,16 +19,12 @@ import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class AssignmentParserTests {
 
 	private AssignmentParser objUnderTest;
 	private String testMetadataString;
-	private String testAssignmentString;
-	private static final int AUTO_GEN_HEADER_SIZE = 54;
+	private String assignStr;
 	
 	@Before
 	public void setUp() {
@@ -48,12 +45,9 @@ public class AssignmentParserTests {
 							      "<date>25/01/2012</date>" +
 							    "</metadata>" +
 							  "</package>";
-		testAssignmentString =
+		assignStr =
 							"<assignment>" +
-							  "<header>" +
-								"<title>Titulo</title>" +
 								"<proposition>Bla bla bla</proposition>" +
-							  "</header>" +
 							  "<initial>" +
 									"<objects>" +
 									"<objectsubstring>" +
@@ -80,8 +74,17 @@ public class AssignmentParserTests {
 							  "</initial>" +
 							  "<current/>" +
 							  "<expected/>" +
+							  "<config>" +
+						  		"<disablebutton2>Button2</disablebutton2>" +
+						  		"<disablebutton1>Button1</disablebutton1>" +
+						  	  "</config>" +
+							  "<metadata>" +
+							  	"<author>Danilo</author>" +
+							  "</metadata>" +
 							  "<modules>" +
-							  	"<" + IlmProtocol.OBJECT_LIST_MODULE_NAME + ">" +
+								"<history/>" +
+								"<undo_redo/>" +
+							  	"<object_list>" +
 								  	"<objects>" +
 									"<objectsubstring>" +
 									"<name>a</name>" +
@@ -104,47 +107,22 @@ public class AssignmentParserTests {
 									"<substring>t</substring>" +
 									"</objectsubstring>" +
 									"</objects>" +
-								"</" + IlmProtocol.OBJECT_LIST_MODULE_NAME + ">" +
-								"<" + IlmProtocol.HISTORY_MODULE_NAME + "/>" +
-								"<" + IlmProtocol.UNDO_REDO_MODULE_NAME + "/>" +
+								"</object_list>" +
 							  "</modules>" +
-							  "<config>" +
-							  	"<disablebuttons>" +
-							  		"<button>Button1</button>" +
-							  		"<button>Button2</button>" +
-							  	"</disablebuttons>" +
-							  "</config>" +
-							  "<metadata>" +
-							  	"<author>Danilo</author>" +
-							  "</metadata>" +
 							"</assignment>";
 	}
 	
+	// from string to assignment
 	@Test
 	public void testConvertStringToAssignment() {
 		assertTrue(true);
 	}
 	
 	@Test
-	public void testSetAssignmentModulesData() {
-		DomainConverter converter = new IlmDomainConverter();
-		HashMap<String, IlmModule> ilmModuleList = new HashMap<String, IlmModule>();
-		IlmModule module = new UndoRedoModule();
-		ilmModuleList.put(module.getName(), module);
-		module = new HistoryModule();
-		ilmModuleList.put(module.getName(), module);
-		module = new ObjectListModule();
-		ilmModuleList.put(module.getName(), module);
-		objUnderTest.setAssignmentModulesData(converter, testAssignmentString, ilmModuleList);
-		
-		ArrayList<DomainObject> expected = new ArrayList<DomainObject>();
-		expected.add(new ObjectSubString("a", "a", "a"));
-		expected.add(new ObjectSubString("s", "s", "s"));
-		expected.add(new ObjectSubString("q", "q", "q"));
-		expected.add(new ObjectSubString("t", "t", "t"));
-		
-		ArrayList<DomainObject> result = ((ObjectListModule)ilmModuleList.get(IlmProtocol.OBJECT_LIST_MODULE_NAME)).getObjectList();
-		assertTrue(compareDomainObjectList(expected, result));
+	public void testGetProposition() {
+		String expected = "Bla bla bla";
+		String result = objUnderTest.getProposition(assignStr);
+		assertEquals(expected, result);
 	}
 	
 	@Test
@@ -158,8 +136,24 @@ public class AssignmentParserTests {
 		expected.setList(objList);
 		
 		DomainConverter converter = new IlmDomainConverter();
-		AssignmentState result = objUnderTest.getState(converter, testAssignmentString, IlmProtocol.ASSIGNMENT_INITIAL_NODE);
+		AssignmentState result = objUnderTest.getState(converter, assignStr, IlmProtocol.ASSIGNMENT_INITIAL_NODE);
 		assertTrue(compareDomainObjectList(expected.getList(), result.getList()));
+	}
+	
+	@Test
+	public void testConvertStringToMap() {
+		HashMap<String, String> expectedMap = new HashMap<String, String>();
+		expectedMap.put("color", "Blue");
+		expectedMap.put("speed", "Fast");
+	    HashMap<String, String> resultMap = objUnderTest.convertStringToMap(testMetadataString, IlmProtocol.CONFIG_LIST_NODE);
+	    assertEquals(expectedMap, resultMap);
+	
+	    expectedMap = new HashMap<String, String>();
+	    expectedMap.put("title", "Titulo");
+	    expectedMap.put("country", "Brasil");
+	    expectedMap.put("date", "25/01/2012");
+	    resultMap = objUnderTest.convertStringToMap(testMetadataString, IlmProtocol.METADATA_LIST_NODE);
+	    assertEquals(expectedMap, resultMap);
 	}
 	
 	private boolean compareDomainObjectList(ArrayList<DomainObject> listA, ArrayList<DomainObject> listB) {
@@ -174,13 +168,36 @@ public class AssignmentParserTests {
 		return true;
 	}
 	
+	//from assignment to string
 	@Test
-	public void testGetProposition() {
-		String expected = "Bla bla bla";
-		String result = objUnderTest.getProposition(testAssignmentString);
-		assertEquals(expected, result);
+	public void testConvertAssignmentToString() {
+		IlmDomainConverter converter = new IlmDomainConverter();
+		Assignment assignment = objUnderTest.convertStringToAssignment(converter, assignStr);
+		String result = objUnderTest.convertAssignmentToString(converter, assignment);
+		//it must remove the string data referring to the modules
+		assertEquals(assignStr.substring(0, assignStr.lastIndexOf("<modules>")), 
+				     result.substring(0, result.lastIndexOf("</assignment>")));
+	}
+		
+	@Test
+	public void testConvertMapToString() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("disablebutton2", "Button2");
+		map.put("disablebutton1", "Button1");
+  		String expected = "<disablebutton2>Button2</disablebutton2><disablebutton1>Button1</disablebutton1>";
+  		String result = objUnderTest.convertMapToString(map);
+  		assertEquals(expected, result);
+  		
+  		map = new HashMap<String, String>();
+  		map.put("title", "Titulo");
+	    map.put("country", "Brasil");
+	    map.put("date", "25/01/2012");
+	    expected = "<title>Titulo</title><date>25/01/2012</date><country>Brasil</country>";
+	    result = objUnderTest.convertMapToString(map);
+	    assertEquals(expected, result);
 	}
 	
+	//from metadata file to assignment (vice-versa)
 	@Test
 	public void testGetAssignmentFileList() {
 		ArrayList<String> expected = new ArrayList<String>();
@@ -191,71 +208,72 @@ public class AssignmentParserTests {
 	}
 	
 	@Test
-	public void testGetConfig() {
-		HashMap<String, String> expectedMap = new HashMap<String, String>();
-		expectedMap.put("color", "Blue");
-		expectedMap.put("speed", "Fast");
-	    HashMap<String, String> resultMap = objUnderTest.getConfig(testMetadataString);
-	    assertEquals(expectedMap, resultMap);
-	}
-	
-	@Test
-	public void testGetMetadata() {
-	    HashMap<String, String> expectedMap = new HashMap<String, String>();
-	    expectedMap.put("title", "Titulo");
-	    expectedMap.put("country", "Brasil");
-	    expectedMap.put("date", "25/01/2012");
-	    HashMap<String, String> resultMap = objUnderTest.getMetadata(testMetadataString);
-	    assertEquals(expectedMap, resultMap);
-	}
-	
-	@Test
 	public void testMergeMetadata() {
 		HashMap<String, String> metadataMap = new HashMap<String, String>();
 		metadataMap.put("color", "Red");
 		metadataMap.put("size", "Big");
-		String expected = testAssignmentString.substring(0, testAssignmentString.length() - 6 - 
-															IlmProtocol.METADATA_LIST_NODE.length() -
-															IlmProtocol.ASSIGNMENT_FILE_NODE.length()) + 
+		String expected = assignStr.substring(0, assignStr.lastIndexOf("</metadata>")) + 
 											  "<color>Red</color>" +
 											  "<size>Big</size>" +
-											"</metadata>" +
-										  "</assignment>";
+											assignStr.substring(assignStr.lastIndexOf("</metadata>"));
 		ArrayList<String> assignmentList = new ArrayList<String>();
-		assignmentList.add(testAssignmentString);
+		assignmentList.add(assignStr);
 		ArrayList<String> result = objUnderTest.mergeMetadata(assignmentList, metadataMap);
 		assertEquals(expected, result.get(0));
 	}
 	
 	@Test
-	public void testConvertDocToXMLString() {
-		Document doc = AssignmentParser.convertXMLStringToDoc(testMetadataString);
-		String resultString = AssignmentParser.convertDocToXMLString(doc);
-		assertEquals(resultString.substring(AUTO_GEN_HEADER_SIZE), testMetadataString);
+	public void testGetMetadataFileContent() {
+		// TODO method yet to be written
+	}
+	
+	//from modules to string (vice-versa)
+	@Test
+	public void testSetAssignmentModulesData() {
+		DomainConverter converter = new IlmDomainConverter();
+		HashMap<String, IlmModule> ilmModuleList = new HashMap<String, IlmModule>();
+		IlmModule module = new UndoRedoModule();
+		ilmModuleList.put(module.getName(), module);
+		module = new HistoryModule();
+		ilmModuleList.put(module.getName(), module);
+		module = new ObjectListModule();
+		ilmModuleList.put(module.getName(), module);
+		objUnderTest.setAssignmentModulesData(converter, assignStr, ilmModuleList);
+		
+		ArrayList<DomainObject> expected = new ArrayList<DomainObject>();
+		expected.add(new ObjectSubString("a", "a", "a"));
+		expected.add(new ObjectSubString("s", "s", "s"));
+		expected.add(new ObjectSubString("q", "q", "q"));
+		expected.add(new ObjectSubString("t", "t", "t"));
+		
+		ArrayList<DomainObject> result = ((ObjectListModule)ilmModuleList.get(IlmProtocol.OBJECT_LIST_MODULE_NAME)).getObjectList();
+		assertTrue(compareDomainObjectList(expected, result));
 	}
 	
 	@Test
-	public void testConvertXMLStringToDoc() {
-		Document doc = AssignmentParser.convertXMLStringToDoc(testMetadataString);
-		Node packageNode = doc.getChildNodes().item(0);
-		NodeList list = packageNode.getChildNodes();
-		String result = "<" + packageNode.getNodeName() + ">";
-		for(int i = 0; i < list.getLength(); i++) {
-			NodeList subList = list.item(i).getChildNodes();
-			if(subList.getLength() > 1) {
-				result += "<" + list.item(i).getNodeName() + ">";
-				for(int j = 0; j < subList.getLength(); j++) {
-					Node node = subList.item(j);
-					result += "<" + node.getNodeName() + ">" + node.getTextContent() + "</" + node.getNodeName() + ">";
-				}
-				result += "</" + list.item(i).getNodeName() + ">";
-			}
-			else {
-				result += "<" + list.item(i).getNodeName() + ">" + list.item(i).getTextContent() + "</" + list.item(i).getNodeName() + ">";
-			}
-		}
-		result += "</" + packageNode.getNodeName() + ">";
-		assertEquals(result, testMetadataString);
+	public void testGetAssignmentModuleData() {
+		DomainConverter converter = new IlmDomainConverter();
+		HashMap<String, IlmModule> ilmModuleList = new HashMap<String, IlmModule>();
+		AssignmentModule module = new UndoRedoModule();
+		module.addAssignment();
+		module.setAssignmentIndex(0);
+		ilmModuleList.put(module.getName(), module);
+		module = new HistoryModule();
+		module.addAssignment();
+		module.setAssignmentIndex(0);
+		ilmModuleList.put(module.getName(), module);
+		module = new ObjectListModule();
+		module.setContentFromString(converter, assignStr.substring(assignStr.lastIndexOf("<object_list>") 
+																	+ "<object_list>".length(), 
+																   assignStr.lastIndexOf("</object_list>")));
+		module.setAssignmentIndex(0);
+		module.print();
+		ilmModuleList.put(module.getName(), module);
+		
+		String result = objUnderTest.getAssignmentModulesData(converter, ilmModuleList);
+		assertEquals(assignStr.substring(assignStr.lastIndexOf("<modules>"), 
+					 assignStr.lastIndexOf("</modules>") + "</modules>".length()),
+					 result);
 	}
 	
 }

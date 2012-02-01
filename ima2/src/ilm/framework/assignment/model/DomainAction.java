@@ -83,5 +83,7 @@ public abstract class DomainAction extends Observable implements Cloneable {
     }
     
     public abstract boolean equals(DomainAction a);
+    
+    public abstract String toXMLString();
 
 }

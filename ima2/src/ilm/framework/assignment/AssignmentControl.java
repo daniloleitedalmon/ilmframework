@@ -119,7 +119,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	
 	private void getConfigFromMetadataFile(String metadataFileContent) {
 		AssignmentParser parser = new AssignmentParser();
-		HashMap<String, String> config = parser.getConfig(metadataFileContent);
+		HashMap<String, String> config = parser.convertStringToMap(metadataFileContent, IlmProtocol.CONFIG_LIST_NODE);
 		for(String key : config.keySet()) {
 			_config.setParameter(key, config.get(key));
 		}
@@ -128,8 +128,8 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	private ArrayList<String> loadAssignmentFiles(int packageIndex, String metadataFileContent) {
 		String packageFilePath = _config.getValue(IlmProtocol.ASSIGNMENT_PACKAGE_PATH + "_" + packageIndex);
 		AssignmentParser parser = new AssignmentParser();
-		HashMap<String, String> metadata = parser.getMetadata(metadataFileContent);
 		ArrayList<String> assignmentFileList = parser.getAssignmentFileList(metadataFileContent);
+		HashMap<String, String> metadata = parser.convertStringToMap(metadataFileContent, IlmProtocol.METADATA_LIST_NODE);
 		try {
 			ArrayList<String> assignmentList = _comm.readAssignmentFiles(packageFilePath, assignmentFileList);
 			return parser.mergeMetadata(assignmentList, metadata);

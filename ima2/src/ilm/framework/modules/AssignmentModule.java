@@ -27,4 +27,6 @@ public abstract class AssignmentModule extends IlmModule implements Observer, Cl
 	
 	public abstract void setContentFromString(DomainConverter converter, String moduleContent);
 	
+	public abstract String getStringContent(DomainConverter converter);
+	
 }

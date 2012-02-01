@@ -35,12 +35,7 @@ public class IlmDomainConverter implements DomainConverter {
 	public String convertObjectToString(ArrayList<DomainObject> objectList) {
 		String objectListString = "<objects>";
 		for(DomainObject obj : objectList) {
-			ObjectSubString subStringObj = (ObjectSubString)obj;
-			objectListString += "<objectsubstring>";
-			objectListString += "<name>" + subStringObj.getName() + "</name>";
-			objectListString += "<description>" + subStringObj.getDescription() + "</description>";
-			objectListString += "<substring>" + subStringObj.getSubString() + "</substring>";
-			objectListString += "</objectsubstring>";
+			objectListString += obj.toXMLString();
 		}
 		objectListString += "</objects>";
 		return objectListString;
@@ -79,23 +74,7 @@ public class IlmDomainConverter implements DomainConverter {
 	public String convertActionToString(ArrayList<DomainAction> actionList) {
 		String actionListString = "<actions>";
 		for(DomainAction act : actionList) {
-			if(act instanceof ActionAddSubString) {
-				ActionAddSubString addAction = (ActionAddSubString)act;
-				actionListString += "<addaction>";
-				actionListString += "<name>" + addAction.getName() + "</name>";
-				actionListString += "<description>" + addAction.getDescription() + "</description>";
-				actionListString += "<substring>" + addAction.getSubString() + "</substring>";
-				actionListString += "</addaction>";
-			}
-			else {
-				ActionRemoveSubString delAction = (ActionRemoveSubString)act;
-				actionListString += "<removeaction>";
-				actionListString += "<name>" + delAction.getName() + "</name>";
-				actionListString += "<description>" + delAction.getDescription() + "</description>";
-				actionListString += "<substring>" + delAction.getSubString() + "</substring>";
-				actionListString += "</removeaction>";
-			}
-			
+			actionListString += act.toXMLString();
 		}
 		actionListString += "</actions>";
 		return actionListString;

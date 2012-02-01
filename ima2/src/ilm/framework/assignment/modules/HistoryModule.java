@@ -62,4 +62,17 @@ public class HistoryModule extends AssignmentModule {
 		}
 	}
 
+	@Override
+	public String getStringContent(DomainConverter converter) {
+		if(_history.get(_assignmentIndex).size() == 0) {
+			return "<" + _name + "/>";
+		}
+		String string = "<" + _name + ">";
+		for(DomainAction action : _history.get(_assignmentIndex)) {
+			string += action.toXMLString();
+		}
+		string += "</" + _name + ">";
+		return string;
+	}
+
 }

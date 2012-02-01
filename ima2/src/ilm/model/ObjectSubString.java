@@ -25,5 +25,11 @@ public class ObjectSubString extends DomainObject {
 		}
 		return false;
 	}
+
+	@Override
+	public String toXMLString() {
+		return "<objectsubstring><name>" + getName() + "</name><description>" + getDescription() + 
+				"</description><substring>" + _substring + "</substring></objectsubstring>";
+	}
     
 }

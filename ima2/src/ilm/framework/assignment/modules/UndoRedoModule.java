@@ -91,4 +91,28 @@ public class UndoRedoModule extends AssignmentModule {
 		}
 	}
 
+	@Override
+	public String getStringContent(DomainConverter converter) {
+		if(_undoStack.get(_assignmentIndex).size() == 0 & _redoStack.get(_assignmentIndex).size() == 0) {
+			return "<" + _name + "/>";
+		}
+		String string = "<" + _name + ">"; 
+		if(_undoStack.get(_assignmentIndex).size() > 0) {
+			string += "<undostack>";
+			for(DomainAction action : _undoStack.get(_assignmentIndex)) {
+				string += action.toXMLString();
+			}
+			string += "</undostack>";
+		}
+		if(_redoStack.get(_assignmentIndex).size() > 0) {
+			string += "<redostack>";
+			for(DomainAction action : _redoStack.get(_assignmentIndex)) {
+				string += action.toXMLString();
+			}
+			string += "</redostack>";
+		}
+		string += "</" + _name + ">";
+		return string;
+	}
+
 }

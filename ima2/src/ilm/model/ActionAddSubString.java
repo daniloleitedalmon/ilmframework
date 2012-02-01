@@ -48,4 +48,10 @@ public class ActionAddSubString extends DomainAction {
 		return false;
 	}
 
+	@Override
+	public String toXMLString() {
+		return "<addaction><name>" + getName() + "</name><description>" + getDescription() + 
+				"</description><substring>" + _substring + "</substring></addaction>";
+	}
+
 }

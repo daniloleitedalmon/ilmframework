@@ -16,7 +16,7 @@ public class IlmDomainGUI extends DomainGUI {
 
 	private static final long serialVersionUID = 1L;
 	private IlmDomainModel _model;
-	private IlmDomainPanel _panel;
+	//private IlmDomainPanel _panel;
 	
 	public IlmDomainGUI() {
 		_actionList = new HashMap<String, DomainAction>();
