@@ -16,6 +16,7 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 		setAssignmentList(assignments);
 		setAssignmentOperator(operator);
 		_name = IlmProtocol.AUTO_CHECKING_MODULE_NAME;
+		_gui = new AutoCheckingModuleToolbar(this);
 	}
 	
 	@Override

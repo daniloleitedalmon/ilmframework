@@ -1,33 +1,44 @@
 package ilm.framework.assignment.modules;
 
+import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.JList;
 
 public class ObjectListModuleGUI extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	private ObjectListModule _objectList;
-	private JList _list = new JList();
-	
+	private JPanel contentPane;
+	private JList list;
+
 	public ObjectListModuleGUI() {
-		// TODO all user interface
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		
+		list = new JList();
+		contentPane.add(list, BorderLayout.CENTER);
 	}
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
 		if(o instanceof ObjectListModule) {
 			_objectList = (ObjectListModule)o;
-			
 			// TODO need a better non-brute force way to do this
 			DefaultListModel listModel = new DefaultListModel();
 			for(int i = 0; i < _objectList.getObjectList().size(); i++) {
 				listModel.addElement(_objectList.getObjectList().get(i).getDescription());
 			}
-			_list.setModel(listModel);
+			list.setModel(listModel);
 		}
 	}
 

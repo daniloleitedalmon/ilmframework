@@ -1,22 +1,34 @@
 package ilm.framework.assignment.modules;
 
+import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JList;
 
 public class HistoryModuleGUI extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	private HistoryModule _history;
-	private JList _list = new JList();
-	
+	private JPanel contentPane;
+	private JList list;
+
 	public HistoryModuleGUI() {
-		// TODO all user interface
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		list = new JList();
+		contentPane.add(list, BorderLayout.CENTER);
 	}
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
 		if(o instanceof HistoryModule) {
@@ -25,7 +37,7 @@ public class HistoryModuleGUI extends JFrame implements Observer {
 			for(int i = 0; i < _history.getHistory().size(); i++) {
 				listModel.addElement(_history.getHistory().get(i).getDescription());
 			}
-			_list.setModel(listModel);
+			list.setModel(listModel);
 		}
 	}
 
