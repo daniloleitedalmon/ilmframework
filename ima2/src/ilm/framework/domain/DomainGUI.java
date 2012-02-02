@@ -41,4 +41,6 @@ public abstract class DomainGUI extends JPanel implements Observer {
 	
 	public abstract ArrayList<DomainObject> getSelectedObjects();
 	
+	public abstract AssignmentState getCurrentState();
+	
 }

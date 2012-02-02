@@ -80,8 +80,12 @@ public class IlmDomainGUI extends DomainGUI {
 
 	@Override
 	public ArrayList<DomainObject> getSelectedObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		return _state.getList();
+	}
+
+	@Override
+	public AssignmentState getCurrentState() {
+		return _state;
 	}
 
 	@Override

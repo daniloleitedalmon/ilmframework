@@ -17,8 +17,9 @@ public abstract class BaseGUI extends JPanel implements Observer {
 
 	protected SystemConfig _config;
 	private ArrayList<DomainGUI> _domainGUIList;
+	private ArrayList<AuthoringGUI> _authoringGUIList;
 	private IAssignment _assignments;
-	protected int _activeDomainGUI;
+	protected int _activeAssignment;
 
 	public BaseGUI(SystemConfig config, IAssignment commands, DomainGUI domainGUI) {
 		_config = config;
@@ -26,6 +27,8 @@ public abstract class BaseGUI extends JPanel implements Observer {
 		_assignments = commands;
 		_domainGUIList = new ArrayList<DomainGUI>();
 		_domainGUIList.add(domainGUI);
+		_authoringGUIList = new ArrayList<AuthoringGUI>();
+		_authoringGUIList.add(getAuthoringGUI());
 	}
 
 	public void initGUI() {
@@ -54,10 +57,12 @@ public abstract class BaseGUI extends JPanel implements Observer {
 	public void startDesktop() {
 		// TODO Auto-generated method stub
 		// create a JForm
-		// set visible
+		// add this to its contentPane
+		// set it visible
 	}
 	
 	protected void setActiveAssignment(int index) {
+		_activeAssignment = index;
 		for(IlmModule module: _assignments.getIlmModuleList().values()) {
 			module.setAssignmentIndex(index);
 		}
@@ -69,10 +74,9 @@ public abstract class BaseGUI extends JPanel implements Observer {
 	protected abstract void setAuthoringButton();
 	
 	protected void startAuthoring() {
-		AuthoringGUI authoring = getAuthoringGUI();
-		authoring.setDomainGUI(_domainGUIList.get(_activeDomainGUI));
-		authoring.setAssignmentCommands(_assignments);
-		authoring.setVisible(true);
+		_authoringGUIList.get(_activeAssignment).setDomainGUI(_domainGUIList.get(_activeAssignment));
+		_authoringGUIList.get(_activeAssignment).setAssignmentCommands(_assignments);
+		_authoringGUIList.get(_activeAssignment).setVisible(true);
 	}
 	
 	protected abstract AuthoringGUI getAuthoringGUI();

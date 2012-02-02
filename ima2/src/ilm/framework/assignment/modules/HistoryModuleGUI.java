@@ -24,6 +24,7 @@ public class HistoryModuleGUI extends JFrame implements Observer {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
+		setTitle(_history.getName());
 		
 		list = new JList();
 		contentPane.add(list, BorderLayout.CENTER);

@@ -24,6 +24,7 @@ public class ObjectListModuleGUI extends JFrame implements Observer {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		setTitle(_objectList.getName());
 		
 		list = new JList();
 		contentPane.add(list, BorderLayout.CENTER);

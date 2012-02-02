@@ -35,6 +35,24 @@ public final class AssignmentState extends Observable {
         return _objectList.get(index);
     }
     
+    public final DomainObject getFromName(String name) {
+    	for(DomainObject obj : _objectList) {
+    		if(obj.getName().equals(name)) {
+    			return obj;
+    		}
+    	}
+    	return null;
+    }
+    
+    public final DomainObject getFromDescription(String description) {
+    	for(DomainObject obj : _objectList) {
+    		if(obj.getDescription().equals(description)) {
+    			return obj;
+    		}
+    	}
+    	return null;
+    }
+    
     public final ArrayList<DomainObject> getList() {
     	return _objectList;
     }
