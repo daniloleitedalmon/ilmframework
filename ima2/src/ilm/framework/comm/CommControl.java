@@ -7,6 +7,7 @@ import ilm.framework.config.SystemConfig;
 
 public class CommControl implements ICommunication {
 	
+	@SuppressWarnings("unused")
 	private SystemConfig _config;
 	private IEncrypter _encrypter;
 	private ICommunication _fileRW;

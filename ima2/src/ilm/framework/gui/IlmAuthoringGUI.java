@@ -1,5 +1,6 @@
 package ilm.framework.gui;
 
+import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
 
@@ -32,6 +33,9 @@ public class IlmAuthoringGUI extends AuthoringGUI implements Observer {
 	private JList listCurrent;
 	private JList listInitial;
 	private JList listExpected;
+	private JTextArea propositionArea;
+	private IlmForm _configForm;
+	private IlmForm _metadataForm;
 
 	public IlmAuthoringGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -137,21 +141,21 @@ public class IlmAuthoringGUI extends AuthoringGUI implements Observer {
 		JLabel lblProposition = new JLabel("Proposition");
 		configPanel.add(lblProposition, "2, 2");
 		
-		JTextArea textArea = new JTextArea();
-		configPanel.add(textArea, "2, 4, fill, fill");
+		propositionArea = new JTextArea();
+		configPanel.add(propositionArea, "2, 4, fill, fill");
 		
-		JButton btnConfig = new JButton("Config");
+		JButton btnConfig = new JButton(IlmProtocol.CONFIG_LIST_NODE);
 		btnConfig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showForm(_config, "Configuration");
+				showForm(_config, IlmProtocol.CONFIG_LIST_NODE);
 			}
 		});
 		configPanel.add(btnConfig, "2, 14");
 		
-		JButton btnMetadata = new JButton("Metadata");
+		JButton btnMetadata = new JButton(IlmProtocol.METADATA_LIST_NODE);
 		btnMetadata.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showForm(_metadata, "Configuration");
+				showForm(_metadata, IlmProtocol.METADATA_LIST_NODE);
 			}
 		});
 		configPanel.add(btnMetadata, "2, 16");
@@ -223,13 +227,25 @@ public class IlmAuthoringGUI extends AuthoringGUI implements Observer {
 	}
 	
 	private void showForm(HashMap<String, String> map, String title) {
-		
+		if(title.equals(IlmProtocol.CONFIG_LIST_NODE)) {
+			if(_configForm == null) {
+				_configForm = new IlmForm(_config, IlmProtocol.CONFIG_LIST_NODE);
+			}
+			_config = _configForm.getUpdatedMap();
+			_configForm.setVisible(true);
+		}
+		if(title.equals(IlmProtocol.METADATA_LIST_NODE)) {
+			if(_metadataForm == null) {
+				_metadataForm = new IlmForm(_metadata, IlmProtocol.METADATA_LIST_NODE);
+			}
+			_metadata = _metadataForm.getUpdatedMap();
+			_metadataForm.setVisible(true);
+		}
 	}
 
 	@Override
 	protected String getProposition() {
-		// TODO Auto-generated method stub
-		return null;
+		return propositionArea.getText();
 	}
 
 	@Override
@@ -252,14 +268,14 @@ public class IlmAuthoringGUI extends AuthoringGUI implements Observer {
 
 	@Override
 	protected HashMap<String, String> getConfig() {
-		// TODO Auto-generated method stub
-		return null;
+		_config = _configForm.getUpdatedMap();
+		return _config;
 	}
 
 	@Override
 	protected HashMap<String, String> getMetadata() {
-		// TODO Auto-generated method stub
-		return null;
+		_metadata = _metadataForm.getUpdatedMap();
+		return _metadata;
 	}
 
 }
