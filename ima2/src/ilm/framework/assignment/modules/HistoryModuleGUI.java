@@ -1,5 +1,7 @@
 package ilm.framework.assignment.modules;
 
+import ilm.framework.modules.IlmModule;
+
 import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
@@ -24,10 +26,14 @@ public class HistoryModuleGUI extends JFrame implements Observer {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-		setTitle(_history.getName());
 		
 		list = new JList();
 		contentPane.add(list, BorderLayout.CENTER);
+	}
+	
+	public void setModule(IlmModule module) {
+		_history = (HistoryModule)module;
+		setTitle(_history.getName());
 	}
 
 	@Override

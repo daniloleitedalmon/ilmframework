@@ -38,6 +38,11 @@ public interface IlmProtocol {
 	public static final String AUTO_CHECKING_MODULE_NAME = "automatic_checking";
 	
 	/**
+	 * Configuration attributes/properties from iLM specification
+	 */
+	public static final String ACTIVE_ASSIGNMENT_INDEX = "active_assignment_index"; 
+	
+	/**
 	 * @return a number which represents the grade obtained by the
 	 * 		student for this assignment (percentage of correctness)
 	 */

@@ -13,7 +13,7 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-public abstract class DomainGUI extends JPanel implements Observer {
+public abstract class DomainGUI extends JPanel implements Observer, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,6 +37,15 @@ public abstract class DomainGUI extends JPanel implements Observer {
 		}
 	}
 	
+
+    public final Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+    }
+    
 	public abstract void setDomainModel(DomainModel model);
 	
 	public abstract ArrayList<DomainObject> getSelectedObjects();

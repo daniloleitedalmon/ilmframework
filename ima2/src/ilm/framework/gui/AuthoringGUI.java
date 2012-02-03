@@ -3,7 +3,6 @@ package ilm.framework.gui;
 import java.util.HashMap;
 
 import ilm.framework.assignment.Assignment;
-import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.domain.DomainGUI;
 
@@ -12,7 +11,6 @@ import javax.swing.JFrame;
 public abstract class AuthoringGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private IAssignment _authoringCommands;
 	protected DomainGUI _domainGUI;
 	protected Assignment _assignment;
 	protected HashMap<String, String> _config;
@@ -22,10 +20,6 @@ public abstract class AuthoringGUI extends JFrame {
 		_domainGUI = domainGUI;
 	}
 
-	public void setAssignmentCommands(IAssignment commands) {
-		_authoringCommands = commands;
-	}
-	
 	public void setConfig(HashMap<String, String> config) {
 		_config = config;
 	}
@@ -34,14 +28,14 @@ public abstract class AuthoringGUI extends JFrame {
 		_metadata = metadata;
 	}
 	
-	protected void finishAuthoring() {
+	public Assignment getAssignment() {
 		_assignment = new Assignment(getProposition(), 
 									 getInitialState(), 
 									 getInitialState(), 
 									 getExpectedAnswer());
 		_assignment.setConfig(getConfig());
 		_assignment.setMetadata(getMetadata());
-		_authoringCommands.authorAssignment(_assignment);
+		return _assignment;
 	}
 
 	protected abstract String getProposition();

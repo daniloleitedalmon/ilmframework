@@ -21,7 +21,6 @@ public class IlmForm extends JFrame {
 	private HashMap<String, JTextField> _inputMap; 
 
 	public IlmForm(HashMap<String, String> map, String title) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane = createForm(map, title);
@@ -35,6 +34,7 @@ public class IlmForm extends JFrame {
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateMap();
+				setVisible(false);
 			}
 		});
 		JButton cancelButton = new JButton("Cancel");

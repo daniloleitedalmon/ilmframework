@@ -23,7 +23,9 @@ public abstract class SystemFactory {
 	public abstract DomainGUI createDomainGUI(SystemConfig config, DomainModel domainModel);
 	
 	public BaseGUI createBaseGUI(SystemConfig config, IAssignment assignment, DomainGUI domainGUI) {
-		return new IlmBaseGUI(config, assignment, domainGUI);
+		BaseGUI gui = new IlmBaseGUI();
+		gui.setComponents(config, assignment, domainGUI);
+		return gui;
 	}
 
 	public CommControl createCommControl(SystemConfig config) {

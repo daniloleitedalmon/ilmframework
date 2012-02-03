@@ -191,6 +191,16 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	}
 
 	/**
+	 * @see IAssignment
+	 * 
+	 * @return the number of assignments on assignment list
+	 */
+	@Override
+	public int getNumberOfAssignments() {
+		return _assignmentList.size();
+	}
+
+	/**
 	 * @see IAssignmentOperator
 	 * 
 	 * @return the converter of file content to domain objects and actions
@@ -221,6 +231,24 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		for(String key : _moduleList.keySet()) {
 			_moduleList.get(key).print();
 		}
+	}
+
+	@Override
+	public ArrayList<AssignmentState> openAssignmentFile(String fileName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AssignmentState newAssignment() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void closeAssignment(int index) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -1,7 +1,5 @@
 package ilm.framework.modules;
 
-import ilm.framework.IlmProtocol;
-
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,9 +12,9 @@ public class AutoCheckingModuleToolbar extends IlmModuleToolbar {
 
 	private static final long serialVersionUID = 1L;
 	private JButton button;
-	private IlmProtocol command;
+	private AutomaticCheckingModule _module;
 	
-	public AutoCheckingModuleToolbar(IlmProtocol protocol) {
+	public AutoCheckingModuleToolbar(AutomaticCheckingModule module) {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		button = makeButton("autochecking", "AUTOMATIC CHECKING", 
@@ -28,15 +26,16 @@ public class AutoCheckingModuleToolbar extends IlmModuleToolbar {
 		});
 		add(button);
 		
-		//human-made code
-		command = protocol;
+		_module = module;
 	}
 	
 	private void showEvaluation() {
-		JOptionPane.showMessageDialog(this, "Evaluation: " + command.getEvaluation(), "Evaluation", JOptionPane.OK_OPTION);
+		JOptionPane.showMessageDialog(this, "Evaluation: " + _module.getEvaluation(), "Evaluation", JOptionPane.OK_OPTION);
 	}
 	
 	@Override
-	public void update(Observable arg0, Object arg1) {}
+	public void update(Observable arg0, Object arg1) {
+		
+	}
 
 }

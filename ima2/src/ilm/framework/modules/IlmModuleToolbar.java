@@ -13,7 +13,7 @@ public abstract class IlmModuleToolbar extends JPanel implements Observer {
 	public IlmModuleToolbar() {
 		// TODO somehow define a height limit of 25 pixels
 	}
-
+	
 	protected JButton makeButton(String imageName,
 						         String actionCommand,
 						         String toolTipText,

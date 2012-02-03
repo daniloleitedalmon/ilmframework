@@ -3,6 +3,7 @@ package ilm.framework.gui;
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
+import ilm.framework.domain.DomainGUI;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -160,7 +161,17 @@ public class IlmAuthoringGUI extends AuthoringGUI implements Observer {
 		});
 		configPanel.add(btnMetadata, "2, 16");
 		
-		//human-made code
+		JButton btnOk = new JButton("OK");
+		btnOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveAndExit();
+			}
+		});
+		configPanel.add(btnOk, "2, 18");
+	}
+	
+	public void setDomainGUI(DomainGUI domainGUI) {
+		_domainGUI = domainGUI;
 		_domainGUI.getCurrentState().addObserver(this);
 	}
 
@@ -278,4 +289,11 @@ public class IlmAuthoringGUI extends AuthoringGUI implements Observer {
 		return _metadata;
 	}
 
+	private void saveAndExit() {
+		// TODO Auto-generated method stub
+		// pega todos os dados e coloca na atividade
+		// ou não, esperar definir como a baseGUI 
+		// vai chamar os métodos das AuthoringGUI
+	}
+	
 }
