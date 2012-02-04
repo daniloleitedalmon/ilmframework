@@ -229,8 +229,20 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 
 	@Override
 	public int openAssignmentFile(String fileName) {
-		// TODO Auto-generated method stub
-		return 0;
+		int initIndex = _assignmentList.size()-1;
+		AssignmentParser parser = new AssignmentParser();
+		try {
+			String metadataFileContent = _comm.readMetadataFile(fileName);
+			ArrayList<String> assignmentFileList = parser.getAssignmentFileList(metadataFileContent);
+			HashMap<String, String> metadata = parser.convertStringToMap(metadataFileContent, IlmProtocol.METADATA_LIST_NODE);
+			ArrayList<String> assignmentList = _comm.readAssignmentFiles(fileName, assignmentFileList);
+			_assignmentList.addAll(createAssignments(parser.mergeMetadata(assignmentList, metadata)));
+			getConfigFromMetadataFile(metadataFileContent);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return initIndex;
 	}
 
 	@Override

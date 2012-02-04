@@ -46,6 +46,9 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 		if(_assignmentList.getExpectedAnswer(_assignmentIndex) == null) {
 			return false;
 		}
+		if(_assignmentList.getExpectedAnswer(_assignmentIndex).getList().size() < 1) {
+			return false;
+		}
 		return true;
 	}
 	

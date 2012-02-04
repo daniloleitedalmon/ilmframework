@@ -32,7 +32,7 @@ public class IlmDesktopFileRW implements ICommunication {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return null;
 	}
 

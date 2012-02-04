@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -82,7 +84,7 @@ public class IlmBaseGUI extends BaseGUI {
 												curState, 
 												_assignments.getIlmModuleList().values());
 		tabbedPane.addTab("assign" + (tabCount++), _domainGUIList.get(index));
-		tabbedPane.setSelectedIndex(index);
+		tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
 		setActiveAssignment();
 		_authoringGUIList.add(_factory.createAuthoringGUI(_domainGUIList.get(index), 
 														  _assignments.getConfig(index), 
@@ -127,7 +129,7 @@ public class IlmBaseGUI extends BaseGUI {
 	@Override
 	protected void setAuthoringButton() {
 		authoringBtn = makeButton("authoring", "ASSIGNMENT AUTHORING", 
-										  "Open assignment authoring window", "Start authoring");
+								  "Open assignment authoring window", "Start authoring");
 		toolBar.add(authoringBtn);
 		authoringBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -148,7 +150,7 @@ public class IlmBaseGUI extends BaseGUI {
 	@Override
 	protected void setNewAssignmentButton() {
 		newAssBtn = makeButton("newassignment", "NEW ASSIGNMENT", 
-				  "Open an assignment in a new tab", "Start a new assignment");
+				  				"Open an assignment in a new tab", "Start a new assignment");
 		toolBar.add(newAssBtn);
 		newAssBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -176,7 +178,7 @@ public class IlmBaseGUI extends BaseGUI {
 	@Override
 	protected void setCloseAssignmentButton() {
 		closeAssBtn = makeButton("closeassignment", "CLOSE ASSIGNMENT", 
-				  "Close the assignment in this tab", "Close this assignment");
+				  				 "Close the assignment in this tab", "Close this assignment");
 		toolBar.add(closeAssBtn);
 		closeAssBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -224,36 +226,45 @@ public class IlmBaseGUI extends BaseGUI {
 	@Override
 	protected void setOpenAssignmentButton() {
 		openAssBtn = makeButton("openassignment", "OPEN ASSIGNMENT FILE", 
-				  "Open an assignment file", "Open an assignment");
+				  				"Open an assignment file", "Open an assignment");
 		toolBar.add(openAssBtn);
 		openAssBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				openAssignmentFile(getFileNameFromWindow());
+				openAssignmentFile(getFileNameFromWindow("Choose file"));
 			}
 		});
 	}
 
 	@Override
 	protected void openAssignmentFile(String fileName) {
+		if(fileName == null) {
+			return;
+		}
 		int initialIndex = _assignments.openAssignmentFile(fileName);
-		for(int i = initialIndex; i < _assignments.getNumberOfAssignments(); i++) {
+		for(int i = initialIndex; i < _assignments.getNumberOfAssignments()-1; i++) {
 			initAssignment(_assignments.getCurrentState(i));
 		}
 	}
 	
-	private String getFileNameFromWindow() {
-		// TODO Auto-generated method stub
+	private String getFileNameFromWindow(String option) {
+		JFileChooser fc = new JFileChooser();
+		int returnval = fc.showDialog(this, option);
+		if(returnval == JFileChooser.APPROVE_OPTION) {
+			return fc.getSelectedFile().getAbsolutePath();
+		} else if(returnval == JFileChooser.ERROR_OPTION) {
+			JOptionPane.showMessageDialog(this, "Error while choosing file.", "Error file", JOptionPane.OK_OPTION);
+		}
 		return null;
 	}
 
 	@Override
 	protected void setSaveAssignmentButton() {
 		saveAssBtn = makeButton("save", "SAVE ASSIGNMENT FILE", 
-				  "Save this assignment in a file", "Save an assignment");
+				  				"Save this assignment in a file", "Save an assignment");
 		toolBar.add(saveAssBtn);
 		saveAssBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveAssignmentFile(getFileNameFromWindow());
+				saveAssignmentFile(getFileNameFromWindow("Choose filename"));
 			}
 		});
 	}
@@ -261,7 +272,7 @@ public class IlmBaseGUI extends BaseGUI {
 	@Override
 	protected void saveAssignmentFile(String fileName) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("Save: " + fileName);
 	}
 	
 }

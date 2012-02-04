@@ -1,1 +1,15 @@
-<metadata><title>Titulo</title></metadata>
+<package>
+<files>
+<assignment>exercicio_teste.geo</assignment>
+<assignment>exercicio_teste2.geo</assignment>
+</files>
+<config>
+<color>Blue</color>
+<speed>Fast</speed>
+</config>
+<metadata>
+<title>Titulo</title>
+<country>Brasil</country>
+<date>25/01/2012</date>
+</metadata>
+</package>
