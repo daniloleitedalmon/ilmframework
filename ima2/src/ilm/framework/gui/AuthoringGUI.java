@@ -1,6 +1,7 @@
 package ilm.framework.gui;
 
 import java.util.HashMap;
+import java.util.Observer;
 
 import ilm.framework.assignment.Assignment;
 import ilm.framework.assignment.model.AssignmentState;
@@ -8,7 +9,7 @@ import ilm.framework.domain.DomainGUI;
 
 import javax.swing.JFrame;
 
-public abstract class AuthoringGUI extends JFrame {
+public abstract class AuthoringGUI extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	protected DomainGUI _domainGUI;
@@ -16,15 +17,10 @@ public abstract class AuthoringGUI extends JFrame {
 	protected HashMap<String, String> _config;
 	protected HashMap<String, String> _metadata;
 
-	public void setDomainGUI(DomainGUI domainGUI) {
-		_domainGUI = domainGUI;
-	}
-
-	public void setConfig(HashMap<String, String> config) {
+	public void setComponents(HashMap<String, String> config, DomainGUI domainGUI, HashMap<String, String> metadata) {
 		_config = config;
-	}
-	
-	public void setMetadata(HashMap<String, String> metadata) {
+		_domainGUI = domainGUI;
+		_domainGUI.getCurrentState().addObserver(this);
 		_metadata = metadata;
 	}
 	

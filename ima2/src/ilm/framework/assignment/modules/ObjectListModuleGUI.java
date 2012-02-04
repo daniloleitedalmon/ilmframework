@@ -1,6 +1,6 @@
 package ilm.framework.assignment.modules;
 
-import ilm.framework.modules.IlmModule;
+import ilm.framework.IlmProtocol;
 
 import java.awt.BorderLayout;
 import java.util.Observable;
@@ -20,7 +20,6 @@ public class ObjectListModuleGUI extends JFrame implements Observer {
 	private JList list;
 
 	public ObjectListModuleGUI() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -29,6 +28,7 @@ public class ObjectListModuleGUI extends JFrame implements Observer {
 		
 		list = new JList();
 		contentPane.add(list, BorderLayout.CENTER);
+		setTitle(IlmProtocol.OBJECT_LIST_MODULE_NAME);
 	}
 
 	@Override
@@ -42,11 +42,6 @@ public class ObjectListModuleGUI extends JFrame implements Observer {
 			}
 			list.setModel(listModel);
 		}
-	}
-
-	public void setModule(IlmModule module) {
-		_objectList = (ObjectListModule)module;
-		setTitle(_objectList.getName());
 	}
 
 }

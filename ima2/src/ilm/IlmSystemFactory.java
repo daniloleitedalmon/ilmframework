@@ -1,12 +1,13 @@
 package ilm;
 
+import java.util.ArrayList;
+
 import ilm.framework.SystemFactory;
-import ilm.framework.assignment.AssignmentControl;
-import ilm.framework.comm.ICommunication;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.domain.DomainModel;
+import ilm.framework.modules.IlmModule;
 import ilm.gui.IlmDomainGUI;
 import ilm.model.IlmDomainConverter;
 import ilm.model.IlmDomainModel;
@@ -14,7 +15,7 @@ import ilm.model.IlmDomainModel;
 public class IlmSystemFactory extends SystemFactory {
 
 	@Override
-	public DomainModel createDomainModel(SystemConfig config) {
+	public DomainModel createDomainModel() {
 		return new IlmDomainModel();
 	}
 
@@ -29,17 +30,13 @@ public class IlmSystemFactory extends SystemFactory {
 		domainGUI.setDomainModel(model);
 		return domainGUI;
 	}
-
-	@Override
-	public AssignmentControl createAssignmentControl(SystemConfig config,
-													 ICommunication comm,
-													 DomainModel model,
-													 DomainConverter converter) {
-		AssignmentControl assignControl = new AssignmentControl(config, comm, model, converter);
-//		assignControl.addIlmModule(new ScriptModule());
-//		assignControl.addIlmModule(new ExampleTracingTutorModule());
-//		assignControl.addIlmModule(new ScormModule(assignControl, assignControl));
-		return assignControl;
+	
+	protected ArrayList<IlmModule> getIlmModuleList() {
+		ArrayList<IlmModule> list = new ArrayList<IlmModule>();
+//		list.add(new ScriptModule());
+//		list.add(new ExampleTracingTutorModule());
+//		list.add(new ScormModule());
+		return list;
 	}
 	
 }

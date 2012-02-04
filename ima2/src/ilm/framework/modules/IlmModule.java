@@ -19,6 +19,8 @@ public abstract class IlmModule extends Observable {
 	
 	public void setAssignmentIndex(int index) {
 		_assignmentIndex = index;
+		setChanged();
+		notifyObservers();
 	}
 	
 	public abstract void print();

@@ -21,6 +21,9 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 	
 	@Override
 	public float getEvaluation() {
+		if(_assignmentList.getExpectedAnswer(_assignmentIndex) == null) {
+			return 0;
+		}
 		return _model.AutomaticChecking(_assignmentList.getCurrentState(_assignmentIndex),
 										_assignmentList.getExpectedAnswer(_assignmentIndex));
 	}
@@ -37,6 +40,13 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 
 	public void print() {
 		System.out.println("Name: " + _name + " index: " + _assignmentIndex + " model: " + _model.toString());
+	}
+
+	public boolean hasExpectedAnswer() {
+		if(_assignmentList.getExpectedAnswer(_assignmentIndex) == null) {
+			return false;
+		}
+		return true;
 	}
 	
 }

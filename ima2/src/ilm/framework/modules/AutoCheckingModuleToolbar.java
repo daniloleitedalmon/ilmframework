@@ -27,6 +27,7 @@ public class AutoCheckingModuleToolbar extends IlmModuleToolbar {
 		add(button);
 		
 		_module = module;
+		_module.addObserver(this);
 	}
 	
 	private void showEvaluation() {
@@ -35,7 +36,12 @@ public class AutoCheckingModuleToolbar extends IlmModuleToolbar {
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		
+		if(_module.hasExpectedAnswer()) {
+			button.setEnabled(true);
+		}
+		else {
+			button.setEnabled(false);
+		}
 	}
 
 }

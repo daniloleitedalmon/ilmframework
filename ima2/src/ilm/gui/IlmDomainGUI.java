@@ -31,6 +31,7 @@ public class IlmDomainGUI extends DomainGUI {
 	private JLabel lblLabel;
 	private JButton btnAdd;
 	private JButton btnDel; 
+	private JLabel lblProposition;
 	
 	public IlmDomainGUI() {
 		
@@ -48,7 +49,11 @@ public class IlmDomainGUI extends DomainGUI {
 			}
 		});
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		lblProposition = new JLabel("proposition");
+		add(lblProposition);
 		add(btnAdd);
+		btnAdd.setEnabled(false);
 		
 		btnDel = new JButton("del");
 		btnDel.addActionListener(new ActionListener() {
@@ -57,25 +62,18 @@ public class IlmDomainGUI extends DomainGUI {
 			}
 		});
 		add(btnDel);
+		btnDel.setEnabled(false);
+		
 		add(textField);
 		textField.setColumns(10);
 		
-		lblLabel = new JLabel("label");
+		lblLabel = new JLabel("");
 		lblLabel.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				updateRemoveButton();
 			}
 		});
 		add(lblLabel);
-		
-		//human-made code
-		_actionList = new HashMap<String, DomainAction>();
-		ActionAddSubString addAction = new ActionAddSubString("add", "add");
-		ActionRemoveSubString delAction = new ActionRemoveSubString("del", "del");
-		addAction.setDomain(_model);
-		delAction.setDomain(_model);
-		_actionList.put(addAction.getName(), addAction);
-		_actionList.put(delAction.getName(), delAction);
 	}
 
 	@Override
@@ -91,6 +89,14 @@ public class IlmDomainGUI extends DomainGUI {
 	@Override
 	public void setDomainModel(DomainModel model) {
 		_model = (IlmDomainModel)model;
+		
+		_actionList = new HashMap<String, DomainAction>();
+		ActionAddSubString addAction = new ActionAddSubString("add", "add");
+		ActionRemoveSubString delAction = new ActionRemoveSubString("del", "del");
+		addAction.setDomain(_model);
+		delAction.setDomain(_model);
+		_actionList.put(addAction.getName(), addAction);
+		_actionList.put(delAction.getName(), delAction);
 	}
 
     @Override
@@ -110,7 +116,7 @@ public class IlmDomainGUI extends DomainGUI {
 	private void removeSubString() {
 		if(lblLabel.getText().length() > 0) {
 			ActionRemoveSubString action = (ActionRemoveSubString)_actionList.get("del");
-			action.setSubString(lblLabel.getText().substring(0, 1));
+			action.setSubString(lblLabel.getText().substring(lblLabel.getText().length()-1));
             action.setDescription("del: " + action.getSubString());
             action.execute();
         }
@@ -149,5 +155,10 @@ public class IlmDomainGUI extends DomainGUI {
             btnAdd.setEnabled(true);
         }
     }
+
+	@Override
+	protected void initDomainGUI() {
+		lblProposition.setText(_proposition);
+	}
     
 }

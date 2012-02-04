@@ -13,14 +13,16 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-public abstract class DomainGUI extends JPanel implements Observer, Cloneable {
+public abstract class DomainGUI extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
+	protected String _proposition;
 	protected AssignmentState _state;
 	protected HashMap<String, DomainAction> _actionList;
 	
-	public void setAssignment(AssignmentState curState, Collection<IlmModule> moduleList) {
+	public void setAssignment(String proposition, AssignmentState curState, Collection<IlmModule> moduleList) {
+		_proposition = proposition;
 		_state = curState;
 		_state.addObserver(this);
 		for(DomainAction action: _actionList.values()) {
@@ -35,17 +37,11 @@ public abstract class DomainGUI extends JPanel implements Observer, Cloneable {
 				}
 			}
 		}
+		initDomainGUI();
 	}
+	    
+	protected abstract void initDomainGUI();
 	
-
-    public final Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-    
 	public abstract void setDomainModel(DomainModel model);
 	
 	public abstract ArrayList<DomainObject> getSelectedObjects();

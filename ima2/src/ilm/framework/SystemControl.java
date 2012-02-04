@@ -5,17 +5,14 @@ import java.util.Map;
 import ilm.framework.assignment.AssignmentControl;
 import ilm.framework.comm.CommControl;
 import ilm.framework.config.*;
-import ilm.framework.domain.DomainModel;
 import ilm.framework.gui.BaseGUI;
 import ilm.framework.modules.AutomaticCheckingModule;
 
 public final class SystemControl {
 
-	private SystemFactory _factory;
 	private SystemConfig _config;
 	private AssignmentControl _assignmentControl;
 	private CommControl _comm;
-	private DomainModel _model;
 	private BaseGUI _gui;
 	
 	public void initialize(boolean isApplet, String[] parameterList, SystemFactory factory) {
@@ -28,15 +25,15 @@ public final class SystemControl {
 		}		
 		Map<String,String> parsedParameterList = parser.Parse(parameterList);
 		_config = new SystemConfig(isApplet, parsedParameterList);
-		_factory = factory;
-		initComponents();
+		initComponents(factory);
 	}
 
-	private void initComponents() {
-		_comm = _factory.createCommControl(_config);
-		_model = _factory.createDomainModel(_config);
-		_assignmentControl = _factory.createAssignmentControl(_config, _comm, _model, _factory.createDomainConverter());
-		_gui = _factory.createBaseGUI(_config, _assignmentControl, _factory.createDomainGUI(_config, _model));
+	private void initComponents(SystemFactory factory) {
+		_comm = factory.createCommControl(_config);
+		_assignmentControl = factory.createAssignmentControl(_config, _comm, 
+															 factory.getDomainModel(_config),
+															 factory.getDomainConverter());
+		_gui = factory.createBaseGUI(_config, _assignmentControl, factory);
 	}
 	
 	public IlmProtocol getProtocol() {

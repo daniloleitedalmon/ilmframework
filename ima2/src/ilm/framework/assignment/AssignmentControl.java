@@ -66,8 +66,9 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 			}
 		}
 		else {
-			_assignmentList.add(createNewAssignment());
-			addAssignmentModules();
+			Assignment a = createNewAssignment();
+			setModulesObservers(a);
+			_assignmentList.add(a);
 		}
 	}
 
@@ -88,17 +89,10 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		return new Assignment("", initialState, initialState, null);
 	}
 	
-	private void addAssignmentModules() {
-		for(String key : _moduleList.keySet()) {
-			if(_moduleList.get(key) instanceof AssignmentModule) {
-				((AssignmentModule)_moduleList.get(key)).addAssignment();
-			}
-		}
-	}
-	
 	private void setModulesObservers(Assignment assignment) {
 		for(String key : _moduleList.keySet()) {
 			if(_moduleList.get(key) instanceof AssignmentModule) {
+				((AssignmentModule)_moduleList.get(key)).addAssignment();
 				if(((AssignmentModule)_moduleList.get(key)).getObserverType() != AssignmentModule.ACTION_OBSERVER) {
 					assignment.getCurrentState().addObserver((AssignmentModule)_moduleList.get(key));
 				}
@@ -234,9 +228,9 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	}
 
 	@Override
-	public ArrayList<AssignmentState> openAssignmentFile(String fileName) {
+	public int openAssignmentFile(String fileName) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 	@Override
@@ -249,6 +243,23 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	public void closeAssignment(int index) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public HashMap<String, String> getConfig(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<String, String> getMetadata(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getProposition(int index) {
+		return _assignmentList.get(index).getProposition();
 	}
 	
 }

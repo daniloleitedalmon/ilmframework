@@ -28,13 +28,13 @@ public class HistoryModule extends AssignmentModule {
 		if(o instanceof DomainAction) {
 			DomainAction action = (DomainAction)o;
 			
-			if(action.isUndo()) {
-				_history.get(_assignmentIndex).add(action);
+			if(!action.isUndo()) {
+				_history.get(_assignmentIndex).add((DomainAction)action.clone());
 				setChanged();
 				notifyObservers();
 			}
 			else {
-				_history.get(_assignmentIndex).remove(action);
+				_history.get(_assignmentIndex).remove(_history.get(_assignmentIndex).size()-1);
 				setChanged();
 				notifyObservers();
 			}

@@ -3,13 +3,11 @@ package ilm.framework.gui;
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
-import ilm.framework.domain.DomainGUI;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -27,7 +25,7 @@ import java.awt.event.ActionEvent;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JTextArea;
 
-public class IlmAuthoringGUI extends AuthoringGUI implements Observer {
+public class IlmAuthoringGUI extends AuthoringGUI {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -168,11 +166,6 @@ public class IlmAuthoringGUI extends AuthoringGUI implements Observer {
 			}
 		});
 		configPanel.add(btnOk, "2, 18");
-	}
-	
-	public void setDomainGUI(DomainGUI domainGUI) {
-		_domainGUI = domainGUI;
-		_domainGUI.getCurrentState().addObserver(this);
 	}
 
 	@Override

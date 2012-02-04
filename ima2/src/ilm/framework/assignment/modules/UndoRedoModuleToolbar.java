@@ -6,6 +6,8 @@ import java.util.Observable;
 
 import javax.swing.JButton;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UndoRedoModuleToolbar extends IlmModuleToolbar {
 
@@ -18,9 +20,23 @@ public class UndoRedoModuleToolbar extends IlmModuleToolbar {
 	public UndoRedoModuleToolbar() {
 		_undoButton = makeButton("undo", "UNDO", "Undo the last action made", "Undo action");
 		add(_undoButton);
-		
+		_undoButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				_undoRedo.undo();
+			}
+		});
+		_undoButton.setEnabled(false);
 		_redoButton = makeButton("redo", "REDO", "Redo the last action unmade", "Redo action");
 		add(_redoButton);
+		_redoButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				_undoRedo.redo();
+			}
+		});
+		_redoButton.setEnabled(false);
+		
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 	}
 	

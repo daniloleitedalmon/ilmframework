@@ -36,7 +36,6 @@ public class ObjectListModuleToolbar extends IlmModuleToolbar {
 	@Override
 	public void update(Observable o, Object arg) {
 		if(_window != null) {
-			_window.setModule((ObjectListModule)o);
 			_window.update(o, arg);
 		}
 	}

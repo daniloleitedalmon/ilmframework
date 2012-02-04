@@ -36,7 +36,6 @@ public class HistoryModuleToolbar extends IlmModuleToolbar {
 	@Override
 	public void update(Observable o, Object arg) {
 		if(_window != null) {
-			_window.setModule((HistoryModule)o);
 			_window.update(o, arg);
 		}
 	}
