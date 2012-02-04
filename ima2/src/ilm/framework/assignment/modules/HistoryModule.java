@@ -75,4 +75,9 @@ public class HistoryModule extends AssignmentModule {
 		return string;
 	}
 
+	@Override
+	public void removeAssignment(int index) {
+		_history.remove(index);
+	}
+
 }

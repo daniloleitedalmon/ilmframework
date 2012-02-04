@@ -38,4 +38,10 @@ public class ScriptModule extends AssignmentModule {
 		return null;
 	}
 
+	@Override
+	public void removeAssignment(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

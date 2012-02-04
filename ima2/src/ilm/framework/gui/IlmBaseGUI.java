@@ -1,7 +1,6 @@
 package ilm.framework.gui;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Observable;
 
 import ilm.framework.assignment.model.AssignmentState;
@@ -24,7 +23,13 @@ public class IlmBaseGUI extends BaseGUI {
 	private JToolBar toolBar;
 	private JPanel panel;
 	private JTabbedPane tabbedPane;
-
+	private JButton authoringBtn; 
+	private JButton newAssBtn;
+	private JButton closeAssBtn; 
+	private JButton openAssBtn;
+	private JButton saveAssBtn;
+	private int tabCount;
+	
 	public IlmBaseGUI() {
 		setLayout(new BorderLayout(0, 0));
 		
@@ -43,42 +48,45 @@ public class IlmBaseGUI extends BaseGUI {
 				setActiveAssignment();
 			}
 		});
-		panel.add(tabbedPane);
+		
+		tabCount = 0;
 	}
 
 	@Override
 	protected void initAssignments() {
-		if(_assignments.getNumberOfAssignments() <= 1) {
+		if(_assignments.getNumberOfAssignments() == 1) {
 			tabbedPane.setVisible(false);
-			
 			_domainGUIList.add(_factory.createDomainGUI(_config, _factory.getDomainModel(_config)));
 			int index = _domainGUIList.size()-1;
 			_domainGUIList.get(index).setAssignment(_assignments.getProposition(0),
 													_assignments.getCurrentState(0), 
 													_assignments.getIlmModuleList().values());
-			add(_domainGUIList.get(index));
-			
+			panel.add(_domainGUIList.get(index));
 			_authoringGUIList.add(_factory.createAuthoringGUI(_domainGUIList.get(index), 
 															  _assignments.getConfig(0), 
 															  _assignments.getMetadata(0)));
-			updateAssignmentIndex(0);
+			setActiveAssignment();
 		} else {
+			panel.add(tabbedPane);
 			for(int i = 0; i < _assignments.getNumberOfAssignments(); i++) {
 				tabbedPane.setVisible(true);
-				initAssignment(_assignments.getCurrentState(i), _assignments.getConfig(i), _assignments.getMetadata(i));
+				initAssignment(_assignments.getCurrentState(i));
 			}
-			updateAssignmentIndex(tabbedPane.getSelectedIndex());
 		}
 	}
-	
-	private void initAssignment(AssignmentState curState, HashMap<String, String> config, HashMap<String, String> metadata) {
+
+	private void initAssignment(AssignmentState curState) {
 		_domainGUIList.add(_factory.createDomainGUI(_config, _factory.getDomainModel(_config)));
 		int index = _domainGUIList.size()-1;
-		_domainGUIList.get(index).setAssignment(_assignments.getProposition(0),
-												curState, _assignments.getIlmModuleList().values());
-		tabbedPane.addTab("", _domainGUIList.get(index));
-		
-		_authoringGUIList.add(_factory.createAuthoringGUI(_domainGUIList.get(index), config, metadata));
+		_domainGUIList.get(index).setAssignment(_assignments.getProposition(index),
+												curState, 
+												_assignments.getIlmModuleList().values());
+		tabbedPane.addTab("assign" + (tabCount++), _domainGUIList.get(index));
+		tabbedPane.setSelectedIndex(index);
+		setActiveAssignment();
+		_authoringGUIList.add(_factory.createAuthoringGUI(_domainGUIList.get(index), 
+														  _assignments.getConfig(index), 
+														  _assignments.getMetadata(index)));
 	}
 
 	@Override
@@ -108,13 +116,17 @@ public class IlmBaseGUI extends BaseGUI {
 	}
 
 	protected void setActiveAssignment() {
-		updateAssignmentIndex(tabbedPane.getSelectedIndex());
+		int index = tabbedPane.getSelectedIndex();
+		if(index == -1) {
+			updateAssignmentIndex(0);
+		} else {
+			updateAssignmentIndex(index);
+		}
 	}
 	
-
 	@Override
 	protected void setAuthoringButton() {
-		JButton authoringBtn = makeButton("authoring", "ASSIGNMENT AUTHORING", 
+		authoringBtn = makeButton("authoring", "ASSIGNMENT AUTHORING", 
 										  "Open assignment authoring window", "Start authoring");
 		toolBar.add(authoringBtn);
 		authoringBtn.addActionListener(new ActionListener() {
@@ -135,7 +147,7 @@ public class IlmBaseGUI extends BaseGUI {
 
 	@Override
 	protected void setNewAssignmentButton() {
-		JButton newAssBtn = makeButton("newassignment", "NEW ASSIGNMENT", 
+		newAssBtn = makeButton("newassignment", "NEW ASSIGNMENT", 
 				  "Open an assignment in a new tab", "Start a new assignment");
 		toolBar.add(newAssBtn);
 		newAssBtn.addActionListener(new ActionListener() {
@@ -147,31 +159,71 @@ public class IlmBaseGUI extends BaseGUI {
 	
 	@Override
 	protected void addNewAssignment() {
-		// TODO Auto-generated method stub
-		
+		if(_assignments.getNumberOfAssignments() == 1) {
+			panel.removeAll();
+			panel.add(tabbedPane);
+			tabbedPane.setVisible(true);
+			tabbedPane.addTab("assign" + (tabCount++), _domainGUIList.get(0));
+			AssignmentState state = _assignments.newAssignment();
+			initAssignment(state);
+		}
+		else {
+			initAssignment(_assignments.newAssignment());
+		}
+		updateCloseButton();
 	}
 
 	@Override
 	protected void setCloseAssignmentButton() {
-		JButton closeAssBtn = makeButton("closeassignment", "CLOSE ASSIGNMENT", 
-				  "Close an assignment in this tab", "Close this assignment");
+		closeAssBtn = makeButton("closeassignment", "CLOSE ASSIGNMENT", 
+				  "Close the assignment in this tab", "Close this assignment");
 		toolBar.add(closeAssBtn);
 		closeAssBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeAssignment(tabbedPane.getSelectedIndex());
 			}
 		});
+		updateCloseButton();
 	}
 	
 	@Override
 	protected void closeAssignment(int index) {
-		// TODO Auto-generated method stub
-		
+		if(_assignments.getNumberOfAssignments() == 1) {
+			
+		}
+		else if(_assignments.getNumberOfAssignments() == 2) {
+			closeActiveAssignment();
+			panel.removeAll();
+			panel.add(_domainGUIList.get(0));
+			_domainGUIList.get(0).setVisible(true);
+			updateCloseButton();
+		}
+		else {
+			closeActiveAssignment();
+		}
+	}
+	
+	private void updateCloseButton() {
+		if(_assignments.getNumberOfAssignments() == 1) {
+			closeAssBtn.setEnabled(false);
+		}
+		else {
+			closeAssBtn.setEnabled(true);
+		}
+	}
+	
+	private void closeActiveAssignment() {
+		int index = _activeAssignment;
+		_assignments.closeAssignment(index);
+		tabbedPane.remove(index);
+		_domainGUIList.remove(index);
+		_authoringGUIList.remove(index);
+		setActiveAssignment();
 	}
 
 	@Override
 	protected void setOpenAssignmentButton() {
-		JButton openAssBtn = makeButton("openassignment", "OPEN ASSIGNMENT FILE", 
+		openAssBtn = makeButton("openassignment", "OPEN ASSIGNMENT FILE", 
 				  "Open an assignment file", "Open an assignment");
 		toolBar.add(openAssBtn);
 		openAssBtn.addActionListener(new ActionListener() {
@@ -185,7 +237,7 @@ public class IlmBaseGUI extends BaseGUI {
 	protected void openAssignmentFile(String fileName) {
 		int initialIndex = _assignments.openAssignmentFile(fileName);
 		for(int i = initialIndex; i < _assignments.getNumberOfAssignments(); i++) {
-			initAssignment(_assignments.getCurrentState(i), _assignments.getConfig(i), _assignments.getMetadata(i));
+			initAssignment(_assignments.getCurrentState(i));
 		}
 	}
 	
@@ -196,7 +248,7 @@ public class IlmBaseGUI extends BaseGUI {
 
 	@Override
 	protected void setSaveAssignmentButton() {
-		JButton saveAssBtn = makeButton("save", "SAVE ASSIGNMENT FILE", 
+		saveAssBtn = makeButton("save", "SAVE ASSIGNMENT FILE", 
 				  "Save this assignment in a file", "Save an assignment");
 		toolBar.add(saveAssBtn);
 		saveAssBtn.addActionListener(new ActionListener() {

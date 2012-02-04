@@ -75,4 +75,9 @@ public class ObjectListModule extends AssignmentModule {
 		return string;
 	}
 
+	@Override
+	public void removeAssignment(int index) {
+		_objectList.remove(index);
+	}
+
 }

@@ -235,14 +235,24 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 
 	@Override
 	public AssignmentState newAssignment() {
-		// TODO Auto-generated method stub
-		return null;
+		Assignment a = createNewAssignment();
+		setModulesObservers(a);
+		_assignmentList.add(a);
+		return a.getCurrentState();
 	}
 
 	@Override
 	public void closeAssignment(int index) {
-		// TODO Auto-generated method stub
-		
+		_assignmentList.remove(index);
+		removeAssignmentFromModules(index);
+	}
+
+	private void removeAssignmentFromModules(int index) {
+		for(String key : _moduleList.keySet()) {
+			if(_moduleList.get(key) instanceof AssignmentModule) {
+				((AssignmentModule)_moduleList.get(key)).removeAssignment(index);
+			}
+		}
 	}
 
 	@Override

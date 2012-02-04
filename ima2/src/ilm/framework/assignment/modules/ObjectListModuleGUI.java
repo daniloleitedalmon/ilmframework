@@ -20,7 +20,7 @@ public class ObjectListModuleGUI extends JFrame implements Observer {
 	private JList list;
 
 	public ObjectListModuleGUI() {
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 200, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));

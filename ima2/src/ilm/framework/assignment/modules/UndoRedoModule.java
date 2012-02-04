@@ -115,4 +115,10 @@ public class UndoRedoModule extends AssignmentModule {
 		return string;
 	}
 
+	@Override
+	public void removeAssignment(int index) {
+		_undoStack.remove(index);
+		_redoStack.remove(index);
+	}
+
 }
