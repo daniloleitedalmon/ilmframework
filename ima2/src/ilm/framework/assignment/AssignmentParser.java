@@ -86,7 +86,7 @@ final class AssignmentParser {
 		} else {
 			string += "<current/>";
 		}
-		if(assignment.getExpectedAnswer().getList().size() > 0) {
+		if(assignment.getExpectedAnswer() != null && assignment.getExpectedAnswer().getList().size() > 0) {
 			string += "<expected>" + converter.convertObjectToString(assignment.getExpectedAnswer().getList()) + "</expected>";
 		} else {
 			string += "<expected/>";

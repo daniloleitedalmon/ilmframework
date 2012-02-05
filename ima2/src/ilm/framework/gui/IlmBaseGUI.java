@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
 
+import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.Assignment;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.gui.BaseGUI;
@@ -286,7 +287,12 @@ public class IlmBaseGUI extends BaseGUI {
 											  _assignments.getInitialState(i),
 											  _assignments.getCurrentState(i),
 											  _assignments.getExpectedAnswer(i));
-				a.setName(tabbedPane.getTitleAt(i));
+				if(tabbedPane.getTabCount() == 0) {
+					a.setName(IlmProtocol.ASSIGNMENT_FILE_NODE + tabCount);
+				}
+				else  {
+					a.setName(tabbedPane.getTitleAt(i));
+				}
 				a.setConfig(_assignments.getConfig(i));
 				a.setMetadata(_assignments.getMetadata(i));
 				list.add(a);
