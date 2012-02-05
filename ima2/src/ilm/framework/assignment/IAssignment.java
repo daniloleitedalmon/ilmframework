@@ -1,5 +1,6 @@
 package ilm.framework.assignment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ilm.framework.assignment.model.AssignmentState;
@@ -27,7 +28,7 @@ public interface IAssignment {
 	
 	public void closeAssignment(int index);
 
-	public int authorAssignment(Assignment assignment);
+	public void authorAssignments(ArrayList<Assignment> assignmentList, String fileName);
 
 	public String getProposition(int i);
 

@@ -1,8 +1,10 @@
 package ilm.framework.gui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
 
+import ilm.framework.assignment.Assignment;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.gui.BaseGUI;
 import ilm.framework.modules.IlmModule;
@@ -140,11 +142,7 @@ public class IlmBaseGUI extends BaseGUI {
 	
 	@Override
 	protected void startAuthoring() {
-		/*if(_authoringGUIList.get(_activeAssignment) == null) {
-			_authoringGUIList.add(getAuthoringGUI());
-		}
-		_authoringGUIList.get(_activeAssignment).setDomainGUI(_domainGUIList.get(_activeAssignment));
-		_authoringGUIList.get(_activeAssignment).setVisible(true);*/
+		_authoringGUIList.get(_activeAssignment).setVisible(true);
 	}
 
 	@Override
@@ -241,9 +239,16 @@ public class IlmBaseGUI extends BaseGUI {
 			return;
 		}
 		int initialIndex = _assignments.openAssignmentFile(fileName);
-		for(int i = initialIndex; i < _assignments.getNumberOfAssignments()-1; i++) {
+		for(int i = initialIndex; i < _assignments.getNumberOfAssignments(); i++) {
+			if(_domainGUIList.size() == 1) {
+				panel.removeAll();
+				panel.add(tabbedPane);
+				tabbedPane.setVisible(true);
+				tabbedPane.addTab("assign" + (tabCount++), _domainGUIList.get(0));
+			}
 			initAssignment(_assignments.getCurrentState(i));
 		}
+		updateCloseButton();
 	}
 	
 	private String getFileNameFromWindow(String option) {
@@ -271,8 +276,23 @@ public class IlmBaseGUI extends BaseGUI {
 
 	@Override
 	protected void saveAssignmentFile(String fileName) {
-		// TODO Auto-generated method stub
-		System.out.println("Save: " + fileName);
+		ArrayList<Assignment> list = new ArrayList<Assignment>();
+		for(int i = 0; i < _assignments.getNumberOfAssignments(); i++) {
+			if(_authoringGUIList.get(i).getProposition().length() > 1) {
+				list.add(_authoringGUIList.get(i).getAssignment());
+			}
+			else {
+				Assignment a = new Assignment(_assignments.getProposition(i),
+											  _assignments.getInitialState(i),
+											  _assignments.getCurrentState(i),
+											  _assignments.getExpectedAnswer(i));
+				a.setName(tabbedPane.getTitleAt(i));
+				a.setConfig(_assignments.getConfig(i));
+				a.setMetadata(_assignments.getMetadata(i));
+				list.add(a);
+			}
+		}
+		_assignments.authorAssignments(list, fileName);
 	}
 	
 }

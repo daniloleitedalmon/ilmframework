@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class Assignment {
 
 	private String _proposition;
+	private String _name;
 	private AssignmentState _initialState;
 	private AssignmentState _currentState;
 	private AssignmentState _expectedAnswer;
@@ -17,6 +18,7 @@ public class Assignment {
 	public Assignment(String proposition, AssignmentState initial, 
 					  AssignmentState current, AssignmentState expected) {
 		_proposition = proposition;
+		_name = "";
 		_initialState = initial;
 		_currentState = current;
 		_expectedAnswer = expected;
@@ -26,6 +28,14 @@ public class Assignment {
 	
 	public String getProposition() {
 		return _proposition;
+	}
+	
+	public String getName() {
+		return _name;
+	}
+	
+	public void setName(String name) {
+		_name = name;
 	}
 	
 	public AssignmentState getInitialState() {

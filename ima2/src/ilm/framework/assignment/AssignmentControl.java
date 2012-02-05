@@ -178,10 +178,23 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	 * 		requested by AuthoringGUI in BaseGUI
 	 */
 	@Override
-	public int authorAssignment(Assignment assignment) {
-		// TODO Auto-generated method stub
-		// set in _config a new parameter regarding the authored assignment
-		return 0;
+	public void authorAssignments(ArrayList<Assignment> assignmentList, String fileName) {
+		AssignmentParser parser = new AssignmentParser();
+		String metadataFileContent = parser.createMetadataFileContent(assignmentList, _config.toString());
+		ArrayList<String> assignmentNameList = parser.getAssignmentFileList(metadataFileContent);
+		ArrayList<String> assignmentContentList = new ArrayList<String>();
+		String assignmentContent = "";
+		for(Assignment a : assignmentList) {
+			assignmentContent = parser.convertAssignmentToString(_converter, a);
+			assignmentContent = parser.getAssignmentModulesData(_converter, assignmentContent, _moduleList);
+			assignmentContentList.add(assignmentContent);
+		}
+		try {
+			_comm.writeAssignmentPackage(fileName, metadataFileContent, null, null, assignmentNameList, assignmentContentList);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -229,7 +242,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 
 	@Override
 	public int openAssignmentFile(String fileName) {
-		int initIndex = _assignmentList.size()-1;
+		int initIndex = _assignmentList.size();
 		AssignmentParser parser = new AssignmentParser();
 		try {
 			String metadataFileContent = _comm.readMetadataFile(fileName);
@@ -269,14 +282,12 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 
 	@Override
 	public HashMap<String, String> getConfig(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return _assignmentList.get(index).getConfig();
 	}
 
 	@Override
 	public HashMap<String, String> getMetadata(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return _assignmentList.get(index).getMetadata();
 	}
 
 	@Override

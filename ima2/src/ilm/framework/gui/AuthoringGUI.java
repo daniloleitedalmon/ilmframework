@@ -29,6 +29,7 @@ public abstract class AuthoringGUI extends JFrame implements Observer {
 									 getInitialState(), 
 									 getInitialState(), 
 									 getExpectedAnswer());
+		_assignment.setName(getAssignmentName());
 		_assignment.setConfig(getConfig());
 		_assignment.setMetadata(getMetadata());
 		return _assignment;
@@ -36,6 +37,8 @@ public abstract class AuthoringGUI extends JFrame implements Observer {
 
 	protected abstract String getProposition();
 
+	protected abstract String getAssignmentName();
+	
 	protected abstract AssignmentState getInitialState();
 
 	protected abstract AssignmentState getExpectedAnswer();

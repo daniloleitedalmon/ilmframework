@@ -162,8 +162,31 @@ final class AssignmentParser {
 		return mergedList;
 	}
 	
-	public String getMetadataFileContent() {
-		return "";
+	public String createMetadataFileContent(ArrayList<Assignment> list, String config) {
+		String string = "<package>";
+		if(list.size() < 1) {
+			return null;
+		}
+		string += "<files>";
+		for(Assignment a : list) {
+			string += "<assignment>" + a.getName() + "</assignment>";
+		}
+		string += "</files></config>" + config + "</config><metadata>";
+		HashMap<String, String> mergedMetadata = new HashMap<String, String>();
+		for(Assignment a : list) {
+			mergedMetadata = mergeMap(mergedMetadata, a.getMetadata());
+		}
+		string += convertMapToString(mergedMetadata) + "</metadata></package>";
+		return string;
+	}
+
+	private HashMap<String, String> mergeMap(HashMap<String, String> mergedMap, HashMap<String, String> map) {
+		for(String key : map.keySet()) {
+			if(!mergedMap.containsKey(key)) {
+				mergedMap.put(key, map.get(key));
+			}
+		}
+		return mergedMap;
 	}
 
 	/**
@@ -193,7 +216,8 @@ final class AssignmentParser {
 		}
 	}
 	
-	public String getAssignmentModulesData(DomainConverter converter, HashMap<String, IlmModule> availableList) {
+	public String getAssignmentModulesData(DomainConverter converter, String assignmentString, 
+										   HashMap<String, IlmModule> availableList) {
 		String string = "<" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">";
 		for(String key : availableList.keySet()) {
 			if(availableList.get(key) instanceof AssignmentModule) {
@@ -201,7 +225,8 @@ final class AssignmentParser {
 			}
 		}
 		string += "</" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">";
-		return string;
+		int index = assignmentString.lastIndexOf("</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">");
+		return assignmentString.substring(0, index-1) + string + assignmentString.substring(index);
 	}
 
 }

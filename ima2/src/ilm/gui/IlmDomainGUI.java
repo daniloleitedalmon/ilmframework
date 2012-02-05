@@ -120,6 +120,7 @@ public class IlmDomainGUI extends DomainGUI {
             action.setDescription("del: " + action.getSubString());
             action.execute();
         }
+		updateRemoveButton();
 	}
 
 	private void addSubString() {
@@ -136,6 +137,7 @@ public class IlmDomainGUI extends DomainGUI {
         else if(textField.getText().length() == 1) {
             textField.setText("");
         }
+        updateAddButton();
 	}
 
     private void updateRemoveButton() {

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BoxLayout;
@@ -24,21 +23,26 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class IlmAuthoringGUI extends AuthoringGUI {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private DefaultListModel currentModel;
+	private DefaultListModel initialModel;
+	private DefaultListModel expectedModel;
 	private JList listCurrent;
 	private JList listInitial;
 	private JList listExpected;
 	private JTextArea propositionArea;
 	private IlmForm _configForm;
 	private IlmForm _metadataForm;
+	private JTextField nameField;
 
 	public IlmAuthoringGUI() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 600, 300);
+		setTitle("Authoring Form");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -51,7 +55,8 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		JLabel lblCurrent = new JLabel("Current");
 		currentPanel.add(lblCurrent, BorderLayout.NORTH);
 		
-		listCurrent = new JList();
+		currentModel = new DefaultListModel();
+		listCurrent = new JList(currentModel);
 		currentPanel.add(listCurrent, BorderLayout.CENTER);
 		
 		JPanel initialPanel = new JPanel();
@@ -61,7 +66,8 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		JLabel lblInitial = new JLabel("Initial");
 		initialPanel.add(lblInitial, BorderLayout.NORTH);
 		
-		listInitial = new JList();
+		initialModel = new DefaultListModel();
+		listInitial = new JList(initialModel);
 		initialPanel.add(listInitial, BorderLayout.CENTER);
 		
 		JPanel panel = new JPanel();
@@ -87,7 +93,8 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		contentPane.add(expectedPanel);
 		expectedPanel.setLayout(new BorderLayout(0, 0));
 		
-		listExpected = new JList();
+		expectedModel = new DefaultListModel();
+		listExpected = new JList(expectedModel);
 		expectedPanel.add(listExpected, BorderLayout.CENTER);
 		
 		JLabel lblExpected = new JLabel("Expected");
@@ -141,7 +148,7 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		configPanel.add(lblProposition, "2, 2");
 		
 		propositionArea = new JTextArea();
-		configPanel.add(propositionArea, "2, 4, fill, fill");
+		configPanel.add(propositionArea, "2, 4, 1, 3, fill, fill");
 		
 		JButton btnConfig = new JButton(IlmProtocol.CONFIG_LIST_NODE);
 		btnConfig.addActionListener(new ActionListener() {
@@ -149,6 +156,13 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 				showForm(_config, IlmProtocol.CONFIG_LIST_NODE);
 			}
 		});
+		
+		JLabel lblName = new JLabel("Name");
+		configPanel.add(lblName, "2, 8");
+		
+		nameField = new JTextField();
+		configPanel.add(nameField, "2, 10, fill, default");
+		nameField.setColumns(10);
 		configPanel.add(btnConfig, "2, 14");
 		
 		JButton btnMetadata = new JButton(IlmProtocol.METADATA_LIST_NODE);
@@ -162,7 +176,7 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		JButton btnOk = new JButton("OK");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveAndExit();
+				setVisible(false);
 			}
 		});
 		configPanel.add(btnOk, "2, 18");
@@ -173,61 +187,40 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		if(o instanceof AssignmentState) {
 			ArrayList<DomainObject> objectList = ((AssignmentState)o).getList();
 			// TODO need a better non-brute force way to do this
-			DefaultListModel listModel = new DefaultListModel();
+			currentModel.clear();
 			for(int i = 0; i < objectList.size(); i++) {
 				// TODO need a way to verify if description is a possible primary key
-				listModel.addElement(objectList.get(i).getDescription());
+				currentModel.addElement(objectList.get(i).getName());
 			}
-			listCurrent.setModel(listModel);
 		}
 	}
 	
 	private void addObjectToInitial() {
-		DefaultListModel listModel = new DefaultListModel();
-		for(int i = 0; i < listInitial.getModel().getSize(); i++) {
-			listModel.addElement(listInitial.getModel().getElementAt(i));
-		}
 		int[] selectedIndices = listCurrent.getSelectedIndices();
-		for(int i : selectedIndices) {
-			listModel.addElement(selectedIndices[i]);
+		for(int i = 0; i < selectedIndices.length; i++) {
+			initialModel.addElement((String)currentModel.getElementAt(selectedIndices[i]));
 		}
-		listInitial.setModel(listModel);
 	}
 	
 	private void removeObjectFromInitial() {
-		DefaultListModel listModel = new DefaultListModel();
-		for(int i = 0; i < listInitial.getModel().getSize(); i++) {
-			listModel.addElement(listInitial.getModel().getElementAt(i));
-		}
 		int[] selectedIndices = listInitial.getSelectedIndices();
-		for(int i : selectedIndices) {
-			listModel.remove(i);
+		for(int i = 0; i < selectedIndices.length; i++) {
+			initialModel.remove(i);
 		}
-		listInitial.setModel(listModel);
 	}
 	
 	private void addObjectToExpected() {
-		DefaultListModel listModel = new DefaultListModel();
-		for(int i = 0; i < listExpected.getModel().getSize(); i++) {
-			listModel.addElement(listExpected.getModel().getElementAt(i));
-		}
 		int[] selectedIndices = listCurrent.getSelectedIndices();
-		for(int i : selectedIndices) {
-			listModel.addElement(selectedIndices[i]);
+		for(int i = 0; i < selectedIndices.length; i++) {
+			expectedModel.addElement((String)currentModel.getElementAt(selectedIndices[i]));
 		}
-		listExpected.setModel(listModel);
 	}
 	
 	private void removeObjectFromExpected() {
-		DefaultListModel listModel = new DefaultListModel();
-		for(int i = 0; i < listExpected.getModel().getSize(); i++) {
-			listModel.addElement(listExpected.getModel().getElementAt(i));
-		}
 		int[] selectedIndices = listExpected.getSelectedIndices();
-		for(int i : selectedIndices) {
-			listModel.remove(i);
-		}
-		listExpected.setModel(listModel);		
+		for(int i = 0; i < selectedIndices.length; i++) {
+			expectedModel.remove(i);
+		}		
 	}
 	
 	private void showForm(HashMap<String, String> map, String title) {
@@ -251,12 +244,19 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 	protected String getProposition() {
 		return propositionArea.getText();
 	}
+	
+	@Override
+	protected String getAssignmentName() {
+		return nameField.getText();
+	}
 
 	@Override
 	protected AssignmentState getInitialState() {
 		AssignmentState state = new AssignmentState();
-		for(int i = 0; i < listInitial.getModel().getSize(); i++) {
-			state.add(_domainGUI.getCurrentState().getFromDescription((String)listInitial.getModel().getElementAt(i)));
+		for(int i = 0; i < initialModel.getSize(); i++) {
+			String objDescription = (String)initialModel.getElementAt(i);
+			DomainObject obj = _domainGUI.getCurrentState().getFromName(objDescription);
+			state.add(obj);
 		}
 		return state;
 	}
@@ -264,29 +264,30 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 	@Override
 	protected AssignmentState getExpectedAnswer() {
 		AssignmentState state = new AssignmentState();
-		for(int i = 0; i < listExpected.getModel().getSize(); i++) {
-			state.add(_domainGUI.getCurrentState().getFromDescription((String)listExpected.getModel().getElementAt(i)));
+		for(int i = 0; i < expectedModel.getSize(); i++) {
+			String objDescription = (String)expectedModel.getElementAt(i);
+			DomainObject obj = _domainGUI.getCurrentState().getFromName(objDescription);
+			state.add(obj);
 		}
 		return state;
 	}
 
 	@Override
 	protected HashMap<String, String> getConfig() {
+		if(_configForm == null) {
+			return new HashMap<String, String>();
+		}
 		_config = _configForm.getUpdatedMap();
 		return _config;
 	}
 
 	@Override
 	protected HashMap<String, String> getMetadata() {
+		if(_metadataForm == null) {
+			return new HashMap<String, String>();
+		}
 		_metadata = _metadataForm.getUpdatedMap();
 		return _metadata;
 	}
 
-	private void saveAndExit() {
-		// TODO Auto-generated method stub
-		// pega todos os dados e coloca na atividade
-		// ou não, esperar definir como a baseGUI 
-		// vai chamar os métodos das AuthoringGUI
-	}
-	
 }

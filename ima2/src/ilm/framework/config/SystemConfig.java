@@ -88,4 +88,12 @@ public final class SystemConfig extends Observable {
 		return _isApplet;
 	}
 	
+	public String toString() {
+		String string = "";
+		for(String s : _parameters.stringPropertyNames()) {
+			string += "<" + s + ">" + _parameters.getProperty(s) + "</" + s + ">";  
+		}
+		return string;
+	}
+	
 }
