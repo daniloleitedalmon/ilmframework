@@ -7,6 +7,8 @@ import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.modules.IlmModule;
 
 public interface IAssignment {
+
+	public String getProposition(int index);
 	
 	public AssignmentState getCurrentState(int index);
 	
@@ -18,18 +20,18 @@ public interface IAssignment {
 	
 	public HashMap<String, String> getMetadata(int index);
 	
+	
 	public HashMap<String, IlmModule> getIlmModuleList();
 	
 	public int getNumberOfAssignments();
 	
-	public int openAssignmentFile(String fileName);
+	
+	public int openAssignmentPackage(String fileName);
+	
+	public void saveAssignmentPackage(ArrayList<Assignment> assignmentList, String fileName);
 	
 	public AssignmentState newAssignment();
 	
 	public void closeAssignment(int index);
-
-	public void authorAssignments(ArrayList<Assignment> assignmentList, String fileName);
-
-	public String getProposition(int i);
 
 }

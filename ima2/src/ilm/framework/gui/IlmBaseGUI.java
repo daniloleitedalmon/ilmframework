@@ -239,7 +239,7 @@ public class IlmBaseGUI extends BaseGUI {
 		if(fileName == null) {
 			return;
 		}
-		int initialIndex = _assignments.openAssignmentFile(fileName);
+		int initialIndex = _assignments.openAssignmentPackage(fileName);
 		for(int i = initialIndex; i < _assignments.getNumberOfAssignments(); i++) {
 			if(_domainGUIList.size() == 1) {
 				panel.removeAll();
@@ -298,7 +298,7 @@ public class IlmBaseGUI extends BaseGUI {
 				list.add(a);
 			}
 		}
-		_assignments.authorAssignments(list, fileName);
+		_assignments.saveAssignmentPackage(list, fileName);
 	}
 	
 }

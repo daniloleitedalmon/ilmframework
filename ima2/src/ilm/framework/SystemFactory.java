@@ -87,7 +87,7 @@ public abstract class SystemFactory {
 															DomainConverter converter) {
 		AssignmentControl assignControl = new AssignmentControl(config, comm, model, converter);
 		for(IlmModule module : getIlmModuleList()) {
-			assignControl.addIlmModule(module);
+			assignControl.addModule(module);
 		}
 		return assignControl;
 	}

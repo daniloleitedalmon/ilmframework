@@ -31,22 +31,25 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		_comm = comm;
 		_model = model;
 		_converter = converter;
-		initIlmModuleList();
+		initModuleList();
 		initAssignments();
 	}
 	
-	private void initIlmModuleList() {
+	
+	private void initModuleList() {
 		_moduleList = new HashMap<String, IlmModule>();
-		IlmModule module = new AutomaticCheckingModule(this, this);
-		((AutomaticCheckingModule)module).setModel(_model);
+		AutomaticCheckingModule module = new AutomaticCheckingModule(this, this);
+		module.setModel(_model);
+		addModule(module);
+		addModule(new UndoRedoModule());
+		addModule(new HistoryModule());
+		addModule(new ObjectListModule());
+	}
+	
+	public void addModule(IlmModule module) {
 		_moduleList.put(module.getName(), module);
-		module = new UndoRedoModule();
-		_moduleList.put(module.getName(), module);
-		module = new HistoryModule();
-		_moduleList.put(module.getName(), module);
-		module = new ObjectListModule();
-		_moduleList.put(module.getName(), module);
-	}	
+	}
+	
 	
 	private void initAssignments() {
 		int numberOfPackages;
@@ -60,15 +63,13 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		_assignmentList = new ArrayList<Assignment>();
 		if(numberOfPackages > 0) {
 			for(int i = 0; i < numberOfPackages; i++) {
-				String metadata = loadPackageFile(i);
-				_assignmentList.addAll(createAssignments(loadAssignmentFiles(i, metadata)));
-				getConfigFromMetadataFile(metadata);
+				String packageFileName = _config.getValue(IlmProtocol.ASSIGNMENT_PACKAGE_PATH + "_" + i);
+				getConfigFromMetadataFile(loadMetadataFile(packageFileName));
+				_assignmentList.addAll(createAssignments(loadAssignmentFiles(packageFileName)));
 			}
 		}
 		else {
-			Assignment a = createNewAssignment();
-			setModulesObservers(a);
-			_assignmentList.add(a);
+			_assignmentList.add(createNewAssignment());
 		}
 	}
 
@@ -86,7 +87,9 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	
 	private Assignment createNewAssignment() {
 		AssignmentState initialState = _model.getNewAssignmentState();
-		return new Assignment("", initialState, initialState, null);
+		Assignment a = new Assignment("", initialState, initialState, null);
+		setModulesObservers(a);
+		return a;
 	}
 	
 	private void setModulesObservers(Assignment assignment) {
@@ -100,10 +103,9 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		}
 	}
 	
-	private String loadPackageFile(int packageIndex) {
-		String packageFilePath = _config.getValue(IlmProtocol.ASSIGNMENT_PACKAGE_PATH + "_" + packageIndex);
+	private String loadMetadataFile(String packageFileName) {
 		try {
-			return _comm.readMetadataFile(packageFilePath);
+			return _comm.readMetadataFile(packageFileName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,13 +121,13 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		}
 	}
 	
-	private ArrayList<String> loadAssignmentFiles(int packageIndex, String metadataFileContent) {
-		String packageFilePath = _config.getValue(IlmProtocol.ASSIGNMENT_PACKAGE_PATH + "_" + packageIndex);
+	private ArrayList<String> loadAssignmentFiles(String packageFileName) {
 		AssignmentParser parser = new AssignmentParser();
+		String metadataFileContent = loadMetadataFile(packageFileName);
 		ArrayList<String> assignmentFileList = parser.getAssignmentFileList(metadataFileContent);
 		HashMap<String, String> metadata = parser.convertStringToMap(metadataFileContent, IlmProtocol.METADATA_LIST_NODE);
 		try {
-			ArrayList<String> assignmentList = _comm.readAssignmentFiles(packageFilePath, assignmentFileList);
+			ArrayList<String> assignmentList = _comm.readAssignmentFiles(packageFileName, assignmentFileList);
 			return parser.mergeMetadata(assignmentList, metadata);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -133,43 +135,8 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		}
 		return null;
 	}
-
-	public void addIlmModule(IlmModule module) {
-		_moduleList.put(module.getName(), module);
-	}
 	
 	
-	/**
-	 * @see IModuleLists
-	 */
-	@Override
-	public HashMap<String, IlmModule> getIlmModuleList() {
-		return _moduleList;
-	}
-
-	/**
-	 * @see IAssignment
-	 */
-	@Override
-	public AssignmentState getCurrentState(int index) {
-		return _assignmentList.get(index).getCurrentState();
-	}
-
-	/**
-	 * @see IAssignment
-	 */
-	@Override
-	public AssignmentState getInitialState(int index) {
-		return _assignmentList.get(index).getInitialState();
-	}
-
-	/**
-	 * @see IAssignment
-	 */
-	@Override
-	public AssignmentState getExpectedAnswer(int index) {
-		return _assignmentList.get(index).getExpectedAnswer();
-	}
 	
 	/**
 	 * @see IAssignment
@@ -178,7 +145,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	 * 		requested by AuthoringGUI in BaseGUI
 	 */
 	@Override
-	public void authorAssignments(ArrayList<Assignment> assignmentList, String fileName) {
+	public void saveAssignmentPackage(ArrayList<Assignment> assignmentList, String fileName) {
 		AssignmentParser parser = new AssignmentParser();
 		String metadataFileContent = parser.createMetadataFileContent(assignmentList, _config.toString());
 		ArrayList<String> assignmentNameList = parser.getAssignmentFileList(metadataFileContent);
@@ -197,16 +164,74 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		}
 	}
 
-	/**
-	 * @see IAssignment
-	 * 
-	 * @return the number of assignments on assignment list
-	 */
+
+	@Override
+	public int openAssignmentPackage(String fileName) {
+		int initIndex = _assignmentList.size();
+		_assignmentList.addAll(createAssignments(loadAssignmentFiles(fileName)));
+		getConfigFromMetadataFile(loadMetadataFile(fileName));
+		return initIndex;
+	}
+
+	@Override
+	public AssignmentState newAssignment() {
+		Assignment a = createNewAssignment();
+		_assignmentList.add(a);
+		return a.getCurrentState();
+	}
+
+	@Override
+	public void closeAssignment(int index) {
+		_assignmentList.remove(index);
+		for(String key : _moduleList.keySet()) {
+			if(_moduleList.get(key) instanceof AssignmentModule) {
+				((AssignmentModule)_moduleList.get(key)).removeAssignment(index);
+			}
+		}
+	}
+
+	
 	@Override
 	public int getNumberOfAssignments() {
 		return _assignmentList.size();
 	}
 
+	@Override
+	public HashMap<String, IlmModule> getIlmModuleList() {
+		return _moduleList;
+	}
+
+	@Override
+	public AssignmentState getCurrentState(int index) {
+		return _assignmentList.get(index).getCurrentState();
+	}
+
+	@Override
+	public AssignmentState getInitialState(int index) {
+		return _assignmentList.get(index).getInitialState();
+	}
+
+	@Override
+	public AssignmentState getExpectedAnswer(int index) {
+		return _assignmentList.get(index).getExpectedAnswer();
+	}
+
+	@Override
+	public HashMap<String, String> getConfig(int index) {
+		return _assignmentList.get(index).getConfig();
+	}
+
+	@Override
+	public HashMap<String, String> getMetadata(int index) {
+		return _assignmentList.get(index).getMetadata();
+	}
+
+	@Override
+	public String getProposition(int index) {
+		return _assignmentList.get(index).getProposition();
+	}
+
+	
 	/**
 	 * @see IAssignmentOperator
 	 * 
@@ -240,59 +265,4 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		}
 	}
 
-	@Override
-	public int openAssignmentFile(String fileName) {
-		int initIndex = _assignmentList.size();
-		AssignmentParser parser = new AssignmentParser();
-		try {
-			String metadataFileContent = _comm.readMetadataFile(fileName);
-			ArrayList<String> assignmentFileList = parser.getAssignmentFileList(metadataFileContent);
-			HashMap<String, String> metadata = parser.convertStringToMap(metadataFileContent, IlmProtocol.METADATA_LIST_NODE);
-			ArrayList<String> assignmentList = _comm.readAssignmentFiles(fileName, assignmentFileList);
-			_assignmentList.addAll(createAssignments(parser.mergeMetadata(assignmentList, metadata)));
-			getConfigFromMetadataFile(metadataFileContent);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return initIndex;
-	}
-
-	@Override
-	public AssignmentState newAssignment() {
-		Assignment a = createNewAssignment();
-		setModulesObservers(a);
-		_assignmentList.add(a);
-		return a.getCurrentState();
-	}
-
-	@Override
-	public void closeAssignment(int index) {
-		_assignmentList.remove(index);
-		removeAssignmentFromModules(index);
-	}
-
-	private void removeAssignmentFromModules(int index) {
-		for(String key : _moduleList.keySet()) {
-			if(_moduleList.get(key) instanceof AssignmentModule) {
-				((AssignmentModule)_moduleList.get(key)).removeAssignment(index);
-			}
-		}
-	}
-
-	@Override
-	public HashMap<String, String> getConfig(int index) {
-		return _assignmentList.get(index).getConfig();
-	}
-
-	@Override
-	public HashMap<String, String> getMetadata(int index) {
-		return _assignmentList.get(index).getMetadata();
-	}
-
-	@Override
-	public String getProposition(int index) {
-		return _assignmentList.get(index).getProposition();
-	}
-	
 }

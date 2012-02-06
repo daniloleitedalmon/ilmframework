@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 final class AssignmentParser {
-
+	
 	/**
 	 * CONVERSÃO DE STRING PARA ATIVIDADE (LEITURA DE ARQUIVOS)
 	 * @param converter
@@ -79,20 +79,24 @@ final class AssignmentParser {
 	 */
 	public String convertAssignmentToString(DomainConverter converter, Assignment assignment) {
 		String string = "<" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">";
-		string += "<proposition>" + assignment.getProposition() + "</proposition>";
-		string += "<initial>" + converter.convertObjectToString(assignment.getInitialState().getList()) + "</initial>";
+		string += "<" + IlmProtocol.ASSIGNMENT_PROPOSITION + ">" + assignment.getProposition() + 
+				 "</" + IlmProtocol.ASSIGNMENT_PROPOSITION + ">";
+		string += "<" + IlmProtocol.ASSIGNMENT_INITIAL_NODE + ">" + converter.convertObjectToString(assignment.getInitialState().getList()) + 
+				 "</" + IlmProtocol.ASSIGNMENT_INITIAL_NODE + ">";
 		if(assignment.getCurrentState().getList().size() > 0) {
-			string += "<current>" + converter.convertObjectToString(assignment.getCurrentState().getList()) + "</current>";
+			string += "<" + IlmProtocol.ASSIGNMENT_CURRENT_NODE + ">" + converter.convertObjectToString(assignment.getCurrentState().getList()) + 
+					"</" + IlmProtocol.ASSIGNMENT_CURRENT_NODE + ">";
 		} else {
-			string += "<current/>";
+			string += "<" + IlmProtocol.ASSIGNMENT_CURRENT_NODE + "/>";
 		}
 		if(assignment.getExpectedAnswer() != null && assignment.getExpectedAnswer().getList().size() > 0) {
-			string += "<expected>" + converter.convertObjectToString(assignment.getExpectedAnswer().getList()) + "</expected>";
+			string += "<" + IlmProtocol.ASSIGNMENT_EXPECTED_NODE + ">" + converter.convertObjectToString(assignment.getExpectedAnswer().getList()) + 
+					"</" + IlmProtocol.ASSIGNMENT_EXPECTED_NODE + ">";
 		} else {
-			string += "<expected/>";
+			string += "<" + IlmProtocol.ASSIGNMENT_EXPECTED_NODE + "/>";
 		}
-		string += "<config>" + convertMapToString(assignment.getConfig()) + "</config>";
-		string += "<metadata>" + convertMapToString(assignment.getMetadata()) + "</metadata>";
+		string += "<" + IlmProtocol.CONFIG_LIST_NODE + ">" + convertMapToString(assignment.getConfig()) + "</" + IlmProtocol.CONFIG_LIST_NODE + ">";
+		string += "<" + IlmProtocol.METADATA_LIST_NODE + ">" + convertMapToString(assignment.getMetadata()) + "</" + IlmProtocol.METADATA_LIST_NODE + ">";
 		string += "</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">";
 		return string;
 	}
@@ -163,20 +167,25 @@ final class AssignmentParser {
 	}
 	
 	public String createMetadataFileContent(ArrayList<Assignment> list, String config) {
-		String string = "<package>";
+		String string = "<" + IlmProtocol.PACKAGE_NODE + ">";
 		if(list.size() < 1) {
 			return null;
 		}
-		string += "<files>";
+		string += "<" + IlmProtocol.FILE_LIST_NODE + ">";
 		for(Assignment a : list) {
-			string += "<assignment>" + a.getName() + "</assignment>";
+			string += "<" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">" + a.getName() + "</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">";
 		}
-		string += "</files></config>" + config + "</config><metadata>";
+		string += "</" + IlmProtocol.FILE_LIST_NODE + "></" 
+				  	   + IlmProtocol.CONFIG_LIST_NODE + ">" + config + 
+				  "</" + IlmProtocol.CONFIG_LIST_NODE + "><" + 
+				  	     IlmProtocol.METADATA_LIST_NODE + ">";
 		HashMap<String, String> mergedMetadata = new HashMap<String, String>();
 		for(Assignment a : list) {
 			mergedMetadata = mergeMap(mergedMetadata, a.getMetadata());
 		}
-		string += convertMapToString(mergedMetadata) + "</metadata></package>";
+		string += convertMapToString(mergedMetadata) + "</" + 
+					IlmProtocol.METADATA_LIST_NODE + "></" + 
+					IlmProtocol.PACKAGE_NODE + ">";
 		return string;
 	}
 
