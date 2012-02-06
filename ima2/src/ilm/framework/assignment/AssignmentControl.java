@@ -6,16 +6,16 @@ import java.util.HashMap;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
-import ilm.framework.assignment.modules.HistoryModule;
-import ilm.framework.assignment.modules.ObjectListModule;
-import ilm.framework.assignment.modules.UndoRedoModule;
 import ilm.framework.comm.ICommunication;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.domain.DomainModel;
 import ilm.framework.modules.AssignmentModule;
-import ilm.framework.modules.AutomaticCheckingModule;
 import ilm.framework.modules.IlmModule;
+import ilm.framework.modules.assignment.HistoryModule;
+import ilm.framework.modules.assignment.ObjectListModule;
+import ilm.framework.modules.assignment.UndoRedoModule;
+import ilm.framework.modules.operation.AutomaticCheckingModule;
 
 public final class AssignmentControl implements IAssignment, IAssignmentOperator {
 

@@ -1,4 +1,4 @@
-package ilm.framework.modules;
+package ilm.framework.modules.operation;
 
 import java.util.ArrayList;
 
@@ -7,6 +7,7 @@ import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IAssignmentOperator;
 import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.domain.DomainModel;
+import ilm.framework.modules.OperationModule;
 
 public class AutomaticCheckingModule extends OperationModule implements IlmProtocol {
 

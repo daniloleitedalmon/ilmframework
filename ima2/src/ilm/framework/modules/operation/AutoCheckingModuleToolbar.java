@@ -1,4 +1,6 @@
-package ilm.framework.modules;
+package ilm.framework.modules.operation;
+
+import ilm.framework.modules.IlmModuleToolbar;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;

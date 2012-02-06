@@ -1,4 +1,4 @@
-package ilm.modules.scorm;
+package ilm.modules.operation.scorm;
 
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.IAssignmentOperator;

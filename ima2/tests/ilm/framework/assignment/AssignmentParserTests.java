@@ -5,12 +5,12 @@ import static org.junit.Assert.*;
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
-import ilm.framework.assignment.modules.HistoryModule;
-import ilm.framework.assignment.modules.ObjectListModule;
-import ilm.framework.assignment.modules.UndoRedoModule;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.modules.AssignmentModule;
 import ilm.framework.modules.IlmModule;
+import ilm.framework.modules.assignment.HistoryModule;
+import ilm.framework.modules.assignment.ObjectListModule;
+import ilm.framework.modules.assignment.UndoRedoModule;
 import ilm.model.IlmDomainConverter;
 import ilm.model.ObjectSubString;
 

@@ -1,11 +1,11 @@
-package ilm.assignment.modules.script;
+package ilm.modules.assignment.tutor;
 
 import java.util.Observable;
 
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.modules.AssignmentModule;
 
-public class ScriptModule extends AssignmentModule {
+public class ExampleTracingTutorModule extends AssignmentModule {
 
 	@Override
 	public void update(Observable o, Object arg) {

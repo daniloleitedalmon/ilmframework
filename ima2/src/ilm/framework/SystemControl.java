@@ -6,7 +6,7 @@ import ilm.framework.assignment.AssignmentControl;
 import ilm.framework.comm.CommControl;
 import ilm.framework.config.*;
 import ilm.framework.gui.BaseGUI;
-import ilm.framework.modules.AutomaticCheckingModule;
+import ilm.framework.modules.operation.AutomaticCheckingModule;
 
 public final class SystemControl {
 

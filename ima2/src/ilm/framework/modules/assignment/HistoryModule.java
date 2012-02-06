@@ -1,4 +1,4 @@
-package ilm.framework.assignment.modules;
+package ilm.framework.modules.assignment;
 
 import java.util.ArrayList;
 import java.util.Observable;

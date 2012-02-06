@@ -1,4 +1,4 @@
-package ilm.framework.assignment.modules;
+package ilm.framework.modules.assignment;
 
 import ilm.framework.modules.IlmModuleToolbar;
 
@@ -9,24 +9,24 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class ObjectListModuleToolbar extends IlmModuleToolbar {
+public class HistoryModuleToolbar extends IlmModuleToolbar {
 
 	private static final long serialVersionUID = 1L;
-	private ObjectListModuleGUI _window;
+	private HistoryModuleGUI _window;
 	private JButton button;
 	
-	public ObjectListModuleToolbar() {
+	public HistoryModuleToolbar() {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		button = makeButton("objectlist", "OBJECT LIST", "Open the list of objects", "Object List window");
+		button = makeButton("history", "HISTORY", "Open the history of actions", "History window");
 		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				showWindow();
 			}
 		});
 		add(button);
 		
-		_window = new ObjectListModuleGUI();
+		_window = new HistoryModuleGUI();
 	}
 	
 	private void showWindow() {
