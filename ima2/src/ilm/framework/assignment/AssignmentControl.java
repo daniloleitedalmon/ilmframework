@@ -76,29 +76,49 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	private ArrayList<Assignment> createAssignments(ArrayList<String> stringList) {
 		ArrayList<Assignment> assignmentList = new ArrayList<Assignment>();
 		AssignmentParser parser = new AssignmentParser();
-		for(String assignmentString : stringList) {
-			Assignment a = parser.convertStringToAssignment(_converter, assignmentString);
+		int n = getNumberOfAssignments();
+		for(int i = 0; i < stringList.size(); i++) {
+			Assignment a = parser.convertStringToAssignment(_converter, stringList.get(i));
 			assignmentList.add(a);
-			setModulesObservers(a);
-			parser.setAssignmentModulesData(_converter, assignmentString, _moduleList);
+			if(a.getExpectedAnswer() == null || a.getExpectedAnswer().getList().size() < 1 ||
+					!a.getInitialState().equals(a.getCurrentState())) {
+				parser.setAssignmentModulesData(_converter, stringList.get(i), _moduleList, i + n);
+			}
+			else {
+				addAssignmentToModules();
+			}
+			setModulesAssignment(a);
 		}
 		return assignmentList;
 	}
-	
+
 	private Assignment createNewAssignment() {
 		AssignmentState initialState = _model.getNewAssignmentState();
 		Assignment a = new Assignment("", initialState, initialState, null);
-		setModulesObservers(a);
+		addAssignmentToModules();
+		setModulesAssignment(a);
 		return a;
 	}
-	
-	private void setModulesObservers(Assignment assignment) {
+
+	private void addAssignmentToModules() {
 		for(String key : _moduleList.keySet()) {
 			if(_moduleList.get(key) instanceof AssignmentModule) {
 				((AssignmentModule)_moduleList.get(key)).addAssignment();
+			}
+		}
+	}
+	
+	private void setModulesAssignment(Assignment assignment) {
+		for(String key : _moduleList.keySet()) {
+			if(_moduleList.get(key) instanceof AssignmentModule) {
 				if(((AssignmentModule)_moduleList.get(key)).getObserverType() != AssignmentModule.ACTION_OBSERVER) {
 					assignment.getCurrentState().addObserver((AssignmentModule)_moduleList.get(key));
 				}
+				if(((AssignmentModule)_moduleList.get(key)).getObserverType() != AssignmentModule.OBJECT_OBSERVER) {
+					((AssignmentModule)_moduleList.get(key)).setDomainModel(_model);
+					((AssignmentModule)_moduleList.get(key)).setActionObservers(_moduleList.values());
+				}
+				((AssignmentModule)_moduleList.get(key)).setState(assignment.getCurrentState());
 			}
 		}
 	}
@@ -151,9 +171,12 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		ArrayList<String> assignmentNameList = parser.getAssignmentFileList(metadataFileContent);
 		ArrayList<String> assignmentContentList = new ArrayList<String>();
 		String assignmentContent = "";
-		for(Assignment a : assignmentList) {
-			assignmentContent = parser.convertAssignmentToString(_converter, a);
-			assignmentContent = parser.getAssignmentModulesData(_converter, assignmentContent, _moduleList);
+		for(int i = 0; i < assignmentList.size(); i++) {
+			assignmentContent = parser.convertAssignmentToString(_converter, assignmentList.get(i));
+			if(assignmentList.get(i).getExpectedAnswer() == null || assignmentList.get(i).getExpectedAnswer().getList().size() < 1 ||
+					!assignmentList.get(i).getInitialState().equals(assignmentList.get(i).getCurrentState())) {
+				assignmentContent = parser.getAssignmentModulesData(_converter, assignmentContent, _moduleList, i);
+			}
 			assignmentContentList.add(assignmentContent);
 		}
 		try {

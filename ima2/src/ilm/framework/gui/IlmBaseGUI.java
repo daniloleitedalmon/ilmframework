@@ -67,7 +67,11 @@ public class IlmBaseGUI extends BaseGUI {
 													_assignments.getCurrentState(0), 
 													_assignments.getIlmModuleList().values());
 			panel.add(_domainGUIList.get(index));
-			_authoringGUIList.add(_factory.createAuthoringGUI(_domainGUIList.get(index), 
+			_authoringGUIList.add(_factory.createAuthoringGUI(_domainGUIList.get(index),
+															  _assignments.getProposition(0),
+															  _assignments.getInitialState(0),
+															  _assignments.getCurrentState(0),
+															  _assignments.getExpectedAnswer(0),
 															  _assignments.getConfig(0), 
 															  _assignments.getMetadata(0)));
 			setActiveAssignment();
@@ -90,6 +94,10 @@ public class IlmBaseGUI extends BaseGUI {
 		tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
 		setActiveAssignment();
 		_authoringGUIList.add(_factory.createAuthoringGUI(_domainGUIList.get(index), 
+														  _assignments.getProposition(index),
+														  _assignments.getInitialState(index),
+														  _assignments.getCurrentState(index),
+														  _assignments.getExpectedAnswer(index),
 														  _assignments.getConfig(index), 
 														  _assignments.getMetadata(index)));
 	}

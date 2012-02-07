@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import ilm.framework.assignment.AssignmentControl;
 import ilm.framework.assignment.IAssignment;
+import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.comm.CommControl;
 import ilm.framework.comm.ICommunication;
 import ilm.framework.comm.IlmAppletFileRW;
@@ -53,11 +54,16 @@ public abstract class SystemFactory {
 		return gui;
 	}
 	
-	public AuthoringGUI createAuthoringGUI(DomainGUI domainGUI, 
-											HashMap<String, String> config, 
-											HashMap<String, String> metadata) {
+	public AuthoringGUI createAuthoringGUI(DomainGUI domainGUI,
+										   String proposition,
+										   AssignmentState initial,
+										   AssignmentState current,
+										   AssignmentState expected,
+										   HashMap<String, String> config, 
+										   HashMap<String, String> metadata) {
 		AuthoringGUI gui = new IlmAuthoringGUI();
 		gui.setComponents(config, domainGUI, metadata);
+		gui.setAssignment(proposition, initial, current, expected);
 		return gui;
 	}
 	

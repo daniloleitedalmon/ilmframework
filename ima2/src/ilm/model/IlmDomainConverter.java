@@ -11,7 +11,7 @@ public class IlmDomainConverter implements DomainConverter {
 	@Override
 	public ArrayList<DomainObject> convertStringToObject(String string) {
 		ArrayList<DomainObject> list = new ArrayList<DomainObject>();
-		if(string.length() == 0) {
+		if(string.length() == 0 || string.equals("<objects></objects>")) {
 			return list;
 		}
 		

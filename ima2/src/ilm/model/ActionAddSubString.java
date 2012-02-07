@@ -1,6 +1,7 @@
 package ilm.model;
 
 import ilm.framework.assignment.model.DomainAction;
+import ilm.framework.domain.DomainModel;
 
 public class ActionAddSubString extends DomainAction {
     
@@ -52,6 +53,11 @@ public class ActionAddSubString extends DomainAction {
 	public String toXMLString() {
 		return "<addaction><name>" + getName() + "</name><description>" + getDescription() + 
 				"</description><substring>" + _substring + "</substring></addaction>";
+	}
+
+	@Override
+	public void setDomainModel(DomainModel model) {
+		_domain = (IlmDomainModel)model;
 	}
 
 }

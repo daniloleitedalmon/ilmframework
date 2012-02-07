@@ -238,7 +238,7 @@ public class AssignmentParserTests {
 		ilmModuleList.put(module.getName(), module);
 		module = new ObjectListModule();
 		ilmModuleList.put(module.getName(), module);
-		objUnderTest.setAssignmentModulesData(converter, assignStr, ilmModuleList);
+		objUnderTest.setAssignmentModulesData(converter, assignStr, ilmModuleList, 0);
 		
 		ArrayList<DomainObject> expected = new ArrayList<DomainObject>();
 		expected.add(new ObjectSubString("a", "a", "a"));
@@ -263,7 +263,7 @@ public class AssignmentParserTests {
 		module.setAssignmentIndex(0);
 		ilmModuleList.put(module.getName(), module);
 		module = new ObjectListModule();
-		module.setContentFromString(converter, assignStr.substring(assignStr.lastIndexOf("<object_list>") 
+		module.setContentFromString(converter, 0, assignStr.substring(assignStr.lastIndexOf("<object_list>") 
 																	+ "<object_list>".length(), 
 																   assignStr.lastIndexOf("</object_list>")));
 		module.setAssignmentIndex(0);

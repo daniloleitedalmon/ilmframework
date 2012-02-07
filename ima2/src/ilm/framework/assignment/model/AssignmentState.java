@@ -61,4 +61,16 @@ public final class AssignmentState extends Observable {
     	_objectList = list;
     }
     
+    public final boolean equals(AssignmentState state) {
+    	if(_objectList.size() != state.getList().size()) {
+    		return false;
+    	}
+    	for(int i = 0; i < _objectList.size(); i++) {
+    		if(!_objectList.get(i).equals(state.get(i))) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+    
 }

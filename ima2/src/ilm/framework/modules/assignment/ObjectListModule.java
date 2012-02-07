@@ -1,13 +1,16 @@
 package ilm.framework.modules.assignment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.domain.DomainConverter;
+import ilm.framework.domain.DomainModel;
 import ilm.framework.modules.AssignmentModule;
+import ilm.framework.modules.IlmModule;
 
 public class ObjectListModule extends AssignmentModule {
 
@@ -42,8 +45,13 @@ public class ObjectListModule extends AssignmentModule {
 	}
 
 	@Override
-	public void setContentFromString(DomainConverter converter,	String moduleContent) {
-		_objectList.add(converter.convertStringToObject(moduleContent));
+	public void setContentFromString(DomainConverter converter,	int index, String moduleContent) {
+		if(_objectList.size() == index) {
+			addAssignment();
+		}
+		for(DomainObject obj : converter.convertStringToObject(moduleContent)) {
+			_objectList.get(index).add(obj);
+		}
 	}
 
 	@Override
@@ -63,12 +71,12 @@ public class ObjectListModule extends AssignmentModule {
 	}
 
 	@Override
-	public String getStringContent(DomainConverter converter) {
+	public String getStringContent(DomainConverter converter, int index) {
 		if(_objectList.get(_assignmentIndex).size() == 0) {
 			return "<" + _name + "/>";
 		}
 		String string = "<" + _name + "><objects>";
-		for(DomainObject obj : _objectList.get(_assignmentIndex)) {
+		for(DomainObject obj : _objectList.get(index)) {
 			string += obj.toXMLString();
 		}
 		string += "</objects></" + _name + ">";
@@ -78,6 +86,21 @@ public class ObjectListModule extends AssignmentModule {
 	@Override
 	public void removeAssignment(int index) {
 		_objectList.remove(index);
+	}
+
+	@Override
+	public void setDomainModel(DomainModel model) {
+		
+	}
+
+	@Override
+	public void setState(AssignmentState state) {
+		
+	}
+
+	@Override
+	public void setActionObservers(Collection<IlmModule> values) {
+		
 	}
 
 }

@@ -1,12 +1,16 @@
 package ilm.framework.modules.assignment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
 import ilm.framework.IlmProtocol;
+import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.domain.DomainConverter;
+import ilm.framework.domain.DomainModel;
 import ilm.framework.modules.AssignmentModule;
+import ilm.framework.modules.IlmModule;
 
 public class HistoryModule extends AssignmentModule {
 
@@ -42,8 +46,14 @@ public class HistoryModule extends AssignmentModule {
 	}
 
 	@Override
-	public void setContentFromString(DomainConverter converter,	String moduleContent) {
-		_history.add(converter.convertStringToAction(moduleContent));
+	public void setContentFromString(DomainConverter converter,	int index, String moduleContent) {
+		if(_history.size() == index) {
+			addAssignment();
+		}
+		for(DomainAction action : converter.convertStringToAction(moduleContent)) {
+			action.addObserver(this);
+			_history.get(index).add(action);
+		}
 	}
 
 	@Override
@@ -63,12 +73,12 @@ public class HistoryModule extends AssignmentModule {
 	}
 
 	@Override
-	public String getStringContent(DomainConverter converter) {
+	public String getStringContent(DomainConverter converter, int index) {
 		if(_history.get(_assignmentIndex).size() == 0) {
 			return "<" + _name + "/>";
 		}
 		String string = "<" + _name + ">";
-		for(DomainAction action : _history.get(_assignmentIndex)) {
+		for(DomainAction action : _history.get(index)) {
 			string += action.toXMLString();
 		}
 		string += "</" + _name + ">";
@@ -78,6 +88,35 @@ public class HistoryModule extends AssignmentModule {
 	@Override
 	public void removeAssignment(int index) {
 		_history.remove(index);
+	}
+
+	@Override
+	public void setDomainModel(DomainModel model) {
+		for(ArrayList<DomainAction> list : _history) {
+			for(DomainAction action : list) {
+				action.setDomainModel(model);
+			}
+		}
+	}
+
+	@Override
+	public void setState(AssignmentState state) {
+		for(DomainAction action : _history.get(_history.size()-1)) {
+			action.setState(state);
+		}
+	}
+
+	@Override
+	public void setActionObservers(Collection<IlmModule> values) {
+		for(IlmModule m : values) {
+			if(m instanceof AssignmentModule) {
+				for(ArrayList<DomainAction> list : _history) {
+					for(DomainAction action : list) {
+						action.addObserver((AssignmentModule)m);
+					}
+				}
+			}
+		}
 	}
 
 }

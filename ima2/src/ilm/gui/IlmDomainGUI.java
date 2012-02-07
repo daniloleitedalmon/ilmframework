@@ -102,13 +102,13 @@ public class IlmDomainGUI extends DomainGUI {
     @Override
     public void update(Observable o, Object arg) {
     	if(o instanceof AssignmentState) {
-            AssignmentState state = (AssignmentState)o;
-            String temp = "";
-            for(DomainObject obj : state.getList()) {
-            	temp += obj.getDescription();
-            }
-            lblLabel.setText(temp);
+            _state = (AssignmentState)o;
         }
+        String temp = "";
+    	for(DomainObject obj : _state.getList()) {
+        	temp += obj.getDescription();
+        }
+        lblLabel.setText(temp);
     	updateRemoveButton();
     	updateAddButton();
     }
@@ -161,6 +161,7 @@ public class IlmDomainGUI extends DomainGUI {
 	@Override
 	protected void initDomainGUI() {
 		lblProposition.setText(_proposition);
+		update(null, null);
 	}
     
 }

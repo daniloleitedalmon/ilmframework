@@ -195,6 +195,21 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		}
 	}
 	
+	protected void initFields() {
+		for(DomainObject obj : _assignment.getInitialState().getList()) {
+			initialModel.addElement(obj.getName());
+		}
+		for(DomainObject obj : _assignment.getCurrentState().getList()) {
+			currentModel.addElement(obj.getName());
+		}
+		if(_assignment.getExpectedAnswer() != null) {
+			for(DomainObject obj : _assignment.getExpectedAnswer().getList()) {
+				expectedModel.addElement(obj.getName());
+			}
+		}
+		propositionArea.setText(_assignment.getProposition());
+	}
+
 	private void addObjectToInitial() {
 		int[] selectedIndices = listCurrent.getSelectedIndices();
 		for(int i = 0; i < selectedIndices.length; i++) {

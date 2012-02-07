@@ -52,18 +52,21 @@ final class AssignmentParser {
 	}
 
 	public HashMap<String, String> convertStringToMap(String xmlContent, String nodeName) {
-		int listLength = nodeName.length();
+		int listNodeLength = nodeName.length();
 		int startIndex = xmlContent.indexOf("<" + nodeName + ">");
 		int endIndex = xmlContent.indexOf("</" + nodeName + ">");
-		String listString = xmlContent.substring(startIndex, endIndex + 3 + listLength);
+		String listString = xmlContent.substring(startIndex, endIndex + 3 + listNodeLength);
 
 		HashMap<String, String> map = new HashMap<String, String>();
 		int nodeLength = 0;
-		endIndex = listLength;
+		endIndex = listNodeLength;
 		do {
 			startIndex = listString.indexOf("<", endIndex + 1);
 			nodeLength = listString.indexOf(">", startIndex) - startIndex;
 			endIndex = listString.indexOf("</", startIndex);
+			if(startIndex == endIndex) {
+				break;
+			}
 			map.put(listString.substring(startIndex + 1, startIndex + nodeLength), 
 						  listString.substring(startIndex + nodeLength + 1, endIndex));
 			// TODO define a better threshold - differences when there are breaklines chars
@@ -175,7 +178,7 @@ final class AssignmentParser {
 		for(Assignment a : list) {
 			string += "<" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">" + a.getName() + "</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">";
 		}
-		string += "</" + IlmProtocol.FILE_LIST_NODE + "></" 
+		string += "</" + IlmProtocol.FILE_LIST_NODE + "><" 
 				  	   + IlmProtocol.CONFIG_LIST_NODE + ">" + config + 
 				  "</" + IlmProtocol.CONFIG_LIST_NODE + "><" + 
 				  	     IlmProtocol.METADATA_LIST_NODE + ">";
@@ -205,9 +208,12 @@ final class AssignmentParser {
 	 * @param availableList
 	 */
 	public void setAssignmentModulesData(DomainConverter converter, String assignmentString,
-										 HashMap<String, IlmModule> availableList) {
+										 HashMap<String, IlmModule> availableList, int assignmentIndex) {
 		int startIndex = assignmentString.indexOf("<" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">");
 		int endIndex = assignmentString.indexOf("</" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">");
+		if(startIndex == -1 || endIndex == -1) {
+			return;
+		}
 		String moduleListString = assignmentString.substring(startIndex + IlmProtocol.ASSIGNMENT_MODULES_NODE.length() + 2, 
 															 endIndex);
 		String moduleString = "";
@@ -220,22 +226,22 @@ final class AssignmentParser {
 				moduleString = "";
 			}
 			if(availableList.get(key) instanceof AssignmentModule) {
-				((AssignmentModule)availableList.get(key)).setContentFromString(converter, moduleString);
+				((AssignmentModule)availableList.get(key)).setContentFromString(converter, assignmentIndex, moduleString);
 			}
 		}
 	}
 	
 	public String getAssignmentModulesData(DomainConverter converter, String assignmentString, 
-										   HashMap<String, IlmModule> availableList) {
+										   HashMap<String, IlmModule> availableList, int assignmentIndex) {
 		String string = "<" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">";
 		for(String key : availableList.keySet()) {
 			if(availableList.get(key) instanceof AssignmentModule) {
-				string += ((AssignmentModule)availableList.get(key)).getStringContent(converter);
+				string += ((AssignmentModule)availableList.get(key)).getStringContent(converter, assignmentIndex);
 			}
 		}
 		string += "</" + IlmProtocol.ASSIGNMENT_MODULES_NODE + ">";
 		int index = assignmentString.lastIndexOf("</" + IlmProtocol.ASSIGNMENT_FILE_NODE + ">");
-		return assignmentString.substring(0, index-1) + string + assignmentString.substring(index);
+		return assignmentString.substring(0, index) + string + assignmentString.substring(index);
 	}
 
 }

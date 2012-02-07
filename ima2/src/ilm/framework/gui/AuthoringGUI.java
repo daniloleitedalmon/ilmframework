@@ -47,4 +47,12 @@ public abstract class AuthoringGUI extends JFrame implements Observer {
 	
 	protected abstract HashMap<String, String> getMetadata();
 
+	public void setAssignment(String proposition, AssignmentState initial,
+			AssignmentState current, AssignmentState expected) {
+		_assignment = new Assignment(proposition, initial, current, expected);
+		initFields();
+	}
+	
+	protected abstract void initFields();
+
 }

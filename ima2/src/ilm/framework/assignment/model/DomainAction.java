@@ -1,5 +1,7 @@
 package ilm.framework.assignment.model;
 
+import ilm.framework.domain.DomainModel;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -17,6 +19,8 @@ public abstract class DomainAction extends Observable implements Cloneable {
     	_description = description;
     	_parameterList = new ArrayList<DomainObject>();
     }
+    
+    public abstract void setDomainModel(DomainModel model);
     
     public final void execute() {
         executeAction();

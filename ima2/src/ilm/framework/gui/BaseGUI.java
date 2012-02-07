@@ -8,6 +8,7 @@ import ilm.framework.SystemFactory;
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainGUI;
+import ilm.framework.modules.AssignmentModule;
 import ilm.framework.modules.IlmModule;
 
 import javax.swing.ImageIcon;
@@ -58,6 +59,12 @@ public abstract class BaseGUI extends JPanel implements Observer {
 		_activeAssignment = index;
 		for(IlmModule module: _assignments.getIlmModuleList().values()) {
 			module.setAssignmentIndex(index);
+			if(module instanceof AssignmentModule) {
+				AssignmentModule m = (AssignmentModule)module;
+				if(m.getObserverType() != AssignmentModule.ACTION_OBSERVER) {
+					m.update(_assignments.getCurrentState(index), null);
+				}
+			}
 		}
 	}
 	

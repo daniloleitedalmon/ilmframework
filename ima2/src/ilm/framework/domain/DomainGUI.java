@@ -21,7 +21,8 @@ public abstract class DomainGUI extends JPanel implements Observer {
 	protected AssignmentState _state;
 	protected HashMap<String, DomainAction> _actionList;
 	
-	public void setAssignment(String proposition, AssignmentState curState, Collection<IlmModule> moduleList) {
+	public void setAssignment(String proposition, AssignmentState curState, 
+								Collection<IlmModule> moduleList) {
 		_proposition = proposition;
 		_state = curState;
 		_state.addObserver(this);
@@ -41,7 +42,7 @@ public abstract class DomainGUI extends JPanel implements Observer {
 	}
 	    
 	protected abstract void initDomainGUI();
-	
+
 	public abstract void setDomainModel(DomainModel model);
 	
 	public abstract ArrayList<DomainObject> getSelectedObjects();
