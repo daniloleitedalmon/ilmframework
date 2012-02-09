@@ -10,6 +10,9 @@ import ilm.framework.assignment.model.DomainObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import example.ilm.model.IlmDomainModel;
+import example.ilm.model.ObjectSubString;
+
 public class IlmDomainModelTests {
 
 	private IlmDomainModel objUnderTest;

@@ -1,6 +1,10 @@
-package ilm;
+package example.ilm;
 
 import java.util.ArrayList;
+
+import example.ilm.gui.IlmDomainGUI;
+import example.ilm.model.IlmDomainConverter;
+import example.ilm.model.IlmDomainModel;
 
 import ilm.framework.SystemFactory;
 import ilm.framework.config.SystemConfig;
@@ -8,9 +12,6 @@ import ilm.framework.domain.DomainConverter;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.domain.DomainModel;
 import ilm.framework.modules.IlmModule;
-import ilm.gui.IlmDomainGUI;
-import ilm.model.IlmDomainConverter;
-import ilm.model.IlmDomainModel;
 
 public class IlmSystemFactory extends SystemFactory {
 

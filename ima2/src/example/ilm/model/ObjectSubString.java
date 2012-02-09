@@ -1,4 +1,4 @@
-package ilm.model;
+package example.ilm.model;
 
 import ilm.framework.assignment.model.DomainObject;
 

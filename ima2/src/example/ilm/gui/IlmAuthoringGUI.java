@@ -1,8 +1,10 @@
-package ilm.framework.gui;
+package example.ilm.gui;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainObject;
+import ilm.framework.gui.AuthoringGUI;
+import ilm.framework.gui.IlmForm;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;

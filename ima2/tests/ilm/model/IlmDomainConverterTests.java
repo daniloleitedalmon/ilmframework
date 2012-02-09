@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import example.ilm.model.ActionAddSubString;
+import example.ilm.model.ActionRemoveSubString;
+import example.ilm.model.IlmDomainConverter;
+import example.ilm.model.ObjectSubString;
+
 public class IlmDomainConverterTests {
 
 	private IlmDomainConverter objUnderTest;

@@ -1,13 +1,10 @@
-package ilm.gui;
+package example.ilm.gui;
 
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.domain.DomainGUI;
 import ilm.framework.domain.DomainModel;
-import ilm.model.ActionAddSubString;
-import ilm.model.ActionRemoveSubString;
-import ilm.model.IlmDomainModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +13,11 @@ import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+
+import example.ilm.model.ActionAddSubString;
+import example.ilm.model.ActionRemoveSubString;
+import example.ilm.model.IlmDomainModel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;

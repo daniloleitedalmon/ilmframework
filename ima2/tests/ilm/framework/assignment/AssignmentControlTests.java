@@ -11,11 +11,12 @@ import ilm.framework.comm.IlmEncrypter;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.domain.DomainModel;
-import ilm.model.IlmDomainConverter;
-import ilm.model.IlmDomainModel;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import example.ilm.model.IlmDomainConverter;
+import example.ilm.model.IlmDomainModel;
 
 public class AssignmentControlTests {
 

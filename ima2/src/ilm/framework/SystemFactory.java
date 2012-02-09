@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import javax.swing.JFrame;
 
+import example.ilm.gui.IlmAuthoringGUI;
+
 import ilm.framework.assignment.AssignmentControl;
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.model.AssignmentState;
@@ -19,7 +21,6 @@ import ilm.framework.domain.DomainGUI;
 import ilm.framework.domain.DomainModel;
 import ilm.framework.gui.AuthoringGUI;
 import ilm.framework.gui.BaseGUI;
-import ilm.framework.gui.IlmAuthoringGUI;
 import ilm.framework.gui.IlmBaseGUI;
 import ilm.framework.gui.IlmForm;
 import ilm.framework.modules.IlmModule;

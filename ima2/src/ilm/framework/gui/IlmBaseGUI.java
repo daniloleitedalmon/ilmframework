@@ -285,6 +285,9 @@ public class IlmBaseGUI extends BaseGUI {
 
 	@Override
 	protected void saveAssignmentFile(String fileName) {
+		if(fileName == null) {
+			return;
+		}
 		ArrayList<Assignment> list = new ArrayList<Assignment>();
 		for(int i = 0; i < _assignments.getNumberOfAssignments(); i++) {
 			if(_authoringGUIList.get(i).getProposition().length() > 1) {

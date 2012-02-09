@@ -11,14 +11,15 @@ import ilm.framework.modules.IlmModule;
 import ilm.framework.modules.assignment.HistoryModule;
 import ilm.framework.modules.assignment.ObjectListModule;
 import ilm.framework.modules.assignment.UndoRedoModule;
-import ilm.model.IlmDomainConverter;
-import ilm.model.ObjectSubString;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import example.ilm.model.IlmDomainConverter;
+import example.ilm.model.ObjectSubString;
 
 public class AssignmentParserTests {
 

@@ -1,4 +1,4 @@
-package ilm;
+package example.ilm;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.SystemControl;
@@ -47,8 +47,9 @@ public class Ilm extends JApplet implements IlmProtocol {
     }
 
 	private String[] GetParam() {
-		// TODO Auto-generated method stub
-		return null;
+		String[] s = new String[1];
+		s[0] = "";
+		return s;
 	}
 
 	@Override
