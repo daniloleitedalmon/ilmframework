@@ -196,7 +196,8 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 			}
 		}
 	}
-	
+
+	@Override
 	protected void initFields() {
 		for(DomainObject obj : _assignment.getInitialState().getList()) {
 			initialModel.addElement(obj.getName());

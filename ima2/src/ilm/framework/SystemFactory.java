@@ -5,8 +5,6 @@ import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-import example.ilm.gui.IlmAuthoringGUI;
-
 import ilm.framework.assignment.AssignmentControl;
 import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.model.AssignmentState;
@@ -45,6 +43,7 @@ public abstract class SystemFactory {
 		}
 		return converter;
 	}
+	
 	protected abstract DomainConverter createDomainConverter();
 	
 	public abstract DomainGUI createDomainGUI(SystemConfig config, DomainModel domainModel);
@@ -55,18 +54,13 @@ public abstract class SystemFactory {
 		return gui;
 	}
 	
-	public AuthoringGUI createAuthoringGUI(DomainGUI domainGUI,
+	public abstract AuthoringGUI createAuthoringGUI(DomainGUI domainGUI,
 										   String proposition,
 										   AssignmentState initial,
 										   AssignmentState current,
 										   AssignmentState expected,
 										   HashMap<String, String> config, 
-										   HashMap<String, String> metadata) {
-		AuthoringGUI gui = new IlmAuthoringGUI();
-		gui.setComponents(config, domainGUI, metadata);
-		gui.setAssignment(proposition, initial, current, expected);
-		return gui;
-	}
+										   HashMap<String, String> metadata);
 	
 	public JFrame createConfigGUI(HashMap<String, String> map, String string) {
 		return new IlmForm(map, string);
@@ -76,7 +70,7 @@ public abstract class SystemFactory {
 		return new IlmForm(map, string);
 	}
 
-	public CommControl createCommControl(SystemConfig config) {
+	public final CommControl createCommControl(SystemConfig config) {
 		CommControl comm = new CommControl(config);
 		comm.SetEncrypter(new IlmEncrypter());
 		if(config.isApplet()) {
@@ -99,6 +93,8 @@ public abstract class SystemFactory {
 		return assignControl;
 	}
 	
-	protected abstract ArrayList<IlmModule> getIlmModuleList();
+	protected ArrayList<IlmModule> getIlmModuleList() {
+		return new ArrayList<IlmModule>();
+	}
 	
 }

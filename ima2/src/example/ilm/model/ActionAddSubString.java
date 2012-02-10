@@ -16,12 +16,7 @@ public class ActionAddSubString extends DomainAction {
     	super(name, description);
     	setSubString(substring);
     }
-    
-    public void setDomain(IlmDomainModel domain) {
-        _domain = domain;
-    }
-    
-    
+       
     public void setSubString(String substring) {
         _substring = substring;
         _description = "add: " + substring;

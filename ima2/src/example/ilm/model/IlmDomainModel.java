@@ -24,7 +24,8 @@ public class IlmDomainModel extends DomainModel {
 	}
 
 	@Override
-	public float AutomaticChecking(AssignmentState cur, AssignmentState expected) {
+	public float AutomaticChecking(AssignmentState cur, 
+								   AssignmentState expected) {
 		if(cur.getList().size() != expected.getList().size()) {
 			return 0;
 		}

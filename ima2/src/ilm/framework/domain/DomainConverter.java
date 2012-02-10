@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import ilm.framework.assignment.model.DomainAction;
 import ilm.framework.assignment.model.DomainObject;
 
-
 public interface DomainConverter {
     
     public ArrayList<DomainObject> convertStringToObject(String objectListDescription);
@@ -17,3 +16,4 @@ public interface DomainConverter {
     public String convertActionToString(ArrayList<DomainAction> actionList);
 
 }
+

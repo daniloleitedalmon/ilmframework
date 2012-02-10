@@ -95,10 +95,16 @@ public class IlmDomainGUI extends DomainGUI {
 		_actionList = new HashMap<String, DomainAction>();
 		ActionAddSubString addAction = new ActionAddSubString("add", "add");
 		ActionRemoveSubString delAction = new ActionRemoveSubString("del", "del");
-		addAction.setDomain(_model);
+		addAction.setDomainModel(_model);
 		delAction.setDomain(_model);
 		_actionList.put(addAction.getName(), addAction);
 		_actionList.put(delAction.getName(), delAction);
+	}
+	
+	@Override
+	protected void initDomainGUI() {
+		lblProposition.setText(_proposition);
+		update(null, null);
 	}
 
     @Override
@@ -160,10 +166,4 @@ public class IlmDomainGUI extends DomainGUI {
         }
     }
 
-	@Override
-	protected void initDomainGUI() {
-		lblProposition.setText(_proposition);
-		update(null, null);
-	}
-    
 }
