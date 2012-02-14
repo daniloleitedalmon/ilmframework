@@ -77,7 +77,7 @@ public class ObjectListModule extends AssignmentModule {
 		}
 		String string = "<" + _name + "><objects>";
 		for(DomainObject obj : _objectList.get(index)) {
-			string += obj.toXMLString();
+			string += obj.toString();
 		}
 		string += "</objects></" + _name + ">";
 		return string;

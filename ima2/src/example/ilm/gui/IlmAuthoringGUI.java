@@ -29,18 +29,24 @@ import javax.swing.JTextField;
 
 public class IlmAuthoringGUI extends AuthoringGUI {
 
+	/**
+	 * @attribute serial version due to javax.swing specification
+	 * @attribute three lists of objects
+	 * @attribute six javax.swing widgets
+	 * @attribute two forms for defining config and metadata
+	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private DefaultListModel currentModel;
 	private DefaultListModel initialModel;
 	private DefaultListModel expectedModel;
+	private JPanel contentPane;
 	private JList listCurrent;
 	private JList listInitial;
 	private JList listExpected;
 	private JTextArea propositionArea;
+	private JTextField nameField;
 	private IlmForm _configForm;
 	private IlmForm _metadataForm;
-	private JTextField nameField;
 
 	public IlmAuthoringGUI() {
 		setBounds(100, 100, 600, 300);
@@ -184,19 +190,10 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		configPanel.add(btnOk, "2, 18");
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		if(o instanceof AssignmentState) {
-			ArrayList<DomainObject> objectList = ((AssignmentState)o).getList();
-			// TODO need a better non-brute force way to do this
-			currentModel.clear();
-			for(int i = 0; i < objectList.size(); i++) {
-				// TODO need a way to verify if description is a possible primary key
-				currentModel.addElement(objectList.get(i).getName());
-			}
-		}
-	}
-
+	/**
+	 * Initializes the fields that need the assignment's data.
+	 * In this case it sets the lists' initial values and the proposition
+	 */
 	@Override
 	protected void initFields() {
 		for(DomainObject obj : _assignment.getInitialState().getList()) {
@@ -211,8 +208,32 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 			}
 		}
 		propositionArea.setText(_assignment.getProposition());
+		// TODO initialize the name
+	}
+	
+	/**
+	 * Update the current state from the observed assignment state,
+	 * which comes from DomainGUI.
+	 * This method just updates the current state's object list
+	 */
+	@Override
+	public void update(Observable o, Object arg) {
+		if(o instanceof AssignmentState) {
+			ArrayList<DomainObject> objectList = ((AssignmentState)o).getList();
+			// TODO need a better non-brute force way to do this
+			currentModel.clear();
+			for(int i = 0; i < objectList.size(); i++) {
+				// TODO need a way to verify if description is a possible primary key
+				currentModel.addElement(objectList.get(i).getName());
+			}
+		}
 	}
 
+	/**
+	 * Method called when add_initial button is pressed.
+	 * It gets the selected objects from current state and adds them
+	 * to initial state
+	 */
 	private void addObjectToInitial() {
 		int[] selectedIndices = listCurrent.getSelectedIndices();
 		for(int i = 0; i < selectedIndices.length; i++) {
@@ -220,6 +241,10 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		}
 	}
 	
+	/**
+	 * Method called when remove_initial button is pressed
+	 * It gets the selected objects from initial state and removes them
+	 */
 	private void removeObjectFromInitial() {
 		int[] selectedIndices = listInitial.getSelectedIndices();
 		for(int i = 0; i < selectedIndices.length; i++) {
@@ -227,6 +252,11 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		}
 	}
 	
+	/**
+	 * Method called when add_expected button is pressed.
+	 * It gets the selected objects from current state and adds them
+	 * to expected state
+	 */
 	private void addObjectToExpected() {
 		int[] selectedIndices = listCurrent.getSelectedIndices();
 		for(int i = 0; i < selectedIndices.length; i++) {
@@ -234,6 +264,10 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		}
 	}
 	
+	/**
+	 * Method called when remove_expected button is pressed
+	 * It gets the selected objects from exptected answer and removes them
+	 */
 	private void removeObjectFromExpected() {
 		int[] selectedIndices = listExpected.getSelectedIndices();
 		for(int i = 0; i < selectedIndices.length; i++) {
@@ -241,6 +275,12 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		}		
 	}
 	
+	/**
+	 * Method called when config or metadata buttons are pressed.
+	 * @param map
+	 * @param title
+	 * It shows (setVisible) the respective IlmForm with the parameters
+	 */
 	private void showForm(HashMap<String, String> map, String title) {
 		if(title.equals(IlmProtocol.CONFIG_LIST_NODE)) {
 			if(_configForm == null) {
@@ -258,16 +298,27 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		}
 	}
 
+	/**
+	 * Hook Method that defines the proposition
+	 */
 	@Override
 	protected String getProposition() {
 		return propositionArea.getText();
 	}
 	
+	/**
+	 * Hook Method that defines the assignment's name
+	 */
 	@Override
 	protected String getAssignmentName() {
 		return nameField.getText();
 	}
 
+	/**
+	 * Hook Method that defines the assignment's initial state.
+	 * It creates a new AssignmentState and then adds an object for each
+	 * item in initialModel
+	 */
 	@Override
 	protected AssignmentState getInitialState() {
 		AssignmentState state = new AssignmentState();
@@ -279,6 +330,11 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		return state;
 	}
 
+	/**
+	 * Hook Method that defines the assignment's expected answer.
+	 * It creates a new AssignmentState and then adds an object for each
+	 * item in expectedModel
+	 */
 	@Override
 	protected AssignmentState getExpectedAnswer() {
 		AssignmentState state = new AssignmentState();
@@ -290,6 +346,11 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		return state;
 	}
 
+	/**
+	 * Hook Method that defines the assignment's configuration.
+	 * it verifies if the user user the configForm to change the
+	 * initial configuration and then return the updated config
+	 */
 	@Override
 	protected HashMap<String, String> getConfig() {
 		if(_configForm == null) {
@@ -299,6 +360,11 @@ public class IlmAuthoringGUI extends AuthoringGUI {
 		return _config;
 	}
 
+	/**
+	 * Hook Method that defines the assignment's metadata.
+	 * it verifies if the user user the metadataForm to change the
+	 * initial configuration and then return the updated metadata
+	 */
 	@Override
 	protected HashMap<String, String> getMetadata() {
 		if(_metadataForm == null) {

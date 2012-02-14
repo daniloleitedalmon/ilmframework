@@ -10,16 +10,27 @@ public abstract class DomainObject {
 		_description = description;
 	}
 	
-	public String getName() {
+	/**
+	 * @return the object's name
+	 */
+	public final String getName() {
 		return _name;
 	}
 	
-	public String getDescription() {
+	/**
+	 * @return the object's description
+	 */
+	public final String getDescription() {
 		return _description;
 	}
 	
+	/**
+	 * Compares this with another DomainObject
+	 * @param the other object to be compare to
+	 * @return the result of the comparison, true or false
+	 * 
+	 * @see example.ilm.model.ObjectSubString for a simple example
+	 */
 	public abstract boolean equals(DomainObject o);
 	
-	public abstract String toXMLString();
-    
 }

@@ -32,7 +32,7 @@ public class IlmSystemFactory extends SystemFactory {
 	@Override
 	public DomainGUI createDomainGUI(SystemConfig config, DomainModel model) {
 		IlmDomainGUI domainGUI = new IlmDomainGUI();
-		domainGUI.setDomainModel(model);
+		domainGUI.initDomainActionList(model);
 		return domainGUI;
 	}
 

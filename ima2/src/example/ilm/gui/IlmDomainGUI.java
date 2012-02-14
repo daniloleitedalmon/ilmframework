@@ -16,7 +16,6 @@ import javax.swing.JButton;
 
 import example.ilm.model.ActionAddSubString;
 import example.ilm.model.ActionRemoveSubString;
-import example.ilm.model.IlmDomainModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -27,8 +26,11 @@ import java.beans.PropertyChangeEvent;
 
 public class IlmDomainGUI extends DomainGUI {
 
+	/**
+	 * @attribute serial version due to javax.swing specification
+	 * @attribute five javax.swing widgets
+	 */
 	private static final long serialVersionUID = 1L;
-	private IlmDomainModel _model;
 	private JTextField textField;
 	private JLabel lblLabel;
 	private JButton btnAdd;
@@ -78,35 +80,49 @@ public class IlmDomainGUI extends DomainGUI {
 		add(lblLabel);
 	}
 
+	/**
+	 * Initialization of the action list. It gets the
+	 * DomainModel and sets it for each possible action.
+	 * In this case there are only two. The name of each
+	 * action is used as key for the action list.
+	 */
 	@Override
-	public ArrayList<DomainObject> getSelectedObjects() {
-		return _state.getList();
-	}
-
-	@Override
-	public AssignmentState getCurrentState() {
-		return _state;
-	}
-
-	@Override
-	public void setDomainModel(DomainModel model) {
-		_model = (IlmDomainModel)model;
-		
+	public void initDomainActionList(DomainModel model) {
 		_actionList = new HashMap<String, DomainAction>();
 		ActionAddSubString addAction = new ActionAddSubString("add", "add");
 		ActionRemoveSubString delAction = new ActionRemoveSubString("del", "del");
-		addAction.setDomainModel(_model);
-		delAction.setDomain(_model);
+		addAction.setDomainModel(model);
+		delAction.setDomainModel(model);
 		_actionList.put(addAction.getName(), addAction);
 		_actionList.put(delAction.getName(), delAction);
 	}
 	
+	/**
+	 * Initialization of the features which are dependent
+	 * of the assignment being shown. In this case it just
+	 * set the proposition label text and calls update.
+	 */
 	@Override
 	protected void initDomainGUI() {
 		lblProposition.setText(_proposition);
 		update(null, null);
 	}
 
+	/**
+	 * @return the list of objects of the current assignment
+	 * state. As there is no "selection" of objects in this
+	 * simple example of iLM, it just return all objects.
+	 */
+	@Override
+	public ArrayList<DomainObject> getSelectedObjects() {
+		return _state.getList();
+	}
+
+	/**
+	 * Usually called by the assignment's state which this
+	 * is an observer. This method updates the content of
+	 * lblLabel and updates the state of the buttons.
+	 */
     @Override
     public void update(Observable o, Object arg) {
     	if(o instanceof AssignmentState) {
@@ -121,21 +137,31 @@ public class IlmDomainGUI extends DomainGUI {
     	updateAddButton();
     }
 
+    /**
+     * Method called when remove_button is pressed.
+     * It gets the text from lblLabel and adds it
+     * to the action, then it executes.
+     */
 	private void removeSubString() {
 		if(lblLabel.getText().length() > 0) {
 			ActionRemoveSubString action = (ActionRemoveSubString)_actionList.get("del");
 			action.setSubString(lblLabel.getText().substring(lblLabel.getText().length()-1));
-            action.setDescription("del: " + action.getSubString());
+            action.setDescription("del: " + lblLabel.getText().substring(lblLabel.getText().length()-1));
             action.execute();
         }
 		updateRemoveButton();
 	}
 
+	/**
+	 * Method called when add_button is pressed.
+	 * It gets the text from textField and adds it
+	 * to the action, then it executes.
+	 */
 	private void addSubString() {
 		if(textField.getText().length() > 0) {
 			ActionAddSubString action = (ActionAddSubString)_actionList.get("add");
             action.setSubString(textField.getText().substring(0, 1));
-            action.setDescription("add: " + action.getSubString());
+            action.setDescription("add: " + textField.getText().substring(0, 1));
             action.execute();
         }
         if(textField.getText().length() > 1) {
@@ -148,6 +174,11 @@ public class IlmDomainGUI extends DomainGUI {
         updateAddButton();
 	}
 
+	/**
+	 * Updates remove_button's state. If there is no
+	 * text in lblLabel, there is no text to remove, so
+	 * it is disabled, otherwise it is enabled.
+	 */
     private void updateRemoveButton() {
     	if(lblLabel.getText().length() < 1) {
             btnDel.setEnabled(false);
@@ -157,6 +188,11 @@ public class IlmDomainGUI extends DomainGUI {
         }
     }
     
+    /**
+     * Updates add_button's state. If there is no
+     * text in textField, there is no text to add, so
+     * it is disabled, otherwise it is enabled.
+     */
     private void updateAddButton() {
     	if(textField.getText().length() < 1) {
             btnAdd.setEnabled(false);

@@ -79,7 +79,7 @@ public class HistoryModule extends AssignmentModule {
 		}
 		String string = "<" + _name + ">";
 		for(DomainAction action : _history.get(index)) {
-			string += action.toXMLString();
+			string += action.toString();
 		}
 		string += "</" + _name + ">";
 		return string;

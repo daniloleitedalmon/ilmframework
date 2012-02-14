@@ -119,14 +119,14 @@ public class UndoRedoModule extends AssignmentModule {
 		if(_undoStack.get(index).size() > 0) {
 			string += "<undostack>";
 			for(DomainAction action : _undoStack.get(index)) {
-				string += action.toXMLString();
+				string += action.toString();
 			}
 			string += "</undostack>";
 		}
 		if(_redoStack.get(index).size() > 0) {
 			string += "<redostack>";
 			for(DomainAction action : _redoStack.get(index)) {
-				string += action.toXMLString();
+				string += action.toString();
 			}
 			string += "</redostack>";
 		}
