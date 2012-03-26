@@ -2,26 +2,25 @@ package ilm.framework.comm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.zip.ZipFile;
 
 import ilm.framework.config.SystemConfig;
 
 public class CommControl implements ICommunication {
 	
-	@SuppressWarnings("unused")
 	private SystemConfig _config;
 	private IEncrypter _encrypter;
 	private ICommunication _fileRW;
 	
 	public CommControl(SystemConfig config) {
 		_config = config;
-	}
-	
-	public void SetEncrypter(IEncrypter encrypter) {
-		_encrypter = encrypter;
-	}
-	
-	public void SetFileRW(ICommunication fileRW) {
-		_fileRW = fileRW;
+		_encrypter = new IlmEncrypter();
+		if(_config.isApplet()) {
+			_fileRW = new IlmAppletFileRW();
+		}
+		else {
+			_fileRW = new IlmDesktopFileRW();
+		}
 	}
 
 	@Override
@@ -58,19 +57,20 @@ public class CommControl implements ICommunication {
 	}
 
 	@Override
-	public void writeAssignmentPackage(String packageName, 
+	public ZipFile writeAssignmentPackage(String packageName, 
 										String metadata,
 										ArrayList<String> resourceNameList,
 										ArrayList<String> resourceList, 
 										ArrayList<String> assignmentNameList,
 										ArrayList<String> assignmentList) {
 		try {
-			_fileRW.writeAssignmentPackage(packageName, metadata, resourceNameList, resourceList, 
-											assignmentNameList, _encrypter.encryptFileContent(assignmentList));
+			return _fileRW.writeAssignmentPackage(packageName, metadata, resourceNameList, resourceList, 
+												  assignmentNameList, _encrypter.encryptFileContent(assignmentList));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 }

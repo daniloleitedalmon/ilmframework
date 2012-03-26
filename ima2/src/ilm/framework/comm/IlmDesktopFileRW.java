@@ -64,7 +64,7 @@ public class IlmDesktopFileRW implements ICommunication {
 	}
 
 	@Override
-	public void writeAssignmentPackage(String packageName, 
+	public ZipFile writeAssignmentPackage(String packageName, 
 										String metadata,
 										ArrayList<String> resourceNameList,
 										ArrayList<String> resourceList, 
@@ -100,6 +100,8 @@ public class IlmDesktopFileRW implements ICommunication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		// TODO Return something meaningfull
+		return null;
 	}
 
 

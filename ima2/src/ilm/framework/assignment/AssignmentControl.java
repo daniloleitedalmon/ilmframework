@@ -3,6 +3,7 @@ package ilm.framework.assignment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.zip.ZipFile;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.assignment.model.AssignmentState;
@@ -17,7 +18,7 @@ import ilm.framework.modules.assignment.ObjectListModule;
 import ilm.framework.modules.assignment.UndoRedoModule;
 import ilm.framework.modules.operation.AutomaticCheckingModule;
 
-public final class AssignmentControl implements IAssignment, IAssignmentOperator {
+public final class AssignmentControl implements IAssignment, IAssignmentOperator, IlmProtocol {
 
 	private SystemConfig _config;
 	private DomainModel _model;
@@ -165,7 +166,7 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 	 * 		requested by AuthoringGUI in BaseGUI
 	 */
 	@Override
-	public void saveAssignmentPackage(ArrayList<Assignment> assignmentList, String fileName) {
+	public ZipFile saveAssignmentPackage(ArrayList<Assignment> assignmentList, String fileName) {
 		AssignmentParser parser = new AssignmentParser();
 		String metadataFileContent = parser.createMetadataFileContent(assignmentList, _config.toString());
 		ArrayList<String> assignmentNameList = parser.getAssignmentFileList(metadataFileContent);
@@ -180,11 +181,12 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 			assignmentContentList.add(assignmentContent);
 		}
 		try {
-			_comm.writeAssignmentPackage(fileName, metadataFileContent, null, null, assignmentNameList, assignmentContentList);
+			return _comm.writeAssignmentPackage(fileName, metadataFileContent, null, null, assignmentNameList, assignmentContentList);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 
@@ -286,6 +288,24 @@ public final class AssignmentControl implements IAssignment, IAssignmentOperator
 		for(String key : _moduleList.keySet()) {
 			_moduleList.get(key).print();
 		}
+	}
+
+
+	@Override
+	public float getEvaluation() {
+		return ((AutomaticCheckingModule)_moduleList.get(IlmProtocol.AUTO_CHECKING_MODULE_NAME)).getEvaluation();
+	}
+
+	@Override
+	public String getAnswer() {
+		return ((AutomaticCheckingModule)_moduleList.get(IlmProtocol.AUTO_CHECKING_MODULE_NAME)).getAnswer();
+	}
+
+	@Override
+	public ZipFile getAssignmentPackage() {
+		// TODO A better maybe random name generator
+		String fileName = "skdjhf";
+		return saveAssignmentPackage(_assignmentList, fileName);
 	}
 
 }

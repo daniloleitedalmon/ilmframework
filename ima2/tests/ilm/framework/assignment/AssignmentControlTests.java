@@ -6,8 +6,6 @@ import java.util.HashMap;
 
 import ilm.framework.IlmProtocol;
 import ilm.framework.comm.CommControl;
-import ilm.framework.comm.IlmDesktopFileRW;
-import ilm.framework.comm.IlmEncrypter;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.domain.DomainModel;
@@ -32,8 +30,6 @@ public class AssignmentControlTests {
 		model = new IlmDomainModel();
 		converter = new IlmDomainConverter();
 		comm = new CommControl(config);
-		comm.SetEncrypter(new IlmEncrypter());
-		comm.SetFileRW(new IlmDesktopFileRW());
 	}
 	
 	@Test

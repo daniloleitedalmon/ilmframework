@@ -2,6 +2,7 @@ package ilm.framework.comm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.zip.ZipFile;
 
 public interface ICommunication {
 
@@ -14,7 +15,7 @@ public interface ICommunication {
 	public ArrayList<String> readAssignmentFiles(String packageName, ArrayList<String> assignmentList)
 			throws IOException;
 	
-	public void writeAssignmentPackage(String packageName, 
+	public ZipFile writeAssignmentPackage(String packageName, 
 										String metadata, 
 										ArrayList<String> resourceNameList,
 										ArrayList<String> resourceList, 

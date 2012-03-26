@@ -1,5 +1,7 @@
 package example.ilm;
 
+import java.util.zip.ZipFile;
+
 import ilm.framework.IlmProtocol;
 import ilm.framework.SystemControl;
 
@@ -60,6 +62,11 @@ public class Ilm extends JApplet implements IlmProtocol {
 	@Override
 	public String getAnswer() {
 		return _ilmProtocol.getAnswer();
+	}
+
+	@Override
+	public ZipFile getAssignmentPackage() {
+		return _ilmProtocol.getAssignmentPackage();
 	}
 	
 }

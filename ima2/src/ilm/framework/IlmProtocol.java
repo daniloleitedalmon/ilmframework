@@ -1,5 +1,7 @@
 package ilm.framework;
 
+import java.util.zip.ZipFile;
+
 public interface IlmProtocol {
 
 	/**
@@ -53,5 +55,10 @@ public interface IlmProtocol {
 	 * 		student for this assignment
 	 */
 	public String getAnswer();
+	
+	/**
+	 * @return a zip package with all the assignment data
+	 */
+	public ZipFile getAssignmentPackage();
 
 }

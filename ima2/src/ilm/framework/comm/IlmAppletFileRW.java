@@ -2,6 +2,7 @@ package ilm.framework.comm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.zip.ZipFile;
 
 public class IlmAppletFileRW implements ICommunication {
 
@@ -26,12 +27,12 @@ public class IlmAppletFileRW implements ICommunication {
 	}
 
 	@Override
-	public void writeAssignmentPackage(String packageName, String metadata,
+	public ZipFile writeAssignmentPackage(String packageName, String metadata,
 			ArrayList<String> resourceNameList, ArrayList<String> resourceList,
 			ArrayList<String> assignmentNameList,
 			ArrayList<String> assignmentList) throws IOException {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 

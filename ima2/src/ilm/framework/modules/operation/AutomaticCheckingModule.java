@@ -9,7 +9,7 @@ import ilm.framework.assignment.model.DomainObject;
 import ilm.framework.domain.DomainModel;
 import ilm.framework.modules.OperationModule;
 
-public class AutomaticCheckingModule extends OperationModule implements IlmProtocol {
+public class AutomaticCheckingModule extends OperationModule {
 
 	private DomainModel _model;
 	
@@ -20,7 +20,6 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 		_gui = new AutoCheckingModuleToolbar(this);
 	}
 	
-	@Override
 	public float getEvaluation() {
 		if(_assignmentList.getExpectedAnswer(_assignmentIndex) == null) {
 			return 0;
@@ -29,7 +28,6 @@ public class AutomaticCheckingModule extends OperationModule implements IlmProto
 										_assignmentList.getExpectedAnswer(_assignmentIndex));
 	}
 
-	@Override
 	public String getAnswer() {
 		ArrayList<DomainObject> list = _assignmentList.getCurrentState(_assignmentIndex).getList();
 		return _operator.getConverter().convertObjectToString(list);

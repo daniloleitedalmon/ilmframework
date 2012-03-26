@@ -10,9 +10,6 @@ import ilm.framework.assignment.IAssignment;
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.comm.CommControl;
 import ilm.framework.comm.ICommunication;
-import ilm.framework.comm.IlmAppletFileRW;
-import ilm.framework.comm.IlmDesktopFileRW;
-import ilm.framework.comm.IlmEncrypter;
 import ilm.framework.config.SystemConfig;
 import ilm.framework.domain.DomainConverter;
 import ilm.framework.domain.DomainGUI;
@@ -71,15 +68,7 @@ public abstract class SystemFactory {
 	}
 
 	public final CommControl createCommControl(SystemConfig config) {
-		CommControl comm = new CommControl(config);
-		comm.SetEncrypter(new IlmEncrypter());
-		if(config.isApplet()) {
-			comm.SetFileRW(new IlmAppletFileRW());
-		}
-		else {
-			comm.SetFileRW(new IlmDesktopFileRW());
-		}
-		return comm;
+		return new CommControl(config);
 	}
 
 	public final AssignmentControl createAssignmentControl(SystemConfig config,

@@ -2,6 +2,7 @@ package ilm.framework.assignment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.zip.ZipFile;
 
 import ilm.framework.assignment.model.AssignmentState;
 import ilm.framework.modules.IlmModule;
@@ -28,7 +29,7 @@ public interface IAssignment {
 	
 	public int openAssignmentPackage(String fileName);
 	
-	public void saveAssignmentPackage(ArrayList<Assignment> assignmentList, String fileName);
+	public ZipFile saveAssignmentPackage(ArrayList<Assignment> assignmentList, String fileName);
 	
 	public AssignmentState newAssignment();
 	
