@@ -38,6 +38,7 @@ public interface IlmProtocol {
 	public static final String HISTORY_MODULE_NAME = "history";
 	public static final String UNDO_REDO_MODULE_NAME = "undo_redo";
 	public static final String AUTO_CHECKING_MODULE_NAME = "automatic_checking";
+	public static final String TUTOR_MODULE_NAME = "tutor";
 	
 	/**
 	 * Configuration attributes/properties from iLM specification
